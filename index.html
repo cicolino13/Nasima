@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{--lime:#B7BB00;--lime-dark:#9a9e00;--lime-glow:rgba(183,187,0,0.18);--charcoal:#1a1a18;--charcoal-2:#232320;--charcoal-3:#2e2e2a;--charcoal-4:#3a3a35;--ash:#585849;--ash-light:#7a7a68;--cream:#f0ede6;--red:#E41D13;--gold:#FFB800;--white:#fff;--border:rgba(183,187,0,0.2);--border-dim:rgba(255,255,255,0.07);--radius:4px;--radius-lg:10px;--shadow:0 4px 32px rgba(0,0,0,0.45);--shadow-lime:0 0 24px rgba(183,187,0,0.22);--tr:0.22s cubic-bezier(0.4,0,0.2,1);}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -432,28 +433,69 @@ body{font-family:'DM Sans',sans-serif;background:#1a1a18;color:#f0ede6;min-heigh
 
 <script>
 // =========================================================
-// STATE
+// STATE & SUPABASE
 // =========================================================
 const PASS = 'nasima2025';
-let DB = JSON.parse(localStorage.getItem('ns_survey_v3') || '[]');
+const SUPA_URL = 'https://ehqjwylxcagpzpcjhput.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVocWp3eWx4Y2FncHpwY2pocHV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0ODYyNTgsImV4cCI6MjA5NjA2MjI1OH0.2oxc34xemhEQfjNuctrp9OCbqJQUdjZyRtkrWMIrTb8';
+const supa = supabase.createClient(SUPA_URL, SUPA_KEY);
+
+let DB = [];
 let editId = null;
 let oidCounter = 0;
 let activeOids = [];
-let photos = {};    // oid -> [{dataUrl,name}]
-let sketches = {};  // oid -> state object
+let photos = {};
+let sketches = {};
 
-function save() {
+async function loadFromSupabase() {
   try {
-    localStorage.setItem('ns_survey_v3', JSON.stringify(DB));
+    const { data, error } = await supa.from('aufnahmen').select('*').order('created_at', { ascending: false });
+    if (error) throw error;
+    DB = (data || []).map(row => ({ ...row.data, id: row.id, _dbid: row.id }));
+    renderList(); updateStats(); updateExport();
   } catch(e) {
-    // localStorage quota exceeded - try saving without sketch images
-    try {
-      const slim = DB.map(r => ({...r, objs: r.objs.map(o => ({...o, skizze: null}))}));
-      localStorage.setItem('ns_survey_v3', JSON.stringify(slim));
-      showNotif('⚠️ Weniger Speicher: Skizzen nicht gespeichert', 'var(--gold)');
-    } catch(e2) {
-      showNotif('⚠️ Speicher voll! Bitte Fotos reduzieren.', 'var(--red)');
+    console.error('Load error:', e);
+    // Fallback to localStorage
+    DB = JSON.parse(localStorage.getItem('ns_survey_v3') || '[]');
+    renderList(); updateStats(); updateExport();
+    showNotif('⚠️ Offline-Modus: Lokale Daten', 'var(--gold)');
+  }
+}
+
+async function saveToSupabase(rec) {
+  try {
+    if (rec._dbid) {
+      // Update existing
+      const { error } = await supa.from('aufnahmen').update({ data: rec, updated_at: new Date().toISOString() }).eq('id', rec._dbid);
+      if (error) throw error;
+    } else {
+      // Insert new
+      const { data, error } = await supa.from('aufnahmen').insert([{ data: rec, created_at: new Date().toISOString() }]).select();
+      if (error) throw error;
+      if (data && data[0]) rec._dbid = data[0].id;
     }
+    // Also save to localStorage as backup
+    try { localStorage.setItem('ns_survey_v3', JSON.stringify(DB)); } catch(e) {}
+    return true;
+  } catch(e) {
+    console.error('Save error:', e);
+    // Fallback to localStorage only
+    try { localStorage.setItem('ns_survey_v3', JSON.stringify(DB)); } catch(e2) {}
+    showNotif('⚠️ Nur lokal gespeichert (kein Internet)', 'var(--gold)');
+    return false;
+  }
+}
+
+async function deleteFromSupabase(dbid) {
+  try {
+    if (dbid) {
+      const { error } = await supa.from('aufnahmen').delete().eq('id', dbid);
+      if (error) throw error;
+    }
+    return true;
+  } catch(e) {
+    console.error('Delete error:', e);
+    return false;
   }
 }
 
@@ -480,13 +522,14 @@ function doLogout() {
 // INIT
 // =========================================================
 function initApp() {
-  renderList();
-  updateStats();
   updateExport();
   const t = new Date().toISOString().split('T')[0];
   document.getElementById('f-datum').value = t;
   document.getElementById('exp-datum').value = t;
   initObjects();
+  document.getElementById('aufnahmen-container') && (document.getElementById('aufnahmen-container').innerHTML = '<p style="text-align:center;padding:60px 20px;color:var(--ash-light);">&#8987; Aufnahmen werden geladen…</p>');
+  document.getElementById('listc') && (document.getElementById('listc').innerHTML = '<p style="text-align:center;padding:60px 20px;color:var(--ash-light);">&#8987; Aufnahmen werden geladen…</p>');
+  loadFromSupabase();
 }
 
 // =========================================================
@@ -941,7 +984,7 @@ function updateProgress() {
 // =========================================================
 // SAVE
 // =========================================================
-function saveAufnahme() {
+async function saveAufnahme() {
   const standort = gv('f-standort').trim();
   if (!standort) { showNotif('&#9888; Standort ist Pflicht','var(--gold)'); return; }
 
@@ -975,10 +1018,12 @@ function saveAufnahme() {
     editId = null;
   } else { DB.push(rec); }
 
-  save(); renderList(); updateStats();
+  showNotif('&#8987; Wird gespeichert…', 'var(--gold)');
+  const ok = await saveToSupabase(rec);
   resetForm();
+  await loadFromSupabase();
   switchTab('list', document.querySelectorAll('.tab-btn')[0]);
-  showNotif('&#10003; Aufnahme gespeichert!');
+  showNotif(ok ? '&#10003; Aufnahme gespeichert!' : '&#10003; Lokal gespeichert!');
 }
 
 function resetForm() {
@@ -1129,9 +1174,13 @@ function editRec(id) {
   updateProgress();
 }
 
-function deleteRec(id) {
+async function deleteRec(id) {
   if(!confirm('Aufnahme wirklich löschen?')) return;
-  DB=DB.filter(r=>r.id!==id); save(); renderList(); updateStats();
+  const rec = DB.find(r => r.id === id);
+  DB = DB.filter(r => r.id !== id);
+  const dbid = rec?._dbid || rec?.id;
+  if (dbid) await deleteFromSupabase(dbid);
+  await loadFromSupabase();
   showNotif('&#128465; Gel&ouml;scht','var(--red)');
 }
 
