@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="de" style="background:#1a1a18;">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,14 +7,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"><\/script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root{--lime:#B7BB00;--lime-dark:#9a9e00;--lime-glow:rgba(183,187,0,0.18);--charcoal:#1a1a18;--charcoal-2:#232320;--charcoal-3:#2e2e2a;--charcoal-4:#3a3a35;--ash:#585849;--ash-light:#7a7a68;--cream:#f0ede6;--red:#E41D13;--gold:#FFB800;--white:#fff;--border:rgba(183,187,0,0.2);--border-dim:rgba(255,255,255,0.07);--radius:4px;--radius-lg:10px;--shadow:0 4px 32px rgba(0,0,0,0.45);--shadow-lime:0 0 24px rgba(183,187,0,0.22);--tr:0.22s cubic-bezier(0.4,0,0.2,1);}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
-body{font-family:'DM Sans',sans-serif;background:var(--charcoal);color:var(--cream);min-height:100vh;overflow-x:hidden;}
+body{font-family:'DM Sans',sans-serif;background:#1a1a18;color:#f0ede6;min-height:100vh;overflow-x:hidden;}
 
-#login-screen{position:fixed;inset:0;z-index:1000;background:var(--charcoal);display:flex;align-items:center;justify-content:center;flex-direction:column;padding:24px;}
+#login-screen{position:fixed;inset:0;z-index:1000;background:#1a1a18;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:24px;min-height:100vh;}
 .login-bg-grid{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(183,187,0,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(183,187,0,0.04) 1px,transparent 1px);background-size:48px 48px;}
 .login-card{position:relative;z-index:2;background:var(--charcoal-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 40px 40px;width:100%;max-width:420px;box-shadow:var(--shadow),var(--shadow-lime);animation:fadeSlide .6s ease both;}
 .login-logo{display:flex;align-items:center;gap:12px;margin-bottom:36px;}
@@ -1281,6 +1281,6 @@ function showNotif(msg,borderColor){
   el.classList.add('show');
   setTimeout(()=>el.classList.remove('show'),3400);
 }
-<\/script>
+</script>
 </body>
 </html>
