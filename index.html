@@ -442,7 +442,20 @@ let activeOids = [];
 let photos = {};    // oid -> [{dataUrl,name}]
 let sketches = {};  // oid -> state object
 
-function save() { localStorage.setItem('ns_survey_v3', JSON.stringify(DB)); }
+function save() {
+  try {
+    localStorage.setItem('ns_survey_v3', JSON.stringify(DB));
+  } catch(e) {
+    // localStorage quota exceeded - try saving without sketch images
+    try {
+      const slim = DB.map(r => ({...r, objs: r.objs.map(o => ({...o, skizze: null}))}));
+      localStorage.setItem('ns_survey_v3', JSON.stringify(slim));
+      showNotif('⚠️ Weniger Speicher: Skizzen nicht gespeichert', 'var(--gold)');
+    } catch(e2) {
+      showNotif('⚠️ Speicher voll! Bitte Fotos reduzieren.', 'var(--red)');
+    }
+  }
+}
 
 // =========================================================
 // LOGIN
@@ -704,9 +717,27 @@ function fillObjFields(oid, o) {
 function addPhotos(input, oid) { Array.from(input.files).forEach(f => readPhoto(f, oid)); input.value = ''; }
 function dropPhoto(e, oid) { e.preventDefault(); document.getElementById('ua-'+oid)?.classList.remove('drag-over'); Array.from(e.dataTransfer.files).filter(f=>f.type.startsWith('image/')).forEach(f=>readPhoto(f,oid)); }
 function readPhoto(file, oid) {
-  const r = new FileReader();
-  r.onload = ev => { photos[oid].push({dataUrl:ev.target.result,name:file.name}); renderPhotos(oid); updateProgress(); };
-  r.readAsDataURL(file);
+  const img = new Image();
+  const reader = new FileReader();
+  reader.onload = ev => {
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const MAX = 1200;
+      let w = img.width, h = img.height;
+      if (w > MAX || h > MAX) {
+        if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
+        else { w = Math.round(w * MAX / h); h = MAX; }
+      }
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      const compressed = canvas.toDataURL('image/jpeg', 0.75);
+      photos[oid].push({dataUrl: compressed, name: file.name});
+      renderPhotos(oid);
+      updateProgress();
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
 }
 function renderPhotos(oid) {
   const g = document.getElementById('pg-'+oid); if (!g) return;
