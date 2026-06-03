@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIGNAGE SURVEY — Nasima Services</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"><\/script>
+<style>
+:root{--lime:#B7BB00;--lime-dark:#9a9e00;--lime-glow:rgba(183,187,0,0.18);--charcoal:#1a1a18;--charcoal-2:#232320;--charcoal-3:#2e2e2a;--charcoal-4:#3a3a35;--ash:#585849;--ash-light:#7a7a68;--cream:#f0ede6;--red:#E41D13;--gold:#FFB800;--white:#fff;--border:rgba(183,187,0,0.2);--border-dim:rgba(255,255,255,0.07);--radius:4px;--radius-lg:10px;--shadow:0 4px 32px rgba(0,0,0,0.45);--shadow-lime:0 0 24px rgba(183,187,0,0.22);--tr:0.22s cubic-bezier(0.4,0,0.2,1);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--charcoal);color:var(--cream);min-height:100vh;overflow-x:hidden;}
+
+#login-screen{position:fixed;inset:0;z-index:1000;background:var(--charcoal);display:flex;align-items:center;justify-content:center;flex-direction:column;padding:24px;}
+.login-bg-grid{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(183,187,0,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(183,187,0,0.04) 1px,transparent 1px);background-size:48px 48px;}
+.login-card{position:relative;z-index:2;background:var(--charcoal-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:48px 40px 40px;width:100%;max-width:420px;box-shadow:var(--shadow),var(--shadow-lime);animation:fadeSlide .6s ease both;}
+.login-logo{display:flex;align-items:center;gap:12px;margin-bottom:36px;}
+.login-logo-mark{width:40px;height:40px;background:var(--lime);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:16px;color:var(--charcoal);}
+.login-logo-text{font-family:'Syne',sans-serif;font-weight:700;font-size:18px;color:var(--white);}
+.login-logo-sub{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.18em;color:var(--lime);text-transform:uppercase;margin-top:1px;}
+.login-title{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--white);margin-bottom:6px;letter-spacing:-.02em;}
+.login-sub{font-size:14px;color:var(--ash-light);margin-bottom:32px;line-height:1.5;}
+.login-error{background:rgba(228,29,19,.12);border:1px solid rgba(228,29,19,.3);border-radius:var(--radius);padding:10px 14px;font-size:13px;color:#ff6b63;margin-bottom:16px;display:none;}
+
+.form-group{margin-bottom:18px;}
+.form-group label{display:block;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ash-light);margin-bottom:7px;}
+.form-group input[type=password],.form-group input[type=text],.form-group input[type=number],.form-group input[type=date],.form-group select,.form-group textarea{width:100%;background:var(--charcoal-3);border:1px solid var(--border-dim);border-radius:var(--radius);padding:11px 13px;color:var(--cream);font-family:'DM Sans',sans-serif;font-size:15px;transition:border-color var(--tr),box-shadow var(--tr);outline:none;-webkit-appearance:none;appearance:none;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--lime);box-shadow:0 0 0 3px var(--lime-glow);}
+.form-group textarea{resize:vertical;min-height:76px;line-height:1.5;}
+.form-group input::placeholder,.form-group textarea::placeholder{color:var(--ash);}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 22px;border:none;border-radius:var(--radius);font-family:'Syne',sans-serif;font-weight:700;font-size:14px;letter-spacing:.04em;cursor:pointer;transition:all var(--tr);text-transform:uppercase;}
+.btn-primary{background:var(--lime);color:var(--charcoal);width:100%;}
+.btn-primary:hover{background:var(--lime-dark);box-shadow:var(--shadow-lime);transform:translateY(-1px);}
+.btn-secondary{background:var(--charcoal-3);color:var(--cream);border:1px solid var(--border-dim);}
+.btn-secondary:hover{border-color:var(--lime);color:var(--lime);}
+.btn-danger{background:transparent;color:var(--red);border:1px solid rgba(228,29,19,.3);font-size:13px;padding:8px 16px;}
+.btn-danger:hover{background:rgba(228,29,19,.1);}
+.btn-ghost{background:transparent;color:var(--ash-light);border:1px solid var(--border-dim);font-size:13px;padding:8px 16px;}
+.btn-ghost:hover{color:var(--cream);border-color:var(--ash-light);}
+.btn-icon{padding:9px 13px;}
+.btn-sm{padding:7px 12px;font-size:12px;}
+
+.nav{position:sticky;top:0;z-index:100;background:rgba(26,26,24,.93);backdrop-filter:blur(16px);border-bottom:1px solid var(--border-dim);padding:0 24px;}
+.nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:62px;}
+.nav-logo{display:flex;align-items:center;gap:10px;}
+.nav-logo-mark{width:30px;height:30px;background:var(--lime);border-radius:5px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:12px;color:var(--charcoal);}
+.nav-logo-text{font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:var(--white);letter-spacing:.03em;}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.nav-status{display:flex;align-items:center;gap:6px;font-family:'DM Mono',monospace;font-size:11px;color:var(--ash-light);letter-spacing:.08em;}
+.status-dot{width:7px;height:7px;border-radius:50%;background:var(--lime);box-shadow:0 0 6px var(--lime);animation:pulse 2s infinite;}
+
+.hero{padding:56px 24px 44px;border-bottom:1px solid var(--border-dim);position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--lime),transparent);opacity:.5;}
+.hero-bg{position:absolute;top:-80px;right:-80px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(183,187,0,.07) 0%,transparent 70%);pointer-events:none;}
+.hero-inner{max-width:1200px;margin:0 auto;position:relative;z-index:1;}
+.hero-label{display:inline-flex;align-items:center;gap:8px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--lime);margin-bottom:18px;}
+.hero-label-line{width:28px;height:1px;background:var(--lime);}
+.hero-title{font-family:'Syne',sans-serif;font-size:clamp(30px,5.5vw,60px);font-weight:800;line-height:1.0;color:var(--white);margin-bottom:14px;letter-spacing:-.03em;}
+.hero-title span{color:var(--lime);}
+.hero-desc{font-size:15px;color:var(--ash-light);max-width:500px;line-height:1.65;margin-bottom:32px;}
+
+.search-wrap{position:relative;max-width:700px;}
+.search-bar{background:var(--charcoal-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:5px 5px 5px 18px;display:flex;align-items:center;gap:7px;transition:box-shadow var(--tr),border-color var(--tr);}
+.search-bar:focus-within{border-color:var(--lime);box-shadow:0 0 0 4px var(--lime-glow);}
+.search-input{flex:1;background:none;border:none;outline:none;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--cream);padding:9px 0;}
+.search-input::placeholder{color:var(--ash);}
+.search-btn{background:var(--lime);color:var(--charcoal);border:none;border-radius:6px;padding:9px 18px;font-family:'Syne',sans-serif;font-weight:700;font-size:12px;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;transition:all var(--tr);white-space:nowrap;flex-shrink:0;}
+.search-btn:hover{background:var(--lime-dark);}
+.geo-pill{display:flex;align-items:center;gap:5px;background:var(--charcoal-3);border:1px solid var(--border-dim);border-radius:6px;padding:8px 12px;color:var(--ash-light);cursor:pointer;font-size:13px;white-space:nowrap;flex-shrink:0;transition:all var(--tr);}
+.geo-pill:hover{border-color:var(--lime);color:var(--lime);}
+.geo-pill.spin{animation:spin .8s linear infinite;}
+.geo-dropdown{position:absolute;top:calc(100% + 5px);left:0;right:0;background:var(--charcoal-2);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;z-index:300;box-shadow:var(--shadow);display:none;}
+.geo-dropdown.open{display:block;}
+.geo-item{padding:10px 14px;cursor:pointer;font-size:13px;border-bottom:1px solid var(--border-dim);display:flex;align-items:flex-start;gap:10px;transition:background var(--tr);}
+.geo-item:last-child{border-bottom:none;}
+.geo-item:hover{background:var(--charcoal-3);}
+.geo-item-main{font-weight:500;color:var(--cream);}
+.geo-item-sub{font-size:11px;color:var(--ash-light);margin-top:1px;}
+
+.stats-row{display:flex;gap:28px;margin-top:36px;flex-wrap:wrap;}
+.stat-item{display:flex;flex-direction:column;gap:2px;}
+.stat-num{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--white);letter-spacing:-.03em;}
+.stat-num span{color:var(--lime);}
+.stat-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ash-light);}
+
+.main-content{max-width:1200px;margin:0 auto;padding:36px 24px 80px;}
+
+.tabs{display:flex;gap:4px;background:var(--charcoal-2);border:1px solid var(--border-dim);border-radius:var(--radius-lg);padding:5px;margin-bottom:36px;overflow-x:auto;}
+.tab-btn{flex:1;min-width:100px;display:flex;align-items:center;justify-content:center;gap:6px;padding:10px 12px;background:none;border:none;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:var(--ash-light);cursor:pointer;transition:all var(--tr);white-space:nowrap;}
+.tab-btn.active{background:var(--lime);color:var(--charcoal);font-weight:700;}
+.tab-btn:not(.active):hover{color:var(--cream);background:var(--charcoal-3);}
+.tab-badge{background:var(--charcoal-4);color:var(--ash-light);border-radius:20px;font-size:11px;font-weight:600;padding:1px 7px;}
+.tab-btn.active .tab-badge{background:rgba(26,26,24,.3);color:var(--charcoal);}
+.tab-panel{display:none;animation:fadeIn .3s ease both;}
+.tab-panel.active{display:block;}
+
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px;gap:10px;flex-wrap:wrap;}
+.section-title{font-family:'Syne',sans-serif;font-size:21px;font-weight:800;color:var(--white);letter-spacing:-.02em;}
+.section-sub{font-size:13px;color:var(--ash-light);margin-top:3px;}
+
+.standort-block{margin-bottom:28px;}
+.standort-block-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px;}
+.standort-block-title{font-family:'Syne',sans-serif;font-weight:700;font-size:16px;color:var(--white);display:flex;align-items:center;gap:9px;}
+.standort-badge{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;background:rgba(183,187,0,.12);color:var(--lime);border:1px solid rgba(183,187,0,.3);border-radius:20px;padding:2px 9px;text-transform:uppercase;}
+.standort-block-meta{font-size:12px;color:var(--ash-light);}
+
+.logo-list{display:flex;flex-direction:column;gap:10px;}
+.logo-item{background:var(--charcoal-2);border:1px solid var(--border-dim);border-radius:var(--radius-lg);padding:14px 18px;display:flex;gap:12px;align-items:flex-start;transition:border-color var(--tr),box-shadow var(--tr);cursor:pointer;}
+.logo-item:hover{border-color:var(--lime);box-shadow:0 4px 20px rgba(0,0,0,.3);}
+.logo-item.sub{margin-left:16px;border-left:2px solid rgba(183,187,0,.4);background:rgba(183,187,0,.02);}
+.logo-thumb{width:76px;height:56px;border-radius:var(--radius);background:var(--charcoal-3);flex-shrink:0;border:1px solid var(--border-dim);display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--ash);overflow:hidden;}
+.logo-thumb img{width:100%;height:100%;object-fit:cover;}
+.logo-info{flex:1;min-width:0;}
+.logo-name{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:var(--white);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.logo-meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:4px;}
+.logo-tag{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;color:var(--ash-light);background:var(--charcoal-3);border:1px solid var(--border-dim);border-radius:20px;padding:2px 8px;text-transform:uppercase;}
+.logo-tag.hi{color:var(--lime);border-color:rgba(183,187,0,.3);}
+.logo-actions{display:flex;gap:5px;flex-shrink:0;}
+
+.aufnahme-card{background:var(--charcoal-2);border:1px solid var(--border-dim);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:16px;transition:border-color var(--tr);}
+.aufnahme-card:hover{border-color:var(--border);}
+.card-header{padding:14px 20px;background:var(--charcoal-3);border-bottom:1px solid var(--border-dim);display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;}
+.card-title-wrap{display:flex;align-items:center;gap:10px;}
+.step-num{width:26px;height:26px;background:var(--lime);color:var(--charcoal);border-radius:50%;font-family:'Syne',sans-serif;font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.step-label{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--white);}
+.step-desc{font-size:11px;color:var(--ash-light);margin-top:1px;}
+.collapse-icon{color:var(--ash-light);font-size:18px;transition:transform var(--tr);}
+.aufnahme-card.collapsed .collapse-icon{transform:rotate(-90deg);}
+.card-body{padding:20px;}
+.aufnahme-card.collapsed .card-body{display:none;}
+
+.upload-area{border:2px dashed var(--border);border-radius:var(--radius-lg);padding:32px 20px;text-align:center;cursor:pointer;transition:all var(--tr);position:relative;background:var(--charcoal-3);min-height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;}
+.upload-area:hover,.upload-area.drag-over{border-color:var(--lime);background:rgba(183,187,0,.04);}
+.upload-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-top:12px;}
+.photo-item{position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:4/3;background:var(--charcoal-3);border:1px solid var(--border-dim);}
+.photo-item img{width:100%;height:100%;object-fit:cover;display:block;}
+.photo-del{position:absolute;top:4px;right:4px;background:rgba(228,29,19,.85);border:none;border-radius:50%;width:20px;height:20px;color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.photo-del:hover{background:var(--red);}
+
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;}
+.fg2{grid-template-columns:1fr 1fr;}
+.fg3{grid-template-columns:1fr 1fr 1fr;}
+.col-full{grid-column:1/-1;}
+
+.masse-wrap{position:relative;}
+.masse-unit{position:absolute;right:11px;top:50%;transform:translateY(-50%);font-family:'DM Mono',monospace;font-size:11px;color:var(--lime);pointer-events:none;}
+.masse-wrap input{padding-right:42px;}
+
+.option-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:9px;}
+.opt-card input[type=radio],.opt-card input[type=checkbox]{display:none;}
+.opt-card label{display:flex;flex-direction:column;align-items:center;gap:6px;padding:13px 9px;background:var(--charcoal-3);border:1px solid var(--border-dim);border-radius:var(--radius-lg);cursor:pointer;text-align:center;transition:all var(--tr);}
+.opt-card label:hover{border-color:var(--lime);}
+.opt-card input:checked+label{background:rgba(183,187,0,.1);border-color:var(--lime);color:var(--lime);}
+.opt-icon{font-size:20px;}
+.opt-label{font-size:12px;font-weight:500;}
+.opt-sub{font-size:10px;color:var(--ash-light);}
+
+/* SKIZZE */
+.sketch-container{border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border-dim);}
+.sketch-canvas{display:block;touch-action:none;cursor:crosshair;width:100%;height:200px;background:#fff;}
+.sketch-toolbar{display:flex;align-items:center;gap:7px;padding:9px 12px;background:var(--charcoal-3);border-top:1px solid var(--border-dim);flex-wrap:wrap;}
+.sk-btn{background:var(--charcoal-4);border:1px solid var(--border-dim);border-radius:var(--radius);padding:6px 11px;color:var(--cream);font-size:12px;cursor:pointer;transition:all var(--tr);font-family:'DM Sans',sans-serif;}
+.sk-btn:hover{border-color:var(--lime);color:var(--lime);}
+.sk-btn.active{background:rgba(183,187,0,.15);border-color:var(--lime);color:var(--lime);}
+.sk-color{width:22px;height:22px;border-radius:50%;border:2px solid var(--border-dim);cursor:pointer;transition:all var(--tr);flex-shrink:0;}
+.sk-color.active,.sk-color:hover{border-color:var(--lime);transform:scale(1.15);}
+.sk-thick{border-radius:50%;background:var(--ash);border:2px solid var(--border-dim);cursor:pointer;transition:all var(--tr);flex-shrink:0;}
+.sk-thick.active{border-color:var(--lime);}
+
+/* GEO FIELD */
+.geo-row{display:flex;gap:7px;align-items:flex-end;}
+.geo-row .form-group{flex:1;margin-bottom:0;}
+.geo-btn-field{height:44px;padding:0 12px;background:var(--charcoal-3);border:1px solid var(--border-dim);border-radius:var(--radius);color:var(--ash-light);cursor:pointer;font-size:16px;transition:all var(--tr);flex-shrink:0;display:flex;align-items:center;gap:5px;white-space:nowrap;}
+.geo-btn-field:hover{border-color:var(--lime);color:var(--lime);}
+.geo-btn-field span{font-size:11px;font-family:'DM Mono',monospace;letter-spacing:.05em;}
+.geo-btn-field.spin{animation:spin .7s linear infinite;}
+
+/* OBJ TABS */
+.obj-tabs-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:16px;}
+.obj-tab{padding:7px 14px;background:var(--charcoal-3);border:1px solid var(--border-dim);border-radius:20px;font-size:13px;font-weight:500;cursor:pointer;transition:all var(--tr);display:flex;align-items:center;gap:6px;white-space:nowrap;color:var(--ash-light);}
+.obj-tab.active{background:rgba(183,187,0,.15);border-color:var(--lime);color:var(--lime);font-weight:600;}
+.obj-tab:hover:not(.active){border-color:var(--ash-light);color:var(--cream);}
+.obj-tab-x{font-size:13px;opacity:.55;line-height:1;}
+.obj-tab-x:hover{opacity:1;}
+.obj-add{padding:7px 13px;background:transparent;border:1px dashed rgba(183,187,0,.5);border-radius:20px;color:var(--lime);font-size:13px;cursor:pointer;transition:all var(--tr);}
+.obj-add:hover{background:rgba(183,187,0,.08);}
+.obj-panel{display:none;}
+.obj-panel.active{display:block;animation:fadeIn .25s ease both;}
+
+/* PROGRESS */
+.prog-wrap{margin-bottom:22px;}
+.prog-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--ash-light);text-transform:uppercase;display:flex;justify-content:space-between;margin-bottom:5px;}
+.prog-track{background:var(--charcoal-3);border-radius:20px;height:5px;overflow:hidden;}
+.prog-fill{height:100%;background:var(--lime);border-radius:20px;transition:width .5s ease;}
+
+/* OVERVIEW */
+.overview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:24px;}
+.ov-card{background:var(--charcoal-2);border:1px solid var(--border-dim);border-radius:var(--radius-lg);padding:18px 16px;}
+.ov-label{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ash-light);}
+.ov-val{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--white);letter-spacing:-.03em;margin-top:3px;}
+.ov-val span{color:var(--lime);font-size:15px;}
+
+.pdf-opts{background:var(--charcoal-2);border:1px solid var(--border-dim);border-radius:var(--radius-lg);padding:20px;margin-bottom:20px;}
+.pdf-opts-title{font-family:'Syne',sans-serif;font-weight:700;font-size:15px;color:var(--white);margin-bottom:14px;}
+
+.empty-state{text-align:center;padding:64px 24px;border:1px dashed var(--border-dim);border-radius:var(--radius-lg);}
+.empty-icon{font-size:44px;margin-bottom:12px;}
+.empty-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--white);margin-bottom:5px;}
+.empty-sub{font-size:13px;color:var(--ash-light);max-width:280px;margin:0 auto;}
+
+.notif{position:fixed;bottom:22px;right:22px;z-index:9999;background:var(--charcoal-2);border:1px solid var(--lime);border-radius:var(--radius-lg);padding:12px 16px;display:flex;align-items:center;gap:9px;font-size:13px;font-weight:500;color:var(--cream);box-shadow:var(--shadow),var(--shadow-lime);transform:translateX(160%);transition:transform .4s cubic-bezier(0.34,1.56,0.64,1);max-width:320px;}
+.notif.show{transform:translateX(0);}
+
+.modal-overlay{position:fixed;inset:0;z-index:500;background:rgba(10,10,8,.85);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s ease;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{background:var(--charcoal-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:26px;width:100%;max-width:580px;max-height:90vh;overflow-y:auto;transform:scale(.95);transition:transform .3s ease;box-shadow:var(--shadow);}
+.modal-overlay.open .modal{transform:scale(1);}
+.modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:20px;}
+.modal-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--white);}
+.modal-x{background:none;border:none;color:var(--ash-light);font-size:20px;cursor:pointer;padding:0;line-height:1;}
+.modal-x:hover{color:var(--cream);}
+.modal-foot{display:flex;gap:9px;justify-content:flex-end;margin-top:22px;}
+
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:var(--charcoal-2);}
+::-webkit-scrollbar-thumb{background:var(--ash);border-radius:3px;}
+
+@keyframes fadeSlide{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+@media(max-width:768px){
+  .hero{padding:32px 16px 24px;}
+  .main-content{padding:18px 14px 56px;}
+  .nav{padding:0 14px;}
+  .fg2,.fg3{grid-template-columns:1fr;}
+  .option-grid{grid-template-columns:repeat(2,1fr);}
+  .login-card{padding:26px 18px;}
+  .tabs{overflow-x:auto;}
+  .tab-btn{min-width:90px;font-size:12px;padding:8px 10px;}
+  .logo-actions{flex-direction:row;}
+  .search-bar{flex-wrap:wrap;padding:7px;gap:6px;}
+  .search-input{min-width:100%;padding:7px;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-bg-grid"></div>
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logo-mark">NS</div>
+      <div>
+        <div class="login-logo-text">Nasima Services</div>
+        <div class="login-logo-sub">Signage Survey Tool</div>
+      </div>
+    </div>
+    <h1 class="login-title">Anmelden</h1>
+    <p class="login-sub">Passwortgeschützte Aufnahme-Plattform für Leuchtschriften &amp; Beschriftungen</p>
+    <div class="login-error" id="login-error">&#9888; Falsches Passwort.</div>
+    <div class="form-group">
+      <label>Passwort</label>
+      <input type="password" id="pw-input" placeholder="Zugangspasswort…" autocomplete="current-password">
+    </div>
+    <button class="btn btn-primary" onclick="doLogin()">Einloggen &#8594;</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none;">
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <div class="nav-logo-mark">NS</div>
+      <span class="nav-logo-text">Signage Survey</span>
+    </div>
+    <div class="nav-right">
+      <div class="nav-status"><div class="status-dot"></div><span id="nav-count">0 Aufnahmen</span></div>
+      <button class="btn btn-ghost" onclick="doLogout()">Abmelden</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-label"><span class="hero-label-line"></span>Vor-Ort-Dokumentation</div>
+    <h1 class="hero-title">Leuchtschriften<br><span>&amp; Beschriftungen</span><br>erfassen.</h1>
+    <p class="hero-desc">Masse, Farben, Fotos und Skizzen sauber dokumentieren — als PDF exportieren.</p>
+    <div class="search-wrap">
+      <div class="search-bar">
+        <span style="color:var(--ash-light);font-size:17px;flex-shrink:0;">&#128269;</span>
+        <input class="search-input" type="text" id="hero-search" placeholder="Standort, Adresse oder Logo suchen…" oninput="filterAufnahmen(this.value)" autocomplete="off">
+        <button class="geo-pill" id="hero-geo-btn" onclick="heroGeo()">&#128205; <span>GPS</span></button>
+        <button class="search-btn" onclick="filterAufnahmen(document.getElementById('hero-search').value)">Suchen</button>
+      </div>
+      <div class="geo-dropdown" id="hero-geo-drop"></div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-item"><div class="stat-num" id="s-aufnahmen">0<span>x</span></div><div class="stat-label">Aufnahmen</div></div>
+      <div class="stat-item"><div class="stat-num" id="s-standorte">0<span>x</span></div><div class="stat-label">Standorte</div></div>
+      <div class="stat-item"><div class="stat-num" id="s-objekte">0<span>x</span></div><div class="stat-label">Objekte</div></div>
+      <div class="stat-item"><div class="stat-num" id="s-fotos">0<span>x</span></div><div class="stat-label">Fotos</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="main-content">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('list',this)">&#128203; Aufnahmen <span class="tab-badge" id="tb-list">0</span></button>
+    <button class="tab-btn" onclick="switchTab('new',this)">&#10010; Neue Aufnahme</button>
+    <button class="tab-btn" onclick="switchTab('export',this)">&#128196; PDF Export <span class="tab-badge" id="tb-exp">0</span></button>
+  </div>
+
+  <!-- TAB: LISTE -->
+  <div class="tab-panel active" id="tab-list">
+    <div class="section-header">
+      <div><div class="section-title">Alle Aufnahmen</div><div class="section-sub">Gruppiert nach Standort</div></div>
+      <button class="btn btn-primary" style="width:auto;" onclick="switchTab('new',document.querySelectorAll('.tab-btn')[1])">&#10010; Neu</button>
+    </div>
+    <div id="list-container">
+      <div class="empty-state" id="empty-state"><div class="empty-icon">&#128294;</div><div class="empty-title">Noch keine Aufnahmen</div><div class="empty-sub">Erstelle deine erste Aufnahme.</div></div>
+    </div>
+  </div>
+
+  <!-- TAB: NEU -->
+  <div class="tab-panel" id="tab-new">
+    <div class="section-header">
+      <div><div class="section-title" id="form-headline">Neue Aufnahme</div><div class="section-sub">Standort erfassen, dann Objekte anlegen</div></div>
+    </div>
+
+    <div class="prog-wrap">
+      <div class="prog-label"><span>Fortschritt</span><span id="prog-pct">0%</span></div>
+      <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+    </div>
+
+    <!-- KARTE 1: STANDORT -->
+    <div class="aufnahme-card" id="c-standort">
+      <div class="card-header" onclick="toggleCard('c-standort')">
+        <div class="card-title-wrap"><div class="step-num">1</div><div><div class="step-label">Standort</div><div class="step-desc">Adresse &amp; GPS-Lokalisierung</div></div></div>
+        <span class="collapse-icon">&#9660;</span>
+      </div>
+      <div class="card-body">
+        <div class="form-grid fg2">
+          <div class="form-group col-full">
+            <label>Standortname / Kunde *</label>
+            <div class="geo-row">
+              <div class="form-group">
+                <input type="text" id="f-standort" placeholder="z.B. McDonald's Schaffhausen" oninput="updateProgress();geocodeSearch(this.value)" autocomplete="off">
+              </div>
+              <button class="geo-btn-field" id="gps-btn" onclick="doGpsStandort()" title="GPS ermitteln">&#128205;<span>GPS</span></button>
+            </div>
+            <div class="geo-dropdown" id="standort-drop" style="position:static;margin-top:4px;"></div>
+          </div>
+          <div class="form-group"><label>Strasse / Hausnummer</label><input type="text" id="f-adresse" placeholder="Musterstrasse 10" oninput="updateProgress()"></div>
+          <div class="form-group"><label>PLZ / Ort</label><input type="text" id="f-ort" placeholder="8200 Schaffhausen" oninput="updateProgress()"></div>
+          <div class="form-group"><label>Aufnahmedatum *</label><input type="date" id="f-datum" oninput="updateProgress()"></div>
+          <div class="form-group"><label>Aufgenommen von</label><input type="text" id="f-person" placeholder="Name"></div>
+          <div class="form-group"><label>Projektnummer</label><input type="text" id="f-projekt" placeholder="NS-2025-042"></div>
+          <div class="form-group"><label>GPS-Koordinaten</label><input type="text" id="f-gps" placeholder="47.6779, 8.6330" readonly style="color:var(--lime);"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KARTE 2: OBJEKTE -->
+    <div class="aufnahme-card" id="c-objekte">
+      <div class="card-header" onclick="toggleCard('c-objekte')">
+        <div class="card-title-wrap">
+          <div class="step-num" style="background:var(--gold);color:#1a1a18;">&#9658;</div>
+          <div><div class="step-label">Objekte an diesem Standort</div><div class="step-desc">Mehrere Beschriftungen pro Adresse aufnehmbar</div></div>
+        </div>
+        <span class="collapse-icon">&#9660;</span>
+      </div>
+      <div class="card-body">
+        <div class="obj-tabs-row" id="obj-tabs-row"></div>
+        <div id="obj-panels-wrap"></div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:24px;flex-wrap:wrap;">
+      <button class="btn btn-ghost" onclick="resetForm()">Zurücksetzen</button>
+      <button class="btn btn-primary" style="width:auto;min-width:190px;" onclick="saveAufnahme()">&#128190; Aufnahme speichern</button>
+    </div>
+  </div>
+
+  <!-- TAB: EXPORT -->
+  <div class="tab-panel" id="tab-export">
+    <div class="section-header"><div><div class="section-title">PDF Export</div><div class="section-sub">1 Seite pro Objekt, inkl. Skizze &amp; Foto</div></div></div>
+    <div class="overview-grid">
+      <div class="ov-card"><div class="ov-label">Aufnahmen</div><div class="ov-val" id="ov-aufnahmen">0<span>x</span></div></div>
+      <div class="ov-card"><div class="ov-label">Objekte</div><div class="ov-val" id="ov-objekte">0<span>x</span></div></div>
+      <div class="ov-card"><div class="ov-label">Fotos</div><div class="ov-val" id="ov-fotos">0<span>x</span></div></div>
+      <div class="ov-card"><div class="ov-label">PDF-Seiten</div><div class="ov-val" id="ov-seiten">0<span>x</span></div></div>
+    </div>
+    <div class="pdf-opts">
+      <div class="pdf-opts-title">Export-Optionen</div>
+      <div class="form-grid fg2">
+        <div class="form-group"><label>Standort-Filter</label><select id="exp-filter"><option value="">Alle Standorte</option></select></div>
+        <div class="form-group"><label>Dateiname</label><input type="text" id="exp-filename" value="Signage-Aufnahme"></div>
+        <div class="form-group"><label>Erstellt von</label><input type="text" id="exp-von" placeholder="Nasima Services"></div>
+        <div class="form-group"><label>Datum Bericht</label><input type="date" id="exp-datum"></div>
+      </div>
+    </div>
+    <div id="exp-empty" class="empty-state" style="display:none;"><div class="empty-icon">&#128196;</div><div class="empty-title">Keine Aufnahmen</div><div class="empty-sub">Erst Aufnahmen erstellen.</div></div>
+    <div id="exp-ready" style="display:none;">
+      <button class="btn btn-primary" onclick="generatePDF()" style="padding:15px;font-size:15px;">&#128229; PDF generieren &amp; herunterladen</button>
+      <p style="margin-top:9px;font-size:12px;color:var(--ash-light);text-align:center;">Jedes Objekt erscheint auf einer eigenen A4-Seite mit Foto, Skizze und allen Daten.</p>
+    </div>
+  </div>
+</div>
+</div><!-- app -->
+
+<div class="notif" id="notif"><span id="notif-icon">&#10003;</span><span id="notif-msg">OK</span></div>
+
+<div class="modal-overlay" id="detail-modal">
+  <div class="modal">
+    <div class="modal-head"><div class="modal-title" id="m-title">Details</div><button class="modal-x" onclick="closeModal()">&#10005;</button></div>
+    <div id="m-body"></div>
+    <div class="modal-foot"><button class="btn btn-danger" id="m-del">&#128465; L&ouml;schen</button><button class="btn btn-ghost" onclick="closeModal()">Schliessen</button></div>
+  </div>
+</div>
+
+<script>
+// =========================================================
+// STATE
+// =========================================================
+const PASS = 'nasima2025';
+let DB = JSON.parse(localStorage.getItem('ns_survey_v3') || '[]');
+let editId = null;
+let oidCounter = 0;
+let activeOids = [];
+let photos = {};    // oid -> [{dataUrl,name}]
+let sketches = {};  // oid -> state object
+
+function save() { localStorage.setItem('ns_survey_v3', JSON.stringify(DB)); }
+
+// =========================================================
+// LOGIN
+// =========================================================
+function doLogin() {
+  if (document.getElementById('pw-input').value === PASS) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    initApp();
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+    document.getElementById('pw-input').value = '';
+  }
+}
+document.getElementById('pw-input').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+function doLogout() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+}
+
+// =========================================================
+// INIT
+// =========================================================
+function initApp() {
+  renderList();
+  updateStats();
+  updateExport();
+  const t = new Date().toISOString().split('T')[0];
+  document.getElementById('f-datum').value = t;
+  document.getElementById('exp-datum').value = t;
+  initObjects();
+}
+
+// =========================================================
+// TABS
+// =========================================================
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+  if (name === 'export') updateExport();
+}
+function toggleCard(id) { document.getElementById(id).classList.toggle('collapsed'); }
+
+// =========================================================
+// OBJECTS (multiple per Standort)
+// =========================================================
+function initObjects() {
+  activeOids = []; photos = {}; sketches = {};
+  document.getElementById('obj-tabs-row').innerHTML = '';
+  document.getElementById('obj-panels-wrap').innerHTML = '';
+  oidCounter = 0;
+  addObject();
+}
+
+function addObject(prefill) {
+  oidCounter++;
+  const oid = 'o' + oidCounter;
+  activeOids.push(oid);
+  photos[oid] = [];
+
+  // Build panel HTML
+  const panel = document.createElement('div');
+  panel.className = 'obj-panel';
+  panel.id = 'panel-' + oid;
+  panel.innerHTML = buildObjHTML(oid);
+  document.getElementById('obj-panels-wrap').appendChild(panel);
+
+  // Build tab
+  renderObjTabs();
+  switchObjTab(oid);
+
+  setTimeout(() => {
+    initSketch(oid);
+    if (prefill) fillObjFields(oid, prefill);
+  }, 40);
+  updateProgress();
+}
+
+function renderObjTabs() {
+  const row = document.getElementById('obj-tabs-row');
+  row.innerHTML = activeOids.map((oid, i) => {
+    const pos = document.getElementById(oid + '-pos')?.value.trim();
+    const label = pos ? (pos.length > 18 ? pos.slice(0,17) + '…' : pos) : 'Objekt ' + (i+1);
+    return `<button class="obj-tab" id="tab-${oid}" onclick="switchObjTab('${oid}')">${label} <span class="obj-tab-x" onclick="removeObject('${oid}',event)">&#10005;</span></button>`;
+  }).join('') + `<button class="obj-add" onclick="addObject()">+ Objekt hinzuf&uuml;gen</button>`;
+  // restore active state
+  if (activeOids.length) {
+    const activePanel = document.querySelector('.obj-panel.active');
+    if (activePanel) {
+      const oid = activePanel.id.replace('panel-', '');
+      document.getElementById('tab-' + oid)?.classList.add('active');
+    }
+  }
+}
+
+function switchObjTab(oid) {
+  document.querySelectorAll('.obj-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.obj-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + oid)?.classList.add('active');
+  document.getElementById('panel-' + oid)?.classList.add('active');
+}
+
+function removeObject(oid, e) {
+  e.stopPropagation();
+  if (activeOids.length <= 1) { showNotif('&#9888; Mindestens 1 Objekt nötig', 'var(--gold)'); return; }
+  if (!confirm('Objekt löschen?')) return;
+  activeOids = activeOids.filter(id => id !== oid);
+  document.getElementById('panel-' + oid)?.remove();
+  delete photos[oid]; delete sketches[oid];
+  renderObjTabs();
+  if (activeOids.length) switchObjTab(activeOids[activeOids.length - 1]);
+  updateProgress();
+}
+
+function buildObjHTML(oid) {
+  return `
+  <!-- FOTOS -->
+  <div class="aufnahme-card" id="${oid}-c-foto"><div class="card-header" onclick="toggleCard('${oid}-c-foto')"><div class="card-title-wrap"><div class="step-num">A</div><div><div class="step-label">Fotos</div><div class="step-desc">Min. 1 Foto</div></div></div><span class="collapse-icon">&#9660;</span></div>
+  <div class="card-body">
+    <div class="upload-area" id="ua-${oid}" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="dropPhoto(event,'${oid}')">
+      <input type="file" accept="image/*" multiple onchange="addPhotos(this,'${oid}')">
+      <div style="font-size:28px;">&#128247;</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--white);">Foto aufnehmen oder hochladen</div>
+      <div style="font-size:12px;color:var(--ash-light);">Tippen oder Bilder hineinziehen</div>
+    </div>
+    <div class="photo-grid" id="pg-${oid}"></div>
+  </div></div>
+
+  <!-- BEZEICHNUNG + MASSE -->
+  <div class="aufnahme-card" id="${oid}-c-mass"><div class="card-header" onclick="toggleCard('${oid}-c-mass')"><div class="card-title-wrap"><div class="step-num">B</div><div><div class="step-label">Bezeichnung &amp; Masse</div><div class="step-desc">Position, B × H × T in mm</div></div></div><span class="collapse-icon">&#9660;</span></div>
+  <div class="card-body">
+    <div class="form-grid fg2" style="margin-bottom:14px;">
+      <div class="form-group col-full"><label>Bezeichnung / Position *</label><input type="text" id="${oid}-pos" placeholder="z.B. Fassade Eingang West" oninput="updateProgress();renderObjTabs()"></div>
+    </div>
+    <div class="form-grid fg3">
+      <div class="form-group"><label>Breite (mm)</label><div class="masse-wrap"><input type="number" id="${oid}-b" placeholder="2400" min="0"><span class="masse-unit">mm</span></div></div>
+      <div class="form-group"><label>H&ouml;he (mm)</label><div class="masse-wrap"><input type="number" id="${oid}-h" placeholder="800" min="0"><span class="masse-unit">mm</span></div></div>
+      <div class="form-group"><label>Tiefe (mm)</label><div class="masse-wrap"><input type="number" id="${oid}-t" placeholder="120" min="0"><span class="masse-unit">mm</span></div></div>
+      <div class="form-group"><label>Montageh&ouml;he (mm)</label><div class="masse-wrap"><input type="number" id="${oid}-mh" placeholder="3200" min="0"><span class="masse-unit">mm</span></div></div>
+      <div class="form-group"><label>Buchstabenh&ouml;he (mm)</label><div class="masse-wrap"><input type="number" id="${oid}-bh" placeholder="350" min="0"><span class="masse-unit">mm</span></div></div>
+      <div class="form-group"><label>Anzahl Elemente</label><input type="number" id="${oid}-az" placeholder="8" min="0"></div>
+    </div>
+  </div></div>
+
+  <!-- FASSADE -->
+  <div class="aufnahme-card" id="${oid}-c-farbe"><div class="card-header" onclick="toggleCard('${oid}-c-farbe')"><div class="card-title-wrap"><div class="step-num">C</div><div><div class="step-label">Farben &amp; Material</div><div class="step-desc">RAL / NCS Nummern oder Freitext</div></div></div><span class="collapse-icon">&#9660;</span></div>
+  <div class="card-body">
+    <div class="form-grid fg2">
+      <div class="form-group"><label>Fassadenfarbe (RAL / NCS / Text)</label><input type="text" id="${oid}-ff" placeholder="z.B. RAL 9016 Verkehrsweiss"></div>
+      <div class="form-group"><label>Fassadenmaterial</label><select id="${oid}-mat"><option value="">— w&auml;hlen —</option><option>Putz / Verputz</option><option>Naturstein</option><option>Kunststein / Beton</option><option>Metall / Aluminium-Kassette</option><option>HPL / Fassadenplatte</option><option>Holz / Holzverkleidung</option><option>Glas / Ganzglas</option><option>Klinker / Backsteinmauerwerk</option><option>WDVS / Vollw&auml;rmeschutz</option><option>Sonstiges</option></select></div>
+      <div class="form-group"><label>Logofarbe (RAL / NCS / Text)</label><input type="text" id="${oid}-lf" placeholder="z.B. RAL 3020 Verkehrsrot"></div>
+      <div class="form-group"><label>Schriftfarbe</label><input type="text" id="${oid}-sf" placeholder="z.B. RAL 9010 Reinweiss"></div>
+    </div>
+  </div></div>
+
+  <!-- UKO + SKIZZE -->
+  <div class="aufnahme-card" id="${oid}-c-uko"><div class="card-header" onclick="toggleCard('${oid}-c-uko')"><div class="card-title-wrap"><div class="step-num">D</div><div><div class="step-label">Unterkonstruktion &amp; Skizze</div><div class="step-desc">Befestigung + Freihandskizze</div></div></div><span class="collapse-icon">&#9660;</span></div>
+  <div class="card-body">
+    <div class="option-grid" style="margin-bottom:14px;">
+      <div class="opt-card"><input type="radio" name="${oid}-uko" id="${oid}-uk1" value="Direktmontage"><label for="${oid}-uk1"><span class="opt-icon">&#128297;</span><span class="opt-label">Direktmontage</span><span class="opt-sub">An Wand</span></label></div>
+      <div class="opt-card"><input type="radio" name="${oid}-uko" id="${oid}-uk2" value="Abstandsmontage"><label for="${oid}-uk2"><span class="opt-icon">&#8596;&#65039;</span><span class="opt-label">Abstandsmontage</span><span class="opt-sub">Abstandshalter</span></label></div>
+      <div class="opt-card"><input type="radio" name="${oid}-uko" id="${oid}-uk3" value="Rahmenkonstruktion"><label for="${oid}-uk3"><span class="opt-icon">&#11036;</span><span class="opt-label">Rahmenkonstrktn.</span><span class="opt-sub">Alu-Rahmen</span></label></div>
+      <div class="opt-card"><input type="radio" name="${oid}-uko" id="${oid}-uk4" value="Rohrst&auml;nder"><label for="${oid}-uk4"><span class="opt-icon">&#127959;&#65039;</span><span class="opt-label">Rohrst&auml;nder</span><span class="opt-sub">Freistehend</span></label></div>
+      <div class="opt-card"><input type="radio" name="${oid}-uko" id="${oid}-uk5" value="Pylon / Stele"><label for="${oid}-uk5"><span class="opt-icon">&#127963;&#65039;</span><span class="opt-label">Pylon / Stele</span><span class="opt-sub">Bodenverankerung</span></label></div>
+      <div class="opt-card"><input type="radio" name="${oid}-uko" id="${oid}-uk6" value="Ausleger"><label for="${oid}-uk6"><span class="opt-icon">&#128208;</span><span class="opt-label">Ausleger</span><span class="opt-sub">Wandausleger</span></label></div>
+      <div class="opt-card"><input type="radio" name="${oid}-uko" id="${oid}-uk7" value="Dachkonstruktion"><label for="${oid}-uk7"><span class="opt-icon">&#127968;</span><span class="opt-label">Dachkonstruktion</span><span class="opt-sub">Auf dem Dach</span></label></div>
+      <div class="opt-card"><input type="radio" name="${oid}-uko" id="${oid}-uk8" value="Sonstiges"><label for="${oid}-uk8"><span class="opt-icon">&#9881;&#65039;</span><span class="opt-label">Sonstiges</span></label></div>
+    </div>
+    <div class="form-group" style="margin-bottom:14px;"><label>UKO Details</label><input type="text" id="${oid}-ukd" placeholder="z.B. Vierkantprofil 60x60mm, verzinkt, Abstand 150mm"></div>
+    <div class="form-group">
+      <label>Skizze Unterkonstruktion</label>
+      <div class="sketch-container">
+        <canvas class="sketch-canvas" id="sk-${oid}"></canvas>
+        <div class="sketch-toolbar">
+          <button class="sk-btn active" id="sk-pen-${oid}" onclick="skTool('${oid}','pen')">&#9998; Stift</button>
+          <button class="sk-btn" id="sk-line-${oid}" onclick="skTool('${oid}','line')">&#8212; Linie</button>
+          <button class="sk-btn" id="sk-rect-${oid}" onclick="skTool('${oid}','rect')">&#9645; Rechteck</button>
+          <button class="sk-btn" id="sk-txt-${oid}" onclick="skTool('${oid}','text')">T Text</button>
+          <button class="sk-btn" id="sk-era-${oid}" onclick="skTool('${oid}','eraser')">&#129529; Rad.</button>
+          <span style="width:1px;height:22px;background:var(--border-dim);margin:0 2px;"></span>
+          <div class="sk-color active" id="skc-blk-${oid}" style="background:#1a1a18;" onclick="skColor('${oid}','#1a1a18','skc-blk-${oid}')" title="Schwarz"></div>
+          <div class="sk-color" id="skc-red-${oid}" style="background:#E41D13;" onclick="skColor('${oid}','#E41D13','skc-red-${oid}')" title="Rot"></div>
+          <div class="sk-color" id="skc-blu-${oid}" style="background:#1a50a0;" onclick="skColor('${oid}','#1a50a0','skc-blu-${oid}')" title="Blau"></div>
+          <div class="sk-color" id="skc-grn-${oid}" style="background:#B7BB00;" onclick="skColor('${oid}','#B7BB00','skc-grn-${oid}')" title="Lime"></div>
+          <span style="width:1px;height:22px;background:var(--border-dim);margin:0 2px;"></span>
+          <div class="sk-thick active" id="skt-s-${oid}" style="width:10px;height:10px;" onclick="skSize('${oid}',2,'s')" title="D&uuml;nn"></div>
+          <div class="sk-thick" id="skt-m-${oid}" style="width:14px;height:14px;" onclick="skSize('${oid}',5,'m')" title="Mittel"></div>
+          <div class="sk-thick" id="skt-l-${oid}" style="width:18px;height:18px;" onclick="skSize('${oid}',10,'l')" title="Dick"></div>
+          <button class="sk-btn" style="margin-left:auto;" onclick="clearSketch('${oid}')">&#128465; L&ouml;schen</button>
+        </div>
+      </div>
+    </div>
+  </div></div>
+
+  <!-- LOGO TYP -->
+  <div class="aufnahme-card" id="${oid}-c-typ"><div class="card-header" onclick="toggleCard('${oid}-c-typ')"><div class="card-title-wrap"><div class="step-num">E</div><div><div class="step-label">Art der Beschriftung</div><div class="step-desc">Typ des Logos / der Leuchtschrift</div></div></div><span class="collapse-icon">&#9660;</span></div>
+  <div class="card-body">
+    <div class="option-grid">
+      <div class="opt-card"><input type="radio" name="${oid}-lt" id="${oid}-lt1" value="Einzelbuchstaben beleuchtet"><label for="${oid}-lt1"><span class="opt-icon">&#10024;</span><span class="opt-label">Einzelbuchst.</span><span class="opt-sub">Beleuchtet</span></label></div>
+      <div class="opt-card"><input type="radio" name="${oid}-lt" id="${oid}-lt2" value="Einzelbuchstaben unbeleuchtet"><label for="${oid}-lt2"><span class="opt-icon">&#128304;</span><span class="opt-label">Einzelbuchst.</span><span class="opt-sub">Unbeleuchtet</span></label></div>
+      <div class="opt-card"><input type="radio" name="${oid}-lt" id="${oid}-lt3" value="Leuchtkasten"><label for="${oid}-lt3"><span class="opt-icon">&#128161;</span><span class="opt-label">Leuchtkasten</span><span class="opt-sub">Lightbox</span></label></div>
+      <div class="opt-card"><input type="radio" name="${oid}-lt" id="${oid}-lt4" value="Neon / LED-Neon"><label for="${oid}-lt4"><span class="opt-icon">&#127775;</span><span class="opt-label">Neon/LED-Neon</span></label></div>
+      <div class="opt-card"><input type="radio" name="${oid}-lt" id="${oid}-lt5" value="Digitaldruck / Folie"><label for="${oid}-lt5"><span class="opt-icon">&#128424;&#65039;</span><span class="opt-label">Druck/Folie</span></label></div>
+      <div class="opt-card"><input type="radio" name="${oid}-lt" id="${oid}-lt6" value="Pylone / Totem"><label for="${oid}-lt6"><span class="opt-icon">&#127959;&#65039;</span><span class="opt-label">Pylone/Totem</span></label></div>
+      <div class="opt-card"><input type="radio" name="${oid}-lt" id="${oid}-lt7" value="Fahne / Banner"><label for="${oid}-lt7"><span class="opt-icon">&#128681;</span><span class="opt-label">Fahne/Banner</span></label></div>
+      <div class="opt-card"><input type="radio" name="${oid}-lt" id="${oid}-lt8" value="Sonstiges"><label for="${oid}-lt8"><span class="opt-icon">&#128204;</span><span class="opt-label">Sonstiges</span></label></div>
+    </div>
+  </div></div>
+
+  <!-- STROM -->
+  <div class="aufnahme-card" id="${oid}-c-strom"><div class="card-header" onclick="toggleCard('${oid}-c-strom')"><div class="card-title-wrap"><div class="step-num">F</div><div><div class="step-label">Stromversorgung &amp; Trafo</div><div class="step-desc">Elektrische Anbindung, Leistung, Spannung</div></div></div><span class="collapse-icon">&#9660;</span></div>
+  <div class="card-body">
+    <div class="form-grid fg2">
+      <div class="form-group"><label>Stromversorgung</label><select id="${oid}-sv"><option value="">— w&auml;hlen —</option><option>Ja, Anschluss vorhanden</option><option>Nein, muss verlegt werden</option><option>Steuerleitung vorhanden</option><option>Nicht relevant (unbeleuchtet)</option></select></div>
+      <div class="form-group"><label>Trafo Leistung (W)</label><div class="masse-wrap"><input type="number" id="${oid}-tw" placeholder="150" min="0"><span class="masse-unit">W</span></div></div>
+      <div class="form-group"><label>Trafo Spannung (V)</label><div class="masse-wrap"><input type="number" id="${oid}-tv" placeholder="24" min="0"><span class="masse-unit">V</span></div></div>
+      <div class="form-group"><label>Trafo Typ / Hersteller</label><input type="text" id="${oid}-tt" placeholder="z.B. Mean Well HLG-150H-24A"></div>
+      <div class="form-group"><label>Steuerung</label><select id="${oid}-ste"><option value="">— w&auml;hlen —</option><option>Manuelle Ein/Aus</option><option>Zeitschaltuhr</option><option>D&auml;mmerungsschalter</option><option>Geb&auml;udeleitsystem</option><option>Nicht relevant</option></select></div>
+      <div class="form-group"><label>Leuchtmittel</label><select id="${oid}-lm"><option value="">— w&auml;hlen —</option><option>LED-Module</option><option>LED-Streifen</option><option>Neonr&ouml;hre (klassisch)</option><option>Leuchtstoffr&ouml;hre</option><option>Keines</option><option>Unbekannt</option></select></div>
+      <div class="form-group"><label>Kabelführung</label><select id="${oid}-kab"><option value="">— w&auml;hlen —</option><option>Unter Putz / verdeckt</option><option>Auf Putz / sichtbar</option><option>Im Kabelkanal</option><option>&Uuml;ber Fassade gef&uuml;hrt</option><option>Nicht vorhanden</option></select></div>
+      <div class="form-group"><label>Schutzklasse / IP</label><input type="text" id="${oid}-ip" placeholder="z.B. IP65"></div>
+    </div>
+  </div></div>
+
+  <!-- NOTIZEN -->
+  <div class="aufnahme-card" id="${oid}-c-info"><div class="card-header" onclick="toggleCard('${oid}-c-info')"><div class="card-title-wrap"><div class="step-num">G</div><div><div class="step-label">Besonderheiten &amp; Notizen</div><div class="step-desc">Sch&auml;den, Massnahmen, Priorit&auml;t</div></div></div><span class="collapse-icon">&#9660;</span></div>
+  <div class="card-body">
+    <div class="form-grid">
+      <div class="form-group col-full"><label>Besonderheiten / Zustand</label><textarea id="${oid}-beson" rows="3" placeholder="z.B. Buchstabe K defekt, Folie blasig, Anker rostig…"></textarea></div>
+      <div class="form-group col-full"><label>Massnahmen / Empfehlung</label><textarea id="${oid}-mass" rows="2" placeholder="z.B. Leuchtmittel ersetzen, Tr&auml;ger lackieren…"></textarea></div>
+      <div class="form-group"><label>Priorit&auml;t</label><select id="${oid}-prio"><option value="">—</option><option value="Hoch">&#128308; Hoch</option><option value="Mittel">&#128993; Mittel</option><option value="Niedrig">&#128994; Niedrig</option></select></div>
+      <div class="form-group"><label>Kostensch&auml;tzung (CHF)</label><div class="masse-wrap"><input type="number" id="${oid}-kost" placeholder="2500" min="0"><span class="masse-unit">CHF</span></div></div>
+    </div>
+  </div></div>
+  `;
+}
+
+function gv(id) { return document.getElementById(id)?.value || ''; }
+function sv(id, val) { const el = document.getElementById(id); if (el) el.value = val || ''; }
+
+function fillObjFields(oid, o) {
+  sv(oid+'-pos', o.pos); sv(oid+'-b', o.b); sv(oid+'-h', o.h); sv(oid+'-t', o.t);
+  sv(oid+'-mh', o.mh); sv(oid+'-bh', o.bh); sv(oid+'-az', o.az);
+  sv(oid+'-ff', o.ff); sv(oid+'-mat', o.mat); sv(oid+'-lf', o.lf); sv(oid+'-sf', o.sf);
+  sv(oid+'-ukd', o.ukd); sv(oid+'-sv', o.sv); sv(oid+'-tw', o.tw); sv(oid+'-tv', o.tv);
+  sv(oid+'-tt', o.tt); sv(oid+'-ste', o.ste); sv(oid+'-lm', o.lm); sv(oid+'-kab', o.kab);
+  sv(oid+'-ip', o.ip); sv(oid+'-beson', o.beson); sv(oid+'-mass', o.mass);
+  sv(oid+'-prio', o.prio); sv(oid+'-kost', o.kost);
+  if (o.uko) { const r = document.querySelector(`input[name="${oid}-uko"][value="${o.uko}"]`); if (r) r.checked = true; }
+  if (o.lt) { const r = document.querySelector(`input[name="${oid}-lt"][value="${o.lt}"]`); if (r) r.checked = true; }
+  if (o.fotos) { photos[oid] = o.fotos.map((d,i) => ({dataUrl:d,name:'f'+i})); renderPhotos(oid); }
+}
+
+// =========================================================
+// PHOTOS
+// =========================================================
+function addPhotos(input, oid) { Array.from(input.files).forEach(f => readPhoto(f, oid)); input.value = ''; }
+function dropPhoto(e, oid) { e.preventDefault(); document.getElementById('ua-'+oid)?.classList.remove('drag-over'); Array.from(e.dataTransfer.files).filter(f=>f.type.startsWith('image/')).forEach(f=>readPhoto(f,oid)); }
+function readPhoto(file, oid) {
+  const r = new FileReader();
+  r.onload = ev => { photos[oid].push({dataUrl:ev.target.result,name:file.name}); renderPhotos(oid); updateProgress(); };
+  r.readAsDataURL(file);
+}
+function renderPhotos(oid) {
+  const g = document.getElementById('pg-'+oid); if (!g) return;
+  g.innerHTML = (photos[oid]||[]).map((p,i)=>`<div class="photo-item"><img src="${p.dataUrl}" alt=""><button class="photo-del" onclick="delPhoto('${oid}',${i})">&#10005;</button></div>`).join('');
+}
+function delPhoto(oid, i) { photos[oid].splice(i,1); renderPhotos(oid); }
+
+// =========================================================
+// SKETCH
+// =========================================================
+function initSketch(oid) {
+  const canvas = document.getElementById('sk-'+oid);
+  if (!canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  const w = canvas.offsetWidth || 600;
+  const h = 200;
+  canvas.width = w * dpr; canvas.height = h * dpr;
+  canvas.style.width = w+'px'; canvas.style.height = h+'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.fillStyle = '#fff'; ctx.fillRect(0,0,w,h);
+  sketches[oid] = { tool:'pen', size:2, color:'#1a1a18', drawing:false, sx:0, sy:0, snap:null, dpr };
+
+  const pos = e => { const r=canvas.getBoundingClientRect(); const t=e.touches?e.touches[0]:e; return {x:t.clientX-r.left, y:t.clientY-r.top}; };
+
+  canvas.addEventListener('mousedown', e => { e.preventDefault(); start(e); });
+  canvas.addEventListener('mousemove', e => { e.preventDefault(); move(e); });
+  canvas.addEventListener('mouseup', e => end());
+  canvas.addEventListener('mouseleave', e => end());
+  canvas.addEventListener('touchstart', e => { e.preventDefault(); start(e); }, {passive:false});
+  canvas.addEventListener('touchmove', e => { e.preventDefault(); move(e); }, {passive:false});
+  canvas.addEventListener('touchend', e => end());
+
+  function start(e) {
+    const s = sketches[oid];
+    const {x,y} = pos(e);
+    s.drawing=true; s.sx=x; s.sy=y;
+    if (s.tool==='text') {
+      const txt = prompt('Text:');
+      if (txt) { ctx.font='14px DM Sans,sans-serif'; ctx.fillStyle=s.color; ctx.fillText(txt,x,y); }
+      s.drawing=false; return;
+    }
+    s.snap = ctx.getImageData(0,0,canvas.width,canvas.height);
+    if (s.tool==='pen'||s.tool==='eraser') { ctx.beginPath(); ctx.moveTo(x,y); }
+  }
+  function move(e) {
+    const s = sketches[oid];
+    if (!s.drawing) return;
+    const {x,y} = pos(e);
+    ctx.lineWidth=s.size; ctx.lineCap='round'; ctx.lineJoin='round';
+    if (s.tool==='pen') { ctx.strokeStyle=s.color; ctx.lineTo(x,y); ctx.stroke(); }
+    else if (s.tool==='eraser') { ctx.strokeStyle='#fff'; ctx.lineTo(x,y); ctx.stroke(); }
+    else if (s.tool==='line') { ctx.putImageData(s.snap,0,0); ctx.strokeStyle=s.color; ctx.beginPath(); ctx.moveTo(s.sx,s.sy); ctx.lineTo(x,y); ctx.stroke(); }
+    else if (s.tool==='rect') { ctx.putImageData(s.snap,0,0); ctx.strokeStyle=s.color; ctx.beginPath(); ctx.strokeRect(s.sx,s.sy,x-s.sx,y-s.sy); }
+  }
+  function end() { if (sketches[oid]) sketches[oid].drawing=false; }
+}
+
+function skTool(oid, tool) {
+  if (!sketches[oid]) return;
+  sketches[oid].tool = tool;
+  ['pen','line','rect','txt','era'].forEach(t => document.getElementById('sk-'+t+'-'+oid)?.classList.remove('active'));
+  const map = {pen:'pen',line:'line',rect:'rect',text:'txt',eraser:'era'};
+  document.getElementById('sk-'+(map[tool]||tool)+'-'+oid)?.classList.add('active');
+}
+
+function skColor(oid, color, btnId) {
+  if (!sketches[oid]) return;
+  sketches[oid].color = color;
+  document.querySelectorAll(`[id^="skc-"][id$="-${oid}"]`).forEach(b => b.classList.remove('active'));
+  document.getElementById(btnId)?.classList.add('active');
+}
+
+function skSize(oid, size, key) {
+  if (!sketches[oid]) return;
+  sketches[oid].size = size;
+  ['s','m','l'].forEach(k => document.getElementById('skt-'+k+'-'+oid)?.classList.remove('active'));
+  document.getElementById('skt-'+key+'-'+oid)?.classList.add('active');
+}
+
+function clearSketch(oid) {
+  const canvas = document.getElementById('sk-'+oid);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle='#fff'; ctx.fillRect(0,0,canvas.width,canvas.height);
+}
+
+function getSketchImg(oid) {
+  return document.getElementById('sk-'+oid)?.toDataURL('image/png') || null;
+}
+
+// =========================================================
+// GEO
+// =========================================================
+let geoDebounce = null;
+function geocodeSearch(val) {
+  clearTimeout(geoDebounce);
+  geoDebounce = setTimeout(async () => {
+    const drop = document.getElementById('standort-drop');
+    if (!drop || val.length < 3) { drop.classList.remove('open'); return; }
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(val+' Schweiz')}&format=json&limit=4&accept-language=de&countrycodes=ch`);
+      const data = await res.json();
+      if (!data.length) { drop.classList.remove('open'); return; }
+      drop.innerHTML = data.map(r => {
+        const parts = r.display_name.split(',');
+        return `<div class="geo-item" onclick="selectGeo('${encodeURIComponent(r.display_name)}','${r.lat}','${r.lon}')">
+          <span style="font-size:15px;">&#128205;</span>
+          <div><div class="geo-item-main">${parts.slice(0,2).join(',').trim()}</div><div class="geo-item-sub">${parts.slice(2,4).join(',').trim()}</div></div>
+        </div>`;
+      }).join('');
+      drop.classList.add('open');
+    } catch(e) {}
+  }, 350);
+}
+
+function selectGeo(nameEnc, lat, lng) {
+  const name = decodeURIComponent(nameEnc);
+  const parts = name.split(',');
+  document.getElementById('f-standort').value = parts[0].trim();
+  document.getElementById('f-gps').value = parseFloat(lat).toFixed(5)+', '+parseFloat(lng).toFixed(5);
+  // Try to extract address parts
+  if (parts.length > 1) document.getElementById('f-adresse').value = parts[1].trim();
+  if (parts.length > 2) document.getElementById('f-ort').value = parts.slice(2,4).join(',').trim();
+  document.getElementById('standort-drop').classList.remove('open');
+  updateProgress();
+}
+
+function doGpsStandort() {
+  const btn = document.getElementById('gps-btn');
+  if (!navigator.geolocation) { showNotif('GPS nicht verf&uuml;gbar','var(--gold)'); return; }
+  btn.classList.add('spin');
+  navigator.geolocation.getCurrentPosition(async pos => {
+    btn.classList.remove('spin');
+    const {latitude:lat, longitude:lng} = pos.coords;
+    document.getElementById('f-gps').value = lat.toFixed(5)+', '+lng.toFixed(5);
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=de`);
+      const d = await res.json();
+      const a = d.address;
+      const street = (a.road||'')+(a.house_number?' '+a.house_number:'');
+      const city = (a.postcode||'')+' '+(a.city||a.town||a.village||'');
+      if (street) document.getElementById('f-adresse').value = street;
+      if (city.trim()) document.getElementById('f-ort').value = city.trim();
+      const place = a.amenity||a.shop||a.building||a.road||'';
+      if (!document.getElementById('f-standort').value && place) document.getElementById('f-standort').value = place;
+      showNotif('&#128205; Standort ermittelt');
+    } catch(e) { showNotif('Koordinaten gespeichert'); }
+    updateProgress();
+  }, err => {
+    btn.classList.remove('spin');
+    showNotif('GPS-Fehler: '+err.message,'var(--red)');
+  }, {enableHighAccuracy:true, timeout:12000});
+}
+
+function heroGeo() {
+  const btn = document.getElementById('hero-geo-btn');
+  if (!navigator.geolocation) { showNotif('GPS nicht verf&uuml;gbar','var(--gold)'); return; }
+  btn.classList.add('spin');
+  navigator.geolocation.getCurrentPosition(async pos => {
+    btn.classList.remove('spin');
+    const {latitude:lat, longitude:lng} = pos.coords;
+    try {
+      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=de`);
+      const d = await res.json();
+      const a = d.address;
+      const place = a.amenity||a.shop||a.building||a.road||d.display_name.split(',')[0];
+      document.getElementById('hero-search').value = place;
+      filterAufnahmen(place);
+      const drop = document.getElementById('hero-geo-drop');
+      drop.innerHTML = `<div class="geo-item"><span style="font-size:15px;">&#128205;</span><div><div class="geo-item-main">${place}</div><div class="geo-item-sub">${lat.toFixed(4)}, ${lng.toFixed(4)}</div></div></div>`;
+      drop.classList.add('open');
+      setTimeout(()=>drop.classList.remove('open'), 4000);
+    } catch(e) {}
+  }, err => { btn.classList.remove('spin'); });
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.search-wrap') && !e.target.closest('.geo-row')) {
+    document.querySelectorAll('.geo-dropdown').forEach(d => d.classList.remove('open'));
+  }
+});
+
+// =========================================================
+// PROGRESS
+// =========================================================
+function updateProgress() {
+  const checks = [
+    !!gv('f-standort'),
+    !!gv('f-datum'),
+    activeOids.some(id => !!gv(id+'-pos')),
+    activeOids.some(id => (photos[id]||[]).length > 0),
+    activeOids.some(id => !!gv(id+'-b') && !!gv(id+'-h')),
+    activeOids.some(id => !!document.querySelector(`input[name="${id}-uko"]:checked`)),
+  ];
+  const pct = Math.round(checks.filter(Boolean).length / checks.length * 100);
+  document.getElementById('prog-fill').style.width = pct+'%';
+  document.getElementById('prog-pct').textContent = pct+'%';
+}
+
+// =========================================================
+// SAVE
+// =========================================================
+function saveAufnahme() {
+  const standort = gv('f-standort').trim();
+  if (!standort) { showNotif('&#9888; Standort ist Pflicht','var(--gold)'); return; }
+
+  const objekte = activeOids.map(oid => {
+    const uko = document.querySelector(`input[name="${oid}-uko"]:checked`);
+    const lt = document.querySelector(`input[name="${oid}-lt"]:checked`);
+    return {
+      oid, pos:gv(oid+'-pos'), b:gv(oid+'-b'), h:gv(oid+'-h'), t:gv(oid+'-t'),
+      mh:gv(oid+'-mh'), bh:gv(oid+'-bh'), az:gv(oid+'-az'),
+      ff:gv(oid+'-ff'), mat:gv(oid+'-mat'), lf:gv(oid+'-lf'), sf:gv(oid+'-sf'),
+      uko:uko?uko.value:'', ukd:gv(oid+'-ukd'),
+      lt:lt?lt.value:'',
+      sv:gv(oid+'-sv'), tw:gv(oid+'-tw'), tv:gv(oid+'-tv'), tt:gv(oid+'-tt'),
+      ste:gv(oid+'-ste'), lm:gv(oid+'-lm'), kab:gv(oid+'-kab'), ip:gv(oid+'-ip'),
+      beson:gv(oid+'-beson'), mass:gv(oid+'-mass'), prio:gv(oid+'-prio'), kost:gv(oid+'-kost'),
+      fotos:(photos[oid]||[]).map(p=>p.dataUrl),
+      skizze:getSketchImg(oid),
+    };
+  });
+
+  const rec = {
+    id: editId || Date.now().toString(),
+    standort, adresse:gv('f-adresse'), ort:gv('f-ort'),
+    datum:gv('f-datum'), person:gv('f-person'), projekt:gv('f-projekt'), gps:gv('f-gps'),
+    objekte, erstelltAm: new Date().toISOString(),
+  };
+
+  if (editId) {
+    const idx = DB.findIndex(r => r.id === editId);
+    if (idx > -1) DB[idx] = rec;
+    editId = null;
+  } else { DB.push(rec); }
+
+  save(); renderList(); updateStats();
+  resetForm();
+  switchTab('list', document.querySelectorAll('.tab-btn')[0]);
+  showNotif('&#10003; Aufnahme gespeichert!');
+}
+
+function resetForm() {
+  ['f-standort','f-adresse','f-ort','f-person','f-projekt','f-gps'].forEach(id => sv(id,''));
+  sv('f-datum', new Date().toISOString().split('T')[0]);
+  document.getElementById('form-headline').textContent = 'Neue Aufnahme';
+  editId = null;
+  initObjects();
+  updateProgress();
+}
+
+// =========================================================
+// RENDER LIST
+// =========================================================
+function renderList(filter) {
+  const container = document.getElementById('list-container');
+  let data = filter ? DB.filter(r =>
+    r.standort.toLowerCase().includes(filter.toLowerCase()) ||
+    (r.adresse||'').toLowerCase().includes(filter.toLowerCase()) ||
+    (r.ort||'').toLowerCase().includes(filter.toLowerCase()) ||
+    r.objekte.some(o => o.pos.toLowerCase().includes(filter.toLowerCase()))
+  ) : DB;
+
+  document.getElementById('tb-list').textContent = DB.length;
+  document.getElementById('tb-exp').textContent = DB.length;
+
+  if (!data.length) {
+    container.innerHTML = '<div class="empty-state" id="empty-state"><div class="empty-icon">&#128294;</div><div class="empty-title">Noch keine Aufnahmen</div><div class="empty-sub">Erstelle deine erste Aufnahme.</div></div>';
+    return;
+  }
+
+  // Group by standort
+  const groups = {};
+  data.forEach(r => { if (!groups[r.standort]) groups[r.standort] = []; groups[r.standort].push(r); });
+
+  container.innerHTML = Object.entries(groups).map(([standort, recs]) => {
+    const totalObjs = recs.reduce((s,r)=>s+r.objekte.length,0);
+    const addr = [recs[0].adresse, recs[0].ort].filter(Boolean).join(', ');
+    const gps = recs[0].gps;
+    return `<div class="standort-block">
+      <div class="standort-block-header">
+        <div class="standort-block-title">&#128205; ${standort} <span class="standort-badge">${totalObjs} Objekt${totalObjs!==1?'e':''}</span></div>
+        <div class="standort-block-meta">${addr}${gps?' &nbsp;&#128225;':''}</div>
+      </div>
+      <div class="logo-list">
+        ${recs.map((r,ri) => r.objekte.map((o,oi) => {
+          const prio = o.prio==='Hoch'?'&#128308;':o.prio==='Mittel'?'&#128993;':o.prio==='Niedrig'?'&#128994;':'';
+          const thumb = o.fotos?.length ? `<img src="${o.fotos[0]}" alt="">` : '&#128247;';
+          return `<div class="logo-item${oi>0||ri>0?' sub':''}" onclick="openDetail('${r.id}','${o.oid}')">
+            <div class="logo-thumb">${thumb}</div>
+            <div class="logo-info">
+              <div class="logo-name">${o.pos||'(ohne Bezeichnung)'}</div>
+              <div style="font-size:11px;color:var(--ash-light);margin-top:1px;">${fmtDate(r.datum)}${r.person?' · '+r.person:''}</div>
+              <div class="logo-meta">
+                ${o.b&&o.h?`<span class="logo-tag hi">${o.b}x${o.h} mm</span>`:''}
+                ${o.lt?`<span class="logo-tag">${o.lt}</span>`:''}
+                ${o.uko?`<span class="logo-tag">${o.uko}</span>`:''}
+                ${o.prio?`<span class="logo-tag">${prio} ${o.prio}</span>`:''}
+                ${o.fotos?.length?`<span class="logo-tag">&#128247; ${o.fotos.length}</span>`:''}
+              </div>
+            </div>
+            <div class="logo-actions" onclick="event.stopPropagation()">
+              <button class="btn btn-ghost btn-icon btn-sm" onclick="editRec('${r.id}')" title="Bearbeiten">&#9998;</button>
+              <button class="btn btn-danger btn-icon btn-sm" onclick="deleteRec('${r.id}')" title="L&ouml;schen">&#128465;</button>
+            </div>
+          </div>`;
+        }).join('')).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterAufnahmen(val) { renderList(val); }
+
+// =========================================================
+// STATS
+// =========================================================
+function updateStats() {
+  document.getElementById('s-aufnahmen').innerHTML = DB.length+'<span>x</span>';
+  document.getElementById('s-standorte').innerHTML = new Set(DB.map(r=>r.standort)).size+'<span>x</span>';
+  const objs = DB.reduce((s,r)=>s+r.objekte.length,0);
+  document.getElementById('s-objekte').innerHTML = objs+'<span>x</span>';
+  const fts = DB.reduce((s,r)=>s+r.objekte.reduce((ss,o)=>ss+(o.fotos?.length||0),0),0);
+  document.getElementById('s-fotos').innerHTML = fts+'<span>x</span>';
+  document.getElementById('nav-count').textContent = DB.length+' Aufnahme'+(DB.length!==1?'n':'');
+}
+
+// =========================================================
+// DETAIL MODAL
+// =========================================================
+function openDetail(rid, oid) {
+  const r = DB.find(x=>x.id===rid); if(!r) return;
+  const o = r.objekte.find(x=>x.oid===oid)||r.objekte[0];
+  document.getElementById('m-title').textContent = r.standort+' — '+(o.pos||'Objekt');
+  document.getElementById('m-del').onclick = ()=>{ deleteRec(rid); closeModal(); };
+  const photos_html = o.fotos?.length ? `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:7px;margin-bottom:16px;">${o.fotos.map(f=>`<div class="photo-item" style="aspect-ratio:4/3;"><img src="${f}" alt=""></div>`).join('')}</div>` : '';
+  const sk_html = o.skizze ? `<div style="margin-bottom:14px;"><div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--ash-light);text-transform:uppercase;margin-bottom:5px;">SKIZZE</div><img src="${o.skizze}" style="width:100%;border-radius:var(--radius);border:1px solid var(--border-dim);" alt="Skizze"></div>` : '';
+  const rows = [
+    ['Standort',r.standort],['Adresse',[r.adresse,r.ort].filter(Boolean).join(', ')],
+    ['GPS',r.gps],['Datum',fmtDate(r.datum)],['Person',r.person],['Projekt',r.projekt],
+    ['Position',o.pos],['B x H x T',o.b&&o.h?`${o.b} x ${o.h}${o.t?' x '+o.t:''} mm`:''],
+    ['Montagehoehe',o.mh?o.mh+' mm':''],['Buchstabenh.',o.bh?o.bh+' mm':''],['Anzahl',o.az],
+    ['Fassadenfarbe',o.ff],['Material',o.mat],['Logofarbe',o.lf],['Schriftfarbe',o.sf],
+    ['UKO',o.uko],['UKO Detail',o.ukd],['Logo-Typ',o.lt],
+    ['Strom',o.sv],['Trafo',o.tw?(o.tw+'W'+(o.tv?' / '+o.tv+'V':'')):''],
+    ['Trafo Typ',o.tt],['Steuerung',o.ste],['Leuchtmittel',o.lm],['Kabel',o.kab],['IP',o.ip],
+    ['Besonderheiten',o.beson],['Massnahmen',o.mass],['Prioritaet',o.prio],['Kosten CHF',o.kost],
+  ].filter(r=>r[1]);
+  document.getElementById('m-body').innerHTML = photos_html + sk_html +
+    rows.map(([k,v])=>`<div style="display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--border-dim);flex-wrap:wrap;"><div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--ash-light);text-transform:uppercase;min-width:120px;">${k}</div><div style="flex:1;font-size:13px;color:var(--cream);">${v}</div></div>`).join('');
+  document.getElementById('detail-modal').classList.add('open');
+}
+function closeModal() { document.getElementById('detail-modal').classList.remove('open'); }
+document.getElementById('detail-modal').addEventListener('click', e => { if(e.target===e.currentTarget) closeModal(); });
+
+// =========================================================
+// EDIT / DELETE
+// =========================================================
+function editRec(id) {
+  const r = DB.find(x=>x.id===id); if(!r) return;
+  editId = id;
+  sv('f-standort',r.standort); sv('f-adresse',r.adresse); sv('f-ort',r.ort);
+  sv('f-datum',r.datum); sv('f-person',r.person); sv('f-projekt',r.projekt); sv('f-gps',r.gps);
+  document.getElementById('form-headline').textContent = 'Aufnahme bearbeiten';
+
+  // rebuild objects
+  activeOids=[]; photos={}; sketches={};
+  document.getElementById('obj-tabs-row').innerHTML='';
+  document.getElementById('obj-panels-wrap').innerHTML='';
+  oidCounter=0;
+
+  r.objekte.forEach(o => {
+    oidCounter++;
+    const oid='o'+oidCounter;
+    activeOids.push(oid);
+    photos[oid]=[];
+    const panel=document.createElement('div');
+    panel.className='obj-panel'; panel.id='panel-'+oid;
+    panel.innerHTML=buildObjHTML(oid);
+    document.getElementById('obj-panels-wrap').appendChild(panel);
+    setTimeout(()=>{ initSketch(oid); fillObjFields(oid,o); renderPhotos(oid); }, 60);
+  });
+
+  renderObjTabs();
+  if(activeOids.length) switchObjTab(activeOids[0]);
+  switchTab('new', document.querySelectorAll('.tab-btn')[1]);
+  showNotif('&#9998; Aufnahme wird bearbeitet');
+  updateProgress();
+}
+
+function deleteRec(id) {
+  if(!confirm('Aufnahme wirklich löschen?')) return;
+  DB=DB.filter(r=>r.id!==id); save(); renderList(); updateStats();
+  showNotif('&#128465; Gel&ouml;scht','var(--red)');
+}
+
+// =========================================================
+// EXPORT TAB
+// =========================================================
+function updateExport() {
+  const n=DB.length;
+  const objs=DB.reduce((s,r)=>s+r.objekte.length,0);
+  const fts=DB.reduce((s,r)=>s+r.objekte.reduce((ss,o)=>ss+(o.fotos?.length||0),0),0);
+  document.getElementById('ov-aufnahmen').innerHTML=n+'<span>x</span>';
+  document.getElementById('ov-objekte').innerHTML=objs+'<span>x</span>';
+  document.getElementById('ov-fotos').innerHTML=fts+'<span>x</span>';
+  document.getElementById('ov-seiten').innerHTML=objs+'<span>x</span>';
+  document.getElementById('exp-empty').style.display=n===0?'block':'none';
+  document.getElementById('exp-ready').style.display=n>0?'block':'none';
+  const sel=document.getElementById('exp-filter');
+  const standorte=[...new Set(DB.map(r=>r.standort))];
+  sel.innerHTML='<option value="">Alle Standorte</option>'+standorte.map(s=>`<option>${s}</option>`).join('');
+}
+
+// =========================================================
+// PDF GENERATOR
+// =========================================================
+async function generatePDF() {
+  const {jsPDF}=window.jspdf; if(!jsPDF){alert('jsPDF fehlt');return;}
+  const filterS=gv('exp-filter');
+  const fname=(gv('exp-filename')||'Signage-Aufnahme')+'.pdf';
+  const vonStr=gv('exp-von')||'Nasima Services';
+  const datStr=gv('exp-datum')||new Date().toISOString().split('T')[0];
+  let recs=filterS?DB.filter(r=>r.standort===filterS):DB;
+  const all=recs.flatMap(r=>r.objekte.map(o=>({r,o})));
+  if(!all.length){showNotif('&#9888; Keine Daten','var(--gold)');return;}
+  showNotif('&#8987; PDF wird erstellt…','var(--gold)');
+
+  const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  const W=210,H=297,M=13;
+  const tc=(r,g,b)=>doc.setTextColor(r,g,b);
+  const fc=(r,g,b)=>doc.setFillColor(r,g,b);
+  const LIME=[183,187,0],DARK=[26,26,24],ASH=[110,110,90],WHITE=[255,255,255],CREAM=[232,229,222];
+
+  for(let pi=0;pi<all.length;pi++){
+    const {r,o}=all[pi];
+    if(pi>0) doc.addPage();
+
+    // BG
+    fc(...DARK); doc.rect(0,0,W,H,'F');
+
+    // Header
+    fc(...LIME); doc.rect(0,0,W,15,'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(8); tc(...DARK);
+    doc.text('NASIMA SERVICES — SIGNAGE SURVEY',M,10);
+    doc.setFont('helvetica','normal'); doc.setFontSize(7.5);
+    doc.text(`${vonStr}  ·  ${fmtDate(datStr)}  ·  Seite ${pi+1}/${all.length}`,W-M,10,{align:'right'});
+
+    let y=21;
+
+    // Title block
+    fc(35,35,32); doc.roundedRect(M,y,W-M*2,19,2,2,'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(12); tc(...WHITE);
+    doc.text(r.standort,M+6,y+8);
+    doc.setFont('helvetica','normal'); doc.setFontSize(9.5); tc(...LIME);
+    doc.text(o.pos||'Objekt',M+6,y+15.5);
+    const addrStr=[r.adresse,r.ort].filter(Boolean).join(', ');
+    doc.setFontSize(7); tc(...ASH);
+    if(addrStr) doc.text(addrStr,W-M-2,y+8,{align:'right'});
+    doc.text(fmtDate(r.datum)+(r.person?' · '+r.person:'')+(r.projekt?' · '+r.projekt:''),W-M-2,y+14,{align:'right'});
+    if(r.gps) doc.text('GPS: '+r.gps,W-M-2,y+20,{align:'right'});
+    y+=25;
+
+    // Photo + Skizze row
+    const IH=62, IW=86;
+    fc(42,42,38); doc.roundedRect(M,y,IW,IH,2,2,'F');
+    if(o.fotos?.length){
+      try{
+        const du=o.fotos[0];
+        const fmt=du.includes('image/png')?'PNG':'JPEG';
+        doc.addImage(du,fmt,M+1,y+1,IW-2,IH-2,undefined,'FAST');
+      }catch(e){}
+      if(o.fotos.length>1){
+        fc(...DARK); doc.roundedRect(M+IW-20,y+IH-10,19,9,1,1,'F');
+        tc(...LIME); doc.setFontSize(6.5); doc.text('+'+( o.fotos.length-1),M+IW-10.5,y+IH-4.5,{align:'center'});
+      }
+    } else { tc(...ASH); doc.setFontSize(7.5); doc.text('Kein Foto',M+IW/2,y+IH/2,{align:'center'}); }
+
+    // Skizze
+    const SX=M+IW+4;
+    fc(255,255,255); doc.roundedRect(SX,y,IW,IH,2,2,'F');
+    if(o.skizze){
+      try{ doc.addImage(o.skizze,'PNG',SX+1,y+1,IW-2,IH-2,undefined,'FAST'); }catch(e){}
+    } else { fc(240,240,235); doc.rect(SX,y,IW,IH,'F'); tc(180,180,170); doc.setFontSize(7); doc.text('Keine Skizze',SX+IW/2,y+IH/2,{align:'center'}); }
+
+    // Labels
+    tc(...ASH); doc.setFontSize(6);
+    doc.text('FOTO',M+IW/2,y+IH+4,{align:'center'});
+    doc.text('SKIZZE UKO',SX+IW/2,y+IH+4,{align:'center'});
+
+    // Masse column (right of skizze)
+    const MX=SX+IW+4, MW=W-M-MX;
+    let my=y+1;
+    doc.setFont('helvetica','bold'); doc.setFontSize(6.5); tc(...LIME);
+    doc.text('MASSE',MX,my+5); my+=9;
+    const mp=[[o.b,'mm','Breite'],[o.h,'mm','Höhe'],[o.t,'mm','Tiefe'],[o.mh,'mm','Mont.H.'],[o.bh,'mm','Buchst.H.'],[o.az,'','Anzahl']].filter(p=>p[0]);
+    mp.forEach(([val,unit,lbl])=>{
+      doc.setFont('helvetica','normal'); doc.setFontSize(6.5); tc(...ASH); doc.text(lbl,MX,my);
+      tc(...CREAM); doc.text(val+(unit?' '+unit:''),MX+MW,my,{align:'right'}); my+=4.5;
+    });
+
+    y+=IH+8;
+
+    // 2-column data sections
+    const C1=M, C2=M+(W-M*2)/2+1, CW=(W-M*2)/2-1;
+
+    function drawSec(cx,title,pairs,sy){
+      fc(38,38,34); doc.roundedRect(cx,sy,CW,7,1,1,'F');
+      doc.setFont('helvetica','bold'); doc.setFontSize(6.5); tc(...LIME);
+      doc.text(title,cx+3,sy+5.2);
+      let ry=sy+10;
+      pairs.filter(p=>p[1]).forEach(([lbl,val])=>{
+        doc.setFont('helvetica','normal'); doc.setFontSize(6.2); tc(...ASH); doc.text(lbl+':',cx+2,ry);
+        tc(...CREAM);
+        const lines=doc.splitTextToSize(String(val),CW-26);
+        doc.text(lines,cx+CW-1,ry,{align:'right'});
+        ry+=Math.max(4.2,lines.length*3.8);
+      });
+      return ry+1;
+    }
+
+    const r1=drawSec(C1,'FASSADE & KONSTRUKTION',[
+      ['Fassadenfarbe',o.ff],['Material',o.mat],['Logofarbe',o.lf],['Schriftfarbe',o.sf],['UKO',o.uko],['UKO Detail',o.ukd],
+    ],y);
+    const r2=drawSec(C2,'LOGO & TECHNIK',[
+      ['Logo-Typ',o.lt],['Strom',o.sv],
+      ['Trafo',o.tw?(o.tw+'W'+(o.tv?' / '+o.tv+'V':'')):null],
+      ['Trafo Typ',o.tt],['Steuerung',o.ste],['Leuchtmittel',o.lm],['Kabel',o.kab],['IP',o.ip],
+    ],y);
+
+    y=Math.max(r1,r2)+3;
+
+    if(o.beson||o.mass){
+      fc(38,38,34); doc.roundedRect(M,y,W-M*2,7,1,1,'F');
+      doc.setFont('helvetica','bold'); doc.setFontSize(6.5); tc(...LIME);
+      doc.text('BESONDERHEITEN & MASSNAHMEN',M+3,y+5.2); y+=10;
+      if(o.beson){ tc(...ASH); doc.setFontSize(6.2); doc.text('Besonderheiten:',M+2,y); y+=4; tc(...CREAM); const ls=doc.splitTextToSize(o.beson,W-M*2-5); doc.text(ls,M+2,y); y+=ls.length*3.8+2; }
+      if(o.mass){ tc(...ASH); doc.setFontSize(6.2); doc.text('Massnahmen:',M+2,y); y+=4; tc(...CREAM); const ls=doc.splitTextToSize(o.mass,W-M*2-5); doc.text(ls,M+2,y); y+=ls.length*3.8+2; }
+      y+=2;
+    }
+
+    if(o.prio||o.kost){
+      const pc=o.prio==='Hoch'?[228,29,19]:o.prio==='Mittel'?[255,184,0]:[60,160,60];
+      if(o.prio){fc(...pc);doc.roundedRect(M,y,46,8,2,2,'F');doc.setFont('helvetica','bold');doc.setFontSize(6.5);tc(...DARK);doc.text('PRIORITÄT: '+o.prio,M+3,y+5.5);}
+      if(o.kost){fc(40,40,36);doc.roundedRect(M+50,y,50,8,2,2,'F');tc(...LIME);doc.setFontSize(6.5);doc.text('CHF '+o.kost+' ca.',M+54,y+5.5);}
+      y+=11;
+    }
+
+    // Footer
+    fc(28,28,26); doc.rect(0,H-11,W,11,'F');
+    tc(...ASH); doc.setFont('helvetica','normal'); doc.setFontSize(6.2);
+    doc.text('Nasima Services — NeonThaler Werbetechnik AG — Zürich  |  WIR MACHEN SIE SICHTBAR.',M,H-5);
+    doc.text('ID: '+r.id,W-M,H-5,{align:'right'});
+  }
+
+  doc.save(fname);
+  showNotif('&#128229; PDF heruntergeladen!');
+}
+
+// =========================================================
+// HELPERS
+// =========================================================
+function fmtDate(d){
+  if(!d) return '';
+  try{const p=d.split('-');return p[2]+'.'+p[1]+'.'+p[0];}catch{return d;}
+}
+function showNotif(msg,borderColor){
+  const el=document.getElementById('notif');
+  document.getElementById('notif-msg').innerHTML=msg;
+  el.style.borderColor=borderColor||'var(--lime)';
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),3400);
+}
+<\/script>
+</body>
+</html>
