@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Nasima Aufnahme Tool V5.5</title>
+<title>Nasima Aufnahme Tool V5.5.1</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
@@ -37,11 +37,11 @@ main{max-width:1220px;margin:auto;padding:24px 20px 80px;display:grid;gap:22px}.
 </style>
 </head>
 <body>
-<section class="login" id="login"><div class="login-box"><div class="mark">V5.5</div><h1>Nasima Aufnahme Tool</h1><p>Cloud-Version mit allen Praxisfeldern und manueller Bildauswahl aus dem Album.</p><div class="notice">User: <b>Marco Cassani</b> oder <b>Hans Zwahlen</b><br>Passwort: <b>Neon1234</b></div><p id="loginError" style="display:none;color:var(--r);font-weight:900">Login falsch.</p><label>Benutzer</label><select id="loginUser"><option>Marco Cassani</option><option>Hans Zwahlen</option></select><label>Passwort</label><input id="loginPass" type="password" onkeydown="if(event.key==='Enter')doLogin()"><button onclick="doLogin()">Einloggen</button></div></section>
+<section class="login" id="login"><div class="login-box"><div class="mark">V5.5.1</div><h1>Nasima Aufnahme Tool</h1><p>Cloud-Version mit allen Praxisfeldern und manueller Bildauswahl aus dem Album.</p><div class="notice">User: <b>Marco Cassani</b> oder <b>Hans Zwahlen</b><br>Passwort: <b>Neon1234</b></div><p id="loginError" style="display:none;color:var(--r);font-weight:900">Login falsch.</p><label>Benutzer</label><select id="loginUser"><option>Marco Cassani</option><option>Hans Zwahlen</option></select><label>Passwort</label><input id="loginPass" type="password" onkeydown="if(event.key==='Enter')doLogin()"><button onclick="doLogin()">Einloggen</button></div></section>
 
 <div class="app" id="app">
-<header><div class="header-inner"><div class="brand"><div class="mark">V5.5</div> Nasima Aufnahme Tool</div><button style="max-width:150px;margin:0" onclick="location.reload()">Abmelden</button></div><div class="nav"><button id="nDash" onclick="view('dash')">Dashboard</button><button id="nSites" onclick="view('sites')">Standorte</button><button id="nNew" onclick="newSite()">Neue Aufnahme</button><button id="nSet" onclick="view('settings')">Einstellungen</button></div></header>
-<section class="hero"><div class="hero-inner"><div class="kicker">V5.5 · Supabase</div><h1>Standorte, Aufnahmen und Objekte bearbeiten.</h1><p>Standorte erscheinen einmalig. Aufnahmen können nachträglich bearbeitet werden. Fotos werden manuell aus dem Album gewählt und komprimiert.</p><div class="row"><input id="q" placeholder="Suche..." oninput="render()"><button onclick="newSite()">Neue Aufnahme</button><button class="secondary" onclick="pdfAll()">PDF alle</button></div><div class="stats"><div class="stat"><strong id="sSites">0</strong><span>Standorte</span></div><div class="stat"><strong id="sSurveys">0</strong><span>Aufnahmen</span></div><div class="stat"><strong id="sObjects">0</strong><span>Objekte</span></div><div class="stat"><strong id="sMode">Cloud</strong><span>Speicher</span></div></div></div></section>
+<header><div class="header-inner"><div class="brand"><div class="mark">V5.5.1</div> Nasima Aufnahme Tool</div><button style="max-width:150px;margin:0" onclick="location.reload()">Abmelden</button></div><div class="nav"><button id="nDash" onclick="view('dash')">Dashboard</button><button id="nSites" onclick="view('sites')">Standorte</button><button id="nNew" onclick="newSite()">Neue Aufnahme</button><button id="nSet" onclick="view('settings')">Einstellungen</button></div></header>
+<section class="hero"><div class="hero-inner"><div class="kicker">V5.5.1 · Supabase</div><h1>Standorte, Aufnahmen und Objekte bearbeiten.</h1><p>Standorte erscheinen einmalig. Aufnahmen können nachträglich bearbeitet werden. Fotos werden manuell aus dem Album gewählt und komprimiert.</p><div class="row"><input id="q" placeholder="Suche..." oninput="render()"><button onclick="newSite()">Neue Aufnahme</button><button class="secondary" onclick="pdfAll()">PDF alle</button></div><div class="stats"><div class="stat"><strong id="sSites">0</strong><span>Standorte</span></div><div class="stat"><strong id="sSurveys">0</strong><span>Aufnahmen</span></div><div class="stat"><strong id="sObjects">0</strong><span>Objekte</span></div><div class="stat"><strong id="sMode">Cloud</strong><span>Speicher</span></div></div></div></section>
 
 <main>
 <section class="card" id="dash"><h2>Dashboard</h2><div id="recent"></div></section>
@@ -60,8 +60,8 @@ main{max-width:1220px;margin:auto;padding:24px 20px 80px;display:grid;gap:22px}.
 <script>
 const PASS="Neon1234";
 const LOCAL_KEY="nasima_v55_local";
-const SUPABASE_URL="https://dolhtxjkphldsyhfpjfh.supabase.co";
-const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRvbGh0eGprcGhsZHN5aGZwamZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0ODg5MTMsImV4cCI6MjA5NjA2NDkxM30.-gc-ISS_alym71K9_SeLpn5uqcvBagVbzWrRBcGUth0";
+const SUPABASE_URL="https://ehqjwylxcagpzpcjhput.supabase.co";
+const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVocWp3eWx4Y2FncHpwY2pocHV0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0ODYyNTgsImV4cCI6MjA5NjA2MjI1OH0.2oxc34xemhEQfjNuctrp9OCbqJQUdjZyRtkrWMIrTb8";
 let currentUser="", db=JSON.parse(localStorage.getItem(LOCAL_KEY)||"[]"), editing={siteId:null,surveyId:null}, objs=[], sb=null, cloud=false;
 
 document.addEventListener("DOMContentLoaded",async()=>{initSupabase();document.getElementById("date").valueAsDate=new Date();await loadFromCloud(false);render();});
@@ -170,7 +170,7 @@ function makePDF(sites,name){
   pdf.text("NASIMA SERVICES",15,9);
   pdf.setFontSize(8);
   pdf.setFont(undefined,"normal");
-  pdf.text("Aufnahme Tool V5.5",15,16);
+  pdf.text("Aufnahme Tool V5.5.1",15,16);
   pdf.setFillColor(183,187,0);
   pdf.rect(0,288,210,9,"F");
   pdf.setTextColor(88,88,73);
