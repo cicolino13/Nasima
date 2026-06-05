@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Nasima Aufnahme Tool V5.4</title>
+<title>Nasima Aufnahme Tool V5.5</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
@@ -37,11 +37,11 @@ main{max-width:1220px;margin:auto;padding:24px 20px 80px;display:grid;gap:22px}.
 </style>
 </head>
 <body>
-<section class="login" id="login"><div class="login-box"><div class="mark">V5.4</div><h1>Nasima Aufnahme Tool</h1><p>Cloud-Version mit allen Praxisfeldern und manueller Bildauswahl aus dem Album.</p><div class="notice">User: <b>Marco Cassani</b> oder <b>Hans Zwahlen</b><br>Passwort: <b>Neon1234</b></div><p id="loginError" style="display:none;color:var(--r);font-weight:900">Login falsch.</p><label>Benutzer</label><select id="loginUser"><option>Marco Cassani</option><option>Hans Zwahlen</option></select><label>Passwort</label><input id="loginPass" type="password" onkeydown="if(event.key==='Enter')doLogin()"><button onclick="doLogin()">Einloggen</button></div></section>
+<section class="login" id="login"><div class="login-box"><div class="mark">V5.5</div><h1>Nasima Aufnahme Tool</h1><p>Cloud-Version mit allen Praxisfeldern und manueller Bildauswahl aus dem Album.</p><div class="notice">User: <b>Marco Cassani</b> oder <b>Hans Zwahlen</b><br>Passwort: <b>Neon1234</b></div><p id="loginError" style="display:none;color:var(--r);font-weight:900">Login falsch.</p><label>Benutzer</label><select id="loginUser"><option>Marco Cassani</option><option>Hans Zwahlen</option></select><label>Passwort</label><input id="loginPass" type="password" onkeydown="if(event.key==='Enter')doLogin()"><button onclick="doLogin()">Einloggen</button></div></section>
 
 <div class="app" id="app">
-<header><div class="header-inner"><div class="brand"><div class="mark">V5.4</div> Nasima Aufnahme Tool</div><button style="max-width:150px;margin:0" onclick="location.reload()">Abmelden</button></div><div class="nav"><button id="nDash" onclick="view('dash')">Dashboard</button><button id="nSites" onclick="view('sites')">Standorte</button><button id="nNew" onclick="newSite()">Neue Aufnahme</button><button id="nSet" onclick="view('settings')">Einstellungen</button></div></header>
-<section class="hero"><div class="hero-inner"><div class="kicker">V5.4 · Supabase</div><h1>Standorte, Aufnahmen und Objekte bearbeiten.</h1><p>Standorte erscheinen einmalig. Aufnahmen können nachträglich bearbeitet werden. Fotos werden manuell aus dem Album gewählt und komprimiert.</p><div class="row"><input id="q" placeholder="Suche..." oninput="render()"><button onclick="newSite()">Neue Aufnahme</button><button class="secondary" onclick="pdfAll()">PDF alle</button></div><div class="stats"><div class="stat"><strong id="sSites">0</strong><span>Standorte</span></div><div class="stat"><strong id="sSurveys">0</strong><span>Aufnahmen</span></div><div class="stat"><strong id="sObjects">0</strong><span>Objekte</span></div><div class="stat"><strong id="sMode">Cloud</strong><span>Speicher</span></div></div></div></section>
+<header><div class="header-inner"><div class="brand"><div class="mark">V5.5</div> Nasima Aufnahme Tool</div><button style="max-width:150px;margin:0" onclick="location.reload()">Abmelden</button></div><div class="nav"><button id="nDash" onclick="view('dash')">Dashboard</button><button id="nSites" onclick="view('sites')">Standorte</button><button id="nNew" onclick="newSite()">Neue Aufnahme</button><button id="nSet" onclick="view('settings')">Einstellungen</button></div></header>
+<section class="hero"><div class="hero-inner"><div class="kicker">V5.5 · Supabase</div><h1>Standorte, Aufnahmen und Objekte bearbeiten.</h1><p>Standorte erscheinen einmalig. Aufnahmen können nachträglich bearbeitet werden. Fotos werden manuell aus dem Album gewählt und komprimiert.</p><div class="row"><input id="q" placeholder="Suche..." oninput="render()"><button onclick="newSite()">Neue Aufnahme</button><button class="secondary" onclick="pdfAll()">PDF alle</button></div><div class="stats"><div class="stat"><strong id="sSites">0</strong><span>Standorte</span></div><div class="stat"><strong id="sSurveys">0</strong><span>Aufnahmen</span></div><div class="stat"><strong id="sObjects">0</strong><span>Objekte</span></div><div class="stat"><strong id="sMode">Cloud</strong><span>Speicher</span></div></div></div></section>
 
 <main>
 <section class="card" id="dash"><h2>Dashboard</h2><div id="recent"></div></section>
@@ -59,7 +59,7 @@ main{max-width:1220px;margin:auto;padding:24px 20px 80px;display:grid;gap:22px}.
 
 <script>
 const PASS="Neon1234";
-const LOCAL_KEY="nasima_v54_local";
+const LOCAL_KEY="nasima_v55_local";
 const SUPABASE_URL="https://dolhtxjkphldsyhfpjfh.supabase.co";
 const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRvbGh0eGprcGhsZHN5aGZwamZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0ODg5MTMsImV4cCI6MjA5NjA2NDkxM30.-gc-ISS_alym71K9_SeLpn5uqcvBagVbzWrRBcGUth0";
 let currentUser="", db=JSON.parse(localStorage.getItem(LOCAL_KEY)||"[]"), editing={siteId:null,surveyId:null}, objs=[], sb=null, cloud=false;
@@ -138,11 +138,212 @@ async function saveCurrent(){if(!val("siteName")){alert("Standort fehlt");return
 function openSite(id){let s=db.find(x=>x.id===id);if(!s)return;detailBox.innerHTML=`<button class="ghost small" onclick="view('sites')">← Zurück</button><h2>${s.id} · ${s.name}</h2><p>${s.street||""}, ${s.city||""}<br>${s.contact||""} ${s.phone||""}</p><p><b>Standort-Historie:</b> Alle Aufnahmen dieses Standorts sind unten chronologisch aufgeführt.</p><div class="actions"><button onclick="newSurveyForSite('${s.id}')">Neue Aufnahme</button><button class="ghost" onclick="editSiteOnly('${s.id}')">Standort bearbeiten</button><button class="secondary" onclick="pdfSite('${s.id}')">Standort PDF</button></div><h3 class="sub">Aufnahmen</h3>`;(s.surveys||[]).slice().sort((a,b)=>b.created-a.created).forEach(u=>{let d=document.createElement("div");d.className="item";d.innerHTML=`<b>${u.id} · ${u.date}</b><p>${u.by} · ${u.project||"-"} · ${(u.objects||[]).length} Objekt(e)</p><span class="bad ${u.status}">${u.status}</span><div class="actions"><button class="secondary small" onclick="pdfSurvey('${s.id}','${u.id}')">PDF</button><button class="ghost small" onclick="editSurvey('${s.id}','${u.id}')">Bearbeiten</button></div>`;detailBox.appendChild(d)});view("detail")}
 async function loadFromCloud(show){if(!cloud||!sb)return;try{const {data,error}=await sb.from("nasima_data").select("data").eq("id","main").maybeSingle();if(error){if(show)alert("Cloud laden Fehler: "+error.message);return}if(data&&data.data){db=data.data;persist();render();if(show)alert("Cloud geladen.")}}catch(e){if(show)alert("Cloud Fehler: "+e.message)}}
 async function syncNow(show=true){if(!cloud||!sb){if(show)alert("Supabase nicht verfügbar.");return}try{const {error}=await sb.from("nasima_data").upsert({id:"main",data:db,updated_at:new Date().toISOString()});if(error)throw error;if(show)alert("Synchronisiert.")}catch(e){alert("Supabase Fehler: "+e.message)}}
-function exportJSON(){download(new Blob([JSON.stringify({version:"5.2",data:db},null,2)],{type:"application/json"}),"nasima_v54_backup.json")}
+function exportJSON(){download(new Blob([JSON.stringify({version:"5.5",data:db},null,2)],{type:"application/json"}),"nasima_v55_backup.json")}
 function importJSON(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=x=>{let j=JSON.parse(x.target.result);db=Array.isArray(j)?j:j.data||[];persist();render()};r.readAsText(f)}
 function download(blob,name){let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href)}
-function pdfAll(){makePDF(db,"nasima_alle.pdf")}function pdfSite(id){makePDF([db.find(s=>s.id===id)],"nasima_"+id+".pdf")}function pdfSurvey(sid,uid){let s=db.find(x=>x.id===sid),u=s?.surveys.find(x=>x.id===uid);makePDF([{...s,surveys:[u]}],"nasima_"+uid+".pdf")}
-function makePDF(sites,name){const{jsPDF}=window.jspdf,pdf=new jsPDF("p","mm","a4");let page=0;sites.filter(Boolean).forEach(s=>(s.surveys||[]).forEach(u=>(u.objects||[]).forEach(o=>{if(page)pdf.addPage();page++;pdf.setFillColor(88,88,73);pdf.rect(0,0,210,24,"F");pdf.setTextColor(255,255,255);pdf.setFontSize(16);pdf.text("NASIMA",15,10);pdf.setFontSize(9);pdf.text("Aufnahme Tool V5.4",15,17);pdf.setTextColor(0,0,0);pdf.setFontSize(14);pdf.text("Aufnahmeprotokoll",15,34);pdf.setFontSize(9);pdf.text(`Standort: ${s.id} · ${s.name}`,15,45);pdf.text(`Adresse: ${s.street}, ${s.city}`,15,52);pdf.text(`Aufnahme: ${u.id} · ${u.date} · ${u.by}`,15,59);let img=o.images?.gesamt||o.images?.front||Object.values(o.images||{})[0];if(img)pdf.addImage(img,"JPEG",15,68,180,82);pdf.setFontSize(8);pdf.text("Skizze Gebäude / Fassade",15,154);if(o.sk2)pdf.addImage(o.sk2,"PNG",15,158,86,35);pdf.text("Skizze Unterkonstruktion",109,154);if(o.sk1)pdf.addImage(o.sk1,"PNG",109,158,86,35);let y=200;[["Objekt",o.name],["Art",o.type],["Ausführung",o.exec],["Masse",`${o.w} x ${o.h} x ${o.d} mm`],["Montagehöhe",o.mh],["Fassade",`${o.fmat} / ${o.fcol}`],["Zugang",o.access],["Unterkonstruktion",o.sub],["Trafo",`${o.trafo} / ${o.tw} / ${o.volt}`],["Kabel",o.cable],["Ampel",o.ampel],["Notizen",o.notes]].forEach(r=>{pdf.setFont(undefined,"bold");pdf.text(r[0]+":",15,y);pdf.setFont(undefined,"normal");pdf.text(String(r[1]||"-"),55,y,{maxWidth:140});y+=7});pdf.setFillColor(183,187,0);pdf.rect(0,288,210,9,"F")})));if(!page){alert("Keine Daten");return}pdf.save(name)}
+
+function pdfAll(){makePDF(db,"nasima_alle_standorte.pdf")}
+function pdfSite(id){makePDF([db.find(s=>s.id===id)],"nasima_"+safeFile(id)+".pdf")}
+function pdfSurvey(sid,uid){
+ let s=db.find(x=>x.id===sid),u=s?.surveys.find(x=>x.id===uid);
+ if(!s||!u){alert("Aufnahme nicht gefunden.");return}
+ makePDF([{...s,surveys:[u]}],"nasima_"+safeFile(uid)+".pdf")
+}
+function safeFile(s){return String(s||"aufnahme").replace(/[^a-z0-9äöüÄÖÜ_-]+/gi,"_")}
+
+function makePDF(sites,name){
+ const {jsPDF}=window.jspdf;
+ const pdf=new jsPDF("p","mm","a4");
+ let pageCount=0;
+
+ const A4={w:210,h:297};
+ const M={l:15,r:15,t:32,b:15};
+
+ function newPage(title,site,survey,obj,pageType){
+  if(pageCount>0)pdf.addPage();
+  pageCount++;
+  pdf.setFillColor(88,88,73);
+  pdf.rect(0,0,210,24,"F");
+  pdf.setTextColor(255,255,255);
+  pdf.setFontSize(15);
+  pdf.setFont(undefined,"bold");
+  pdf.text("NASIMA SERVICES",15,9);
+  pdf.setFontSize(8);
+  pdf.setFont(undefined,"normal");
+  pdf.text("Aufnahme Tool V5.5",15,16);
+  pdf.setFillColor(183,187,0);
+  pdf.rect(0,288,210,9,"F");
+  pdf.setTextColor(88,88,73);
+  pdf.setFontSize(8);
+  pdf.text(pageType||"Aufnahmeprotokoll",15,294);
+  pdf.setTextColor(0,0,0);
+  pdf.setFontSize(14);
+  pdf.setFont(undefined,"bold");
+  pdf.text(title,15,34);
+  pdf.setFont(undefined,"normal");
+  pdf.setFontSize(8.5);
+  let y=44;
+  pdf.text(`Standort: ${site.id||"-"} · ${site.name||"-"}`,15,y); y+=5;
+  pdf.text(`Adresse: ${site.street||"-"}, ${site.city||"-"}`,15,y); y+=5;
+  if(site.gps){pdf.text(`GPS: ${site.gps}`,15,y); y+=5;}
+  pdf.text(`Aufnahme: ${survey.id||"-"} · ${survey.date||"-"} · ${survey.by||"-"}`,15,y); y+=5;
+  pdf.text(`Projekt: ${survey.project||"-"} · Objekt: ${obj.name||obj.type||"-"}`,15,y);
+  return 68;
+ }
+
+ function addImageFit(img,x,y,w,h){
+  if(!img)return false;
+  try{
+   pdf.addImage(img,"JPEG",x,y,w,h,undefined,"FAST");
+   return true;
+  }catch(e){
+   try{pdf.addImage(img,"PNG",x,y,w,h,undefined,"FAST");return true;}catch(err){return false;}
+  }
+ }
+
+ function fieldRows(o){
+  return [
+   ["Objektbezeichnung",o.name],
+   ["Beschriftungsart",o.type],
+   ["Ausführung",o.exec],
+   ["Breite",o.w ? `${o.w} mm` : ""],
+   ["Höhe",o.h ? `${o.h} mm` : ""],
+   ["Tiefe",o.d ? `${o.d} mm` : ""],
+   ["Montagehöhe",o.mh ? `${o.mh} m` : ""],
+   ["Fassadenfarbe",o.fcol],
+   ["Fassadenmaterial",o.fmat],
+   ["Zugang",o.access],
+   ["Demontage",o.demo],
+   ["Unterkonstruktion",o.sub],
+   ["UK Material",o.submat],
+   ["UK Details",o.subdet],
+   ["Bohrlöcher",o.holes],
+   ["Trafo / Netzteil Typ",o.trafo],
+   ["Trafo Leistung",o.tw],
+   ["Spannung",o.volt],
+   ["Standort Trafo",o.tloc],
+   ["Kabelherkunft",o.cable],
+   ["Kabel sichtbar",o.cvis],
+   ["Kabelreserve",o.cres],
+   ["Schaltart",o.sw],
+   ["Automatischer Ampelvorschlag",o.autoAmpel],
+   ["Finale Ampel",o.ampel],
+   ["Besonderheiten",o.notes]
+  ];
+ }
+
+ function addTable(rows,startY){
+  let y=startY;
+  pdf.setFontSize(8.5);
+  rows.forEach(r=>{
+   if(y>278){
+    pdf.addPage();
+    y=20;
+   }
+   pdf.setFont(undefined,"bold");
+   pdf.text(String(r[0]||""),15,y);
+   pdf.setFont(undefined,"normal");
+   let txt=String(r[1]||"-");
+   let lines=pdf.splitTextToSize(txt,128);
+   pdf.text(lines,68,y);
+   y+=Math.max(6,lines.length*4.2);
+  });
+ }
+
+ function addOverview(site,survey,o){
+  let y=newPage("Objektübersicht",site,survey,o,"Seite 1 · Übersicht");
+  let main=o.images?.gesamt||o.images?.front||Object.values(o.images||{})[0];
+  if(main){
+   addImageFit(main,15,y,180,92);
+   y+=100;
+  }else{
+   pdf.rect(15,y,180,92);
+   pdf.text("Kein Hauptbild vorhanden",78,y+46);
+   y+=100;
+  }
+  pdf.setFontSize(12);
+  pdf.setFont(undefined,"bold");
+  pdf.text("Kurzangaben",15,y);
+  y+=8;
+  addTable([
+   ["Objekt",o.name],
+   ["Art",o.type],
+   ["Masse",`${o.w||"-"} x ${o.h||"-"} x ${o.d||"-"} mm`],
+   ["Montagehöhe",o.mh ? `${o.mh} m` : "-"],
+   ["Fassade",`${o.fmat||"-"} / ${o.fcol||"-"}`],
+   ["Unterkonstruktion",o.sub],
+   ["Trafo",`${o.trafo||"-"} / ${o.tw||"-"} / ${o.volt||"-"}`],
+   ["Kabel",o.cable],
+   ["Ampel",o.ampel],
+   ["Notizen",o.notes]
+  ],y);
+ }
+
+ function addPhotoPages(site,survey,o){
+  const photos=[
+   ["Gesamtansicht",o.images?.gesamt],
+   ["Frontansicht",o.images?.front],
+   ["Befestigung",o.images?.befestigung],
+   ["Trafo / Kabel",o.images?.trafo],
+   ["Fassade",o.images?.fassade],
+   ["Schaden / Besonderheit",o.images?.schaden]
+  ].filter(p=>!!p[1]);
+
+  if(!photos.length)return;
+
+  for(let i=0;i<photos.length;i+=4){
+   newPage("Fotodokumentation",site,survey,o,`Fotos ${Math.floor(i/4)+1}`);
+   const subset=photos.slice(i,i+4);
+   const boxes=[
+    [15,70,86,72],
+    [109,70,86,72],
+    [15,155,86,72],
+    [109,155,86,72]
+   ];
+   subset.forEach((p,idx)=>{
+    let [x,y,w,h]=boxes[idx];
+    pdf.setFontSize(9);
+    pdf.setFont(undefined,"bold");
+    pdf.text(p[0],x,y-4);
+    addImageFit(p[1],x,y,w,h);
+   });
+  }
+ }
+
+ function addSketchPage(site,survey,o){
+  if(!o.sk1&&!o.sk2)return;
+  newPage("Skizzen",site,survey,o,"Skizzen");
+  pdf.setFontSize(10);
+  pdf.setFont(undefined,"bold");
+  pdf.text("Gebäude / Fassade",15,72);
+  if(o.sk2){addImageFit(o.sk2,15,78,180,80)}else{pdf.rect(15,78,180,80);pdf.text("Keine Skizze vorhanden",78,118)}
+  pdf.text("Unterkonstruktion",15,172);
+  if(o.sk1){addImageFit(o.sk1,15,178,180,80)}else{pdf.rect(15,178,180,80);pdf.text("Keine Skizze vorhanden",78,218)}
+ }
+
+ function addTechPage(site,survey,o){
+  newPage("Technische Dokumentation",site,survey,o,"Technische Daten");
+  pdf.setFontSize(12);
+  pdf.setFont(undefined,"bold");
+  pdf.text("Vollständige technische Angaben",15,72);
+  addTable(fieldRows(o),82);
+ }
+
+ sites.filter(Boolean).forEach(site=>{
+  (site.surveys||[]).forEach(survey=>{
+   (survey.objects||[]).forEach(obj=>{
+    addOverview(site,survey,obj);
+    addPhotoPages(site,survey,obj);
+    addSketchPage(site,survey,obj);
+    addTechPage(site,survey,obj);
+   });
+  });
+ });
+
+ if(!pageCount){alert("Keine Daten für PDF vorhanden.");return}
+ pdf.save(name);
+}
+
 </script>
 </body>
 </html>
