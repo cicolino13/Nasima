@@ -3,347 +3,155 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>cicolino13 Aufnahme Tool 4.1.1</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
-window.addEventListener("error",function(e){
- console.error("App Fehler:", e.message, e.filename, e.lineno);
-});
-</script>
+<title>Nasima Aufnahme Tool V5.1.1</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--g:#b7bb00;--d:#585849;--r:#e41d13;--bg:#f4f5f0;--line:#deded6;--txt:#25251f;--soft:#fbfbf7}
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--txt)}
+:root{--g:#b7bb00;--d:#585849;--r:#e41d13;--bg:#f4f5f0;--line:#deded6;--txt:#25251f}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--txt)}
 h1,h2,h3{color:var(--d);margin-top:0}p{color:#77776d;line-height:1.45}
 input,select,textarea,button{font:inherit;width:100%}
 input,select,textarea{border:1px solid var(--line);border-radius:14px;background:#fff;padding:13px 14px;margin-top:7px}
-textarea{min-height:88px;resize:vertical}
-label{display:block;font-weight:800;font-size:14px;margin-top:14px;color:#37372f}
+textarea{min-height:88px;resize:vertical}label{display:block;font-weight:800;font-size:14px;margin-top:14px}
 button{border:0;border-radius:15px;padding:14px 16px;background:var(--g);color:#282819;font-weight:900;cursor:pointer;margin-top:14px}
-button.secondary{background:var(--d);color:white}button.danger{background:var(--r);color:white}button.ghost{background:#eeeede;color:var(--d)}
-button.small{padding:9px 10px;font-size:13px;margin-top:8px}
+button.secondary{background:var(--d);color:#fff}button.danger{background:var(--r);color:#fff}button.ghost{background:#eeeede;color:var(--d)}
+button.small{padding:9px 10px;font-size:13px;margin-top:8px}.hidden{display:none!important}
 .login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(135deg,#585849,#24241f)}
-.login-box{background:white;max-width:420px;width:100%;padding:34px;border-radius:28px;box-shadow:0 25px 70px #0005}
+.login-box{background:#fff;max-width:430px;width:100%;padding:34px;border-radius:28px;box-shadow:0 25px 70px #0005}
 .mark{width:58px;height:58px;border-radius:17px;background:var(--g);display:flex;align-items:center;justify-content:center;font-weight:900;color:var(--d);font-size:22px;margin-bottom:18px}
-.app{display:none}
-header{position:sticky;top:0;z-index:20;background:white;border-bottom:1px solid var(--line)}
-.header-inner{max-width:1220px;margin:auto;padding:14px 20px;display:flex;justify-content:space-between;gap:14px;align-items:center}
-.brand{display:flex;gap:12px;align-items:center;font-weight:900;color:var(--d);text-transform:uppercase}.brand .mark{width:38px;height:38px;border-radius:12px;margin:0;font-size:14px}
-.nav{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:1220px;margin:auto;padding:0 20px 14px}
-.nav button{margin:0;padding:11px 8px;background:#eeeede;color:var(--d);font-size:13px}.nav button.active{background:var(--g)}
-.hero{background:linear-gradient(135deg,rgba(88,88,73,.97),rgba(31,31,27,.97));color:white;padding:38px 20px}
-.hero-inner{max-width:1220px;margin:auto}.kicker{color:var(--g);font-weight:900;text-transform:uppercase;letter-spacing:.12em;margin-bottom:12px}
-.hero h1{color:white;font-size:clamp(32px,6vw,58px);line-height:1.02;margin-bottom:12px}.hero p{color:#ededdf;max-width:780px;font-size:18px}
-.grid,.row,.stats,.actions,.toolbar,.photo-grid{display:grid;grid-template-columns:1fr;gap:12px}
-.stats{grid-template-columns:repeat(2,1fr);margin-top:24px}.stat{background:#ffffff1a;border:1px solid #ffffff26;border-radius:18px;padding:14px}.stat strong{display:block;font-size:24px;color:white}.stat span{font-size:13px;color:#ddd}
-main{max-width:1220px;margin:auto;padding:24px 20px 80px;display:grid;gap:22px}
-.card{background:white;border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:0 12px 30px rgba(40,40,30,.06)}
-.hidden{display:none!important}.addr{position:relative}.addr input{padding-right:60px}.gpsbtn{position:absolute;right:6px;top:6px;width:44px;height:44px;margin:0;padding:0}
-.map{display:none;margin-top:14px;border:1px solid var(--line);border-radius:18px;overflow:hidden}.map iframe{width:100%;height:220px;border:0}
-.item{border:1px solid var(--line);border-radius:18px;padding:16px;background:white;margin-top:12px}.item-head{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
-.bad{display:inline-block;border-radius:999px;padding:6px 9px;background:#eeeede;color:var(--d);font-size:12px;font-weight:900;margin:4px 4px 0 0}.activeStatus{background:#eaf6de}.maintenance{background:#fff4d6}.inactive{background:#ffe3e0}.archived{background:#eee}.open{background:#eaf6de}.done{background:#e6f0ff}
-.thumb{width:96px;height:72px;border-radius:12px;object-fit:cover;border:1px solid var(--line);background:#f2f2eb}
-.sub{border-top:1px solid var(--line);padding-top:18px;margin:28px 0 4px}
-.object{background:var(--soft);border:1px solid var(--line);border-left:7px solid var(--g);border-radius:20px;padding:20px;margin-top:18px}
-.accordion summary{cursor:pointer;font-weight:900;color:var(--d);padding:12px;background:#eeeede;border-radius:14px}
-.accordion[open] summary{background:var(--g)}
-.photo{background:white;border:1px solid var(--line);border-radius:18px;padding:12px}.prev{width:100%;max-height:220px;object-fit:cover;border-radius:14px;border:1px solid var(--line);display:none;margin-top:10px}
-.skbox{background:white;border:1px solid var(--line);border-radius:18px;padding:12px;margin-top:10px}.sketch{width:100%;height:220px;border:2px dashed var(--line);border-radius:14px;background:white;touch-action:none}.skact{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.ampel{display:grid;grid-template-columns:1fr;gap:12px;background:#f1f1e8;border-radius:16px;padding:14px;margin-top:18px}
-.dot{display:inline-block;width:14px;height:14px;border-radius:50%;background:#34a853;margin-right:8px}.yellow{background:#ff9800}.red{background:var(--r)}
-.notice{background:#fffbe8;border:1px solid #e8dfaa;color:#5c5318;padding:12px;border-radius:16px}
-@media(min-width:780px){
-.row{grid-template-columns:2fr 1fr 1fr}.stats{grid-template-columns:repeat(4,1fr)}.grid{grid-template-columns:repeat(2,1fr)}.toolbar{grid-template-columns:2fr 1fr 1fr}.photo-grid{grid-template-columns:repeat(3,1fr)}.actions{grid-template-columns:repeat(4,1fr)}.ampel{grid-template-columns:1fr 1fr}.nav{display:flex}.nav button{width:auto;min-width:140px}
-}
+.app{display:none}header{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line)}
+.header-inner{max-width:1220px;margin:auto;padding:14px 20px;display:flex;justify-content:space-between;gap:14px;align-items:center}.brand{display:flex;gap:12px;align-items:center;font-weight:900;color:var(--d);text-transform:uppercase}.brand .mark{width:38px;height:38px;border-radius:12px;margin:0;font-size:14px}
+.nav{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:1220px;margin:auto;padding:0 20px 14px}.nav button{margin:0;padding:11px 8px;background:#eeeede;color:var(--d);font-size:13px}.nav button.active{background:var(--g)}
+.hero{background:linear-gradient(135deg,rgba(88,88,73,.97),rgba(31,31,27,.97));color:white;padding:34px 20px}.hero-inner{max-width:1220px;margin:auto}.kicker{color:var(--g);font-weight:900;text-transform:uppercase;letter-spacing:.12em}.hero h1{color:white;font-size:clamp(30px,6vw,56px);line-height:1.02}.hero p{color:#eee}
+main{max-width:1220px;margin:auto;padding:24px 20px 80px;display:grid;gap:22px}.card{background:white;border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:0 12px 30px rgba(40,40,30,.06)}
+.grid,.row,.stats,.actions,.toolbar,.photo-grid{display:grid;grid-template-columns:1fr;gap:12px}.stats{grid-template-columns:repeat(2,1fr);margin-top:20px}.stat{background:#ffffff1a;border:1px solid #ffffff26;border-radius:18px;padding:14px}.stat strong{display:block;font-size:24px;color:white}.stat span{font-size:13px;color:#ddd}
+.item{border:1px solid var(--line);border-radius:18px;padding:16px;background:#fff;margin-top:12px}.bad{display:inline-block;border-radius:999px;padding:6px 9px;background:#eeeede;color:var(--d);font-size:12px;font-weight:900;margin:4px 4px 0 0}.open{background:#eaf6de}.done{background:#e6f0ff}.archived{background:#eee}
+.sub{border-top:1px solid var(--line);padding-top:18px;margin:28px 0 4px}.photo{background:#fff;border:1px solid var(--line);border-radius:18px;padding:12px}.prev{width:100%;max-height:220px;object-fit:cover;border-radius:14px;border:1px solid var(--line);display:none;margin-top:10px}.file-hidden{display:none!important}.photo-actions{display:grid;grid-template-columns:1fr;gap:8px;margin-top:8px}.camera-note{font-size:12px;color:#77776d;margin-top:6px}
+.obj{background:#fbfbf7;border:1px solid var(--line);border-left:7px solid var(--g);border-radius:20px;padding:20px;margin-top:18px}.obj summary{cursor:pointer;font-weight:900;color:var(--d);padding:12px;background:#eeeede;border-radius:14px}.obj[open] summary{background:var(--g)}
+.notice{background:#fffbe8;border:1px solid #e8dfaa;color:#5c5318;padding:12px;border-radius:16px}.muted{color:#77776d;font-size:13px}
+@media(min-width:780px){.row{grid-template-columns:2fr 1fr 1fr}.stats{grid-template-columns:repeat(4,1fr)}.grid{grid-template-columns:repeat(2,1fr)}.toolbar{grid-template-columns:2fr 1fr 1fr}.actions{grid-template-columns:repeat(4,1fr)}.photo-grid{grid-template-columns:repeat(3,1fr)}.photo-actions{grid-template-columns:1fr 1fr}.nav{display:flex}.nav button{width:auto;min-width:140px}}
 </style>
 </head>
 <body>
 <section class="login" id="login">
-<div class="login-box">
-<div class="mark">C13</div>
-<h1>cicolino13 Aufnahme Tool</h1>
-<p>Version 4.1.1 – Standortverwaltung mit Aufnahmen und Objekten.</p>
-<div class="notice">Passwort: <b>cicolino13</b><br><small>Falls der Login nicht reagiert: Seite neu laden und Passwort exakt klein schreiben.</small></div>
-<p id="loginError" style="display:none;color:var(--r);font-weight:900">Falsches Passwort. Bitte exakt <b>cicolino13</b> eingeben.</p>
-<label>Passwort</label>
-<input id="password" type="password" onkeydown="if(event.key==='Enter')doLogin()">
-<button type="button" onclick="doLogin()">Einloggen</button>
-</div>
+  <div class="login-box">
+    <div class="mark">V5</div>
+    <h1>Nasima Aufnahme Tool</h1>
+    <p>Cloud-ready V5.1 mit nachträglicher Bearbeitung.</p>
+    <div class="notice">User: <b>Marco Cassani</b> oder <b>Hans Zwahlen</b><br>Passwort: <b>Neon1234</b></div>
+    <p id="loginError" style="display:none;color:var(--r);font-weight:900">Login falsch.</p>
+    <label>Benutzer</label><select id="loginUser"><option>Marco Cassani</option><option>Hans Zwahlen</option></select>
+    <label>Passwort</label><input id="loginPass" type="password" onkeydown="if(event.key==='Enter')doLogin()">
+    <button onclick="doLogin()">Einloggen</button>
+  </div>
 </section>
-
 <div class="app" id="app">
 <header>
-<div class="header-inner">
-<div class="brand"><div class="mark">C13</div> Aufnahme Tool 4.1.1</div>
-<button style="max-width:140px;margin:0" onclick="location.reload()">Abmelden</button>
-</div>
-<div class="nav">
-<button id="navDash" onclick="showView('dashboard')">🏠 Dashboard</button>
-<button id="navSites" onclick="showView('sites')">📍 Standorte</button>
-<button id="navNew" onclick="newSiteFlow()">➕ Neue Aufnahme</button>
-<button id="navSettings" onclick="showView('settings')">⚙️ Einstellungen</button>
-</div>
+  <div class="header-inner"><div class="brand"><div class="mark">V5</div> Nasima Aufnahme Tool</div><button style="max-width:150px;margin:0" onclick="logout()">Abmelden</button></div>
+  <div class="nav"><button id="nDash" onclick="view('dash')">Dashboard</button><button id="nSites" onclick="view('sites')">Standorte</button><button id="nNew" onclick="newSite()">Neue Aufnahme</button><button id="nSet" onclick="view('settings')">Einstellungen</button></div>
 </header>
-
-<section class="hero">
-<div class="hero-inner">
-<div class="kicker">Standorte → Aufnahmen → Objekte</div>
-<h1>Signage-Aufnahmen sauber verwalten.</h1>
-<p>Jeder Standort erscheint nur einmal. Darunter liegen die historischen Aufnahmen und darin die einzelnen Logos, Pylone oder Beschriftungen.</p>
-<div class="row">
-<input id="globalSearch" placeholder="Suche nach Standort, Adresse, Projekt, Datum..." oninput="renderAll()">
-<button onclick="newSiteFlow()">Neue Aufnahme</button>
-<button class="secondary" onclick="pdfAll()">Alle PDF</button>
-</div>
-<div class="stats">
-<div class="stat"><strong id="cSites">0</strong><span>Standorte</span></div>
-<div class="stat"><strong id="cSurveys">0</strong><span>Aufnahmen</span></div>
-<div class="stat"><strong id="cObjects">0</strong><span>Objekte</span></div>
-<div class="stat"><strong id="cOpen">0</strong><span>Offen</span></div>
-</div>
-</div>
-</section>
-
+<section class="hero"><div class="hero-inner"><div class="kicker">V5 · Cloud-ready</div><h1>Standorte, Aufnahmen und Objekte bearbeiten.</h1><p>Nachträgliches Bearbeiten ist vorgesehen. Ohne Supabase-Konfiguration läuft die App lokal im Browser; mit Supabase synchronisiert sie über Geräte.</p><div class="row"><input id="q" placeholder="Suche..." oninput="render()"><button onclick="newSite()">Neue Aufnahme</button><button class="secondary" onclick="pdfAll()">PDF alle</button></div><div class="stats"><div class="stat"><strong id="sSites">0</strong><span>Standorte</span></div><div class="stat"><strong id="sSurveys">0</strong><span>Aufnahmen</span></div><div class="stat"><strong id="sObjects">0</strong><span>Objekte</span></div><div class="stat"><strong id="sMode">Lokal</strong><span>Speicher</span></div></div></div></section>
 <main>
-<section class="card" id="dashboardView">
-<h2>Dashboard</h2>
-<p>Letzte bearbeitete Standorte und offene Aufnahmen.</p>
-<div id="recentList"></div>
-</section>
-
-<section class="card hidden" id="sitesView">
-<h2>Standorte</h2>
-<p>Jeder Standort wird nur einmal geführt. Öffne den Standort, um Aufnahmen und Objekte zu sehen.</p>
-<div class="toolbar">
-<input id="siteSearch" placeholder="Standort suchen..." oninput="renderSites()">
-<select id="siteStatusFilter" onchange="renderSites()"><option value="all">Alle Status</option><option value="active">Aktiv</option><option value="maintenance">Wartung</option><option value="inactive">Ausser Betrieb</option><option value="archived">Archiv</option></select>
-<select id="siteSort" onchange="renderSites()"><option value="recent">Zuletzt bearbeitet</option><option value="az">Name A-Z</option><option value="count">Meiste Aufnahmen</option></select>
-</div>
-<button onclick="newSiteFlow()">Neuen Standort / neue Aufnahme erfassen</button>
-<div id="siteList"></div>
-</section>
-
-<section class="card hidden" id="siteDetailView"><div id="siteDetail"></div></section>
-
-<section class="card hidden" id="siteFormView">
-<h2 id="siteFormTitle">Standort erfassen</h2>
+<section class="card" id="dash"><h2>Dashboard</h2><div id="recent"></div></section>
+<section class="card hidden" id="sites"><h2>Standorte</h2><div class="toolbar"><input id="siteQ" placeholder="Standort suchen..." oninput="renderSites()"><select id="siteFilter" onchange="renderSites()"><option value="all">Alle</option><option value="active">Aktiv</option><option value="archived">Archiv</option></select><select id="sort" onchange="renderSites()"><option value="recent">Zuletzt</option><option value="az">A-Z</option></select></div><div id="siteList"></div></section>
+<section class="card hidden" id="detail"><div id="detailBox"></div></section>
+<section class="card hidden" id="form"><h2 id="formTitle">Neue Aufnahme</h2>
 <div class="grid">
-<label>Standort-ID<input id="fSiteId" readonly></label>
-<label>Standortstatus<select id="fSiteStatus"><option value="active">Aktiv</option><option value="maintenance">Wartung</option><option value="inactive">Ausser Betrieb</option><option value="archived">Archiv</option></select></label>
-<label>Kunde / Standortname *<input id="fSiteName" onblur="checkDuplicateSite()"></label>
-<label>Strasse / Hausnummer<div class="addr"><input id="fStreet"><button class="gpsbtn" type="button" onclick="gps()">📍</button></div></label>
-<label>PLZ / Ort<input id="fCity"></label>
-<label>Ansprechpartner<input id="fContact"></label>
-<label>Telefon<input id="fPhone"></label>
-<label>GPS<input id="fGps"></label>
-<label>Google Maps<input id="fMaps"></label>
-<label>Standortfoto<input type="file" accept="image/*" capture="environment" onchange="loadSitePhoto(event)"></label>
-<label>Notizen<textarea id="fSiteNotes"></textarea></label>
+<label>Standort-ID<input id="siteId" readonly></label><label>Status<select id="siteStatus"><option value="active">Aktiv</option><option value="archived">Archiv</option></select></label>
+<label>Kunde / Standort<input id="siteName"></label><label>Adresse<input id="street"></label><label>PLZ / Ort<input id="city"></label><label>Ansprechpartner<input id="contact"></label><label>Telefon<input id="phone"></label><label>GPS<input id="gps"></label>
 </div>
-<img id="sitePhotoPrev" class="prev" style="max-width:320px">
-<div id="dupNote" class="notice hidden"></div>
-<div class="map" id="map"><iframe id="mapframe"></iframe></div>
-
-<h3 class="sub">Neue Aufnahme</h3>
-<div class="grid">
-<label>Aufnahme-ID<input id="fSurveyId" readonly></label>
-<label>Status<select id="fSurveyStatus"><option value="open">Offen</option><option value="done">Erledigt</option><option value="archived">Archiv</option></select></label>
-<label>Datum<input id="fDate" type="date"></label>
-<label>Aufgenommen von<select id="fBy"><option value="">— auswählen —</option><option>Marco Cassani</option><option>Hans Zwahlen</option></select></label>
-<label>Projektnummer<input id="fProject"></label>
-<label>Bemerkungen Aufnahme<textarea id="fSurveyNotes"></textarea></label>
-</div>
-<h3 class="sub">Objekte</h3>
-<div id="objects"></div>
-<div class="actions">
-<button onclick="addObject()">Objekt hinzufügen</button>
-<button class="secondary" onclick="saveSiteSurvey()">Speichern</button>
-<button class="ghost" onclick="showView('sites')">Schliessen</button>
-<button class="danger" onclick="resetCurrentForm()">Formular leeren</button>
-</div>
+<h3 class="sub">Aufnahme</h3><div class="grid"><label>Aufnahme-ID<input id="surveyId" readonly></label><label>Status<select id="surveyStatus"><option value="open">Offen</option><option value="done">Erledigt</option><option value="archived">Archiv</option></select></label><label>Datum<input id="date" type="date"></label><label>Aufgenommen von<select id="by"><option>Marco Cassani</option><option>Hans Zwahlen</option></select></label><label>Projektnummer<input id="project"></label><label>Notizen<textarea id="surveyNotes"></textarea></label></div>
+<h3 class="sub">Objekte</h3><div id="objects"></div>
+<div class="actions"><button onclick="addObject()">Objekt hinzufügen</button><button class="secondary" onclick="saveCurrent()">Speichern</button><button class="ghost" onclick="view('sites')">Schliessen</button><button class="danger" onclick="clearCurrent()">Formular leeren</button></div>
 </section>
-
-<section class="card hidden" id="settingsView">
-<h2>Einstellungen / Backup</h2>
-<p>Daten werden lokal im Browser gespeichert. Für langfristige Sicherheit regelmässig JSON exportieren.</p>
-<div class="actions">
-<button onclick="exportJSON()">JSON Backup exportieren</button>
-<button class="ghost" onclick="document.getElementById('importer').click()">JSON importieren</button>
-<button class="secondary" onclick="pdfAll()">Alle Standorte als PDF</button>
-</div>
-<input id="importer" type="file" accept=".json,application/json" style="display:none" onchange="importJSON(event)">
-</section>
+<section class="card hidden" id="settings"><h2>Einstellungen</h2><div class="notice"><b>Supabase aktivieren:</b><br>Trage unten deine Supabase URL und deinen Public Anon Key ein. Danach werden die Daten in der Cloud gespeichert.</div><label>Supabase URL<input id="supabaseUrl" placeholder="https://xxxxx.supabase.co"></label><label>Supabase Public Anon Key<input id="supabaseKey"></label><button onclick="saveSupabaseConfig()">Supabase speichern</button><div class="actions"><button onclick="exportJSON()">JSON Backup</button><button class="ghost" onclick="document.getElementById('importer').click()">JSON Import</button><button class="secondary" onclick="syncNow()">Jetzt synchronisieren</button></div><input id="importer" type="file" accept=".json,application/json" style="display:none" onchange="importJSON(event)"><p class="muted">Supabase ist in dieser Datei bereits eingetragen. Wichtig: In Supabase muss die Tabelle <b>nasima_data</b> existieren. Für echte Cloud-Fotos braucht es später zusätzlich einen Supabase Storage Bucket.</p></section>
 </main>
 </div>
-
 <script>
-const PASS="cicolino13", KEY="c13_tool_v41_stable";
-let db=JSON.parse(localStorage.getItem(KEY)||"[]");
-let currentSiteId=null, sitePhoto="", objs=[];
+const PASS="Neon1234", LOCAL_KEY="nasima_v51_local", CFG_KEY="nasima_v51_cfg";
+const SUPABASE_URL="https://dolhtxjkphldsyhfpjfh.supabase.co";
+const SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRvbGh0eGprcGhsZHN5aGZwamZoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA0ODg5MTMsImV4cCI6MjA5NjA2NDkxM30.-gc-ISS_alym71K9_SeLpn5uqcvBagVbzWrRBcGUth0";
+let currentUser="", db=JSON.parse(localStorage.getItem(LOCAL_KEY)||"[]"), editing={siteId:null,surveyId:null}, objs=[], sb=null, cloud=false;
 
-document.addEventListener("DOMContentLoaded",()=>{showView("dashboard");renderAll();});
-
-function doLogin(){
- try{
-  var input=document.getElementById("password");
-  var login=document.getElementById("login");
-  var app=document.getElementById("app");
-  var error=document.getElementById("loginError");
-  var pw=(input && input.value ? input.value : "").trim();
-  if(pw==="cicolino13"){
-   if(login) login.style.display="none";
-   if(app) app.style.display="block";
-   try{renderAll();}catch(e){console.warn("Render warning:",e);}
-   return true;
-  }
-  if(error) error.style.display="block";
-  return false;
- }catch(e){
-  alert("Login-Fehler: "+e.message);
-  return false;
+document.addEventListener("DOMContentLoaded",async()=>{
+ loadConfig();
+ document.getElementById("date").valueAsDate=new Date();
+ await loadFromCloud();
+ render();
+});
+async function doLogin(){
+ let pw=document.getElementById("loginPass").value.trim();
+ if(pw===PASS){
+  currentUser=document.getElementById("loginUser").value;
+  document.getElementById("login").style.display="none";
+  document.getElementById("app").style.display="block";
+  await loadFromCloud();
+  render();
+ }else document.getElementById("loginError").style.display="block";
+}
+function logout(){location.reload()}
+function loadConfig(){
+ let c=JSON.parse(localStorage.getItem(CFG_KEY)||"{}");
+ let url=c.url||SUPABASE_URL;
+ let key=c.key||SUPABASE_ANON_KEY;
+ if(document.getElementById("supabaseUrl"))document.getElementById("supabaseUrl").value=url;
+ if(document.getElementById("supabaseKey"))document.getElementById("supabaseKey").value=key;
+ if(url&&key&&window.supabase){
+  sb=window.supabase.createClient(url,key);
+  cloud=true;
  }
 }
-function persist(){localStorage.setItem(KEY,JSON.stringify(db))}
-function siteId(){return"ST-"+String(db.length+1).padStart(6,"0")}
-function surveyId(){return"AP-"+new Date().getFullYear()+"-"+String(Date.now()).slice(-5)}
-function val(id){let e=document.getElementById(id);return e?e.value||"":""}
-function setVal(id,v){let e=document.getElementById(id);if(e)e.value=v||""}
-
-function showView(v){
- ["dashboardView","sitesView","siteDetailView","siteFormView","settingsView"].forEach(id=>document.getElementById(id).classList.add("hidden"));
- ["navDash","navSites","navNew","navSettings"].forEach(id=>document.getElementById(id).classList.remove("active"));
- if(v==="dashboard"){document.getElementById("dashboardView").classList.remove("hidden");document.getElementById("navDash").classList.add("active")}
- if(v==="sites"){document.getElementById("sitesView").classList.remove("hidden");document.getElementById("navSites").classList.add("active");renderSites()}
- if(v==="detail"){document.getElementById("siteDetailView").classList.remove("hidden")}
- if(v==="form"){document.getElementById("siteFormView").classList.remove("hidden");document.getElementById("navNew").classList.add("active")}
- if(v==="settings"){document.getElementById("settingsView").classList.remove("hidden");document.getElementById("navSettings").classList.add("active")}
- renderStats();renderRecent();
-}
-function renderAll(){renderStats();renderRecent();renderSites()}
-function renderStats(){
- let surveys=db.reduce((a,s)=>a+s.surveys.length,0);
- let objects=db.reduce((a,s)=>a+s.surveys.reduce((b,u)=>b+u.objects.length,0),0);
- let open=db.reduce((a,s)=>a+s.surveys.filter(u=>u.status==="open").length,0);
- document.getElementById("cSites").textContent=db.length;
- document.getElementById("cSurveys").textContent=surveys;
- document.getElementById("cObjects").textContent=objects;
- document.getElementById("cOpen").textContent=open;
-}
-function siteText(s){return (s.id+" "+s.name+" "+s.street+" "+s.city+" "+s.contact+" "+s.phone+" "+s.surveys.map(u=>u.id+" "+u.project+" "+u.date+" "+u.by+" "+u.objects.map(o=>o.name+" "+o.type).join(" ")).join(" ")).toLowerCase()}
-function renderRecent(){
- let q=(document.getElementById("globalSearch")?.value||"").toLowerCase();
- let arr=[...db].filter(s=>siteText(s).includes(q)).sort((a,b)=>(b.updated||0)-(a.updated||0)).slice(0,10);
- let el=document.getElementById("recentList"); if(!el)return;
- el.innerHTML=arr.length?"":"<div class='item'><b>Noch keine Standorte</b><p>Erstelle die erste Aufnahme.</p></div>";
- arr.forEach(s=>el.appendChild(siteCard(s,true)));
-}
-function renderSites(){
- let q=((document.getElementById("siteSearch")?.value||"")+" "+(document.getElementById("globalSearch")?.value||"")).toLowerCase().trim();
- let status=val("siteStatusFilter")||"all", sort=val("siteSort")||"recent";
- let arr=[...db].filter(s=>siteText(s).includes(q)&&(status==="all"||s.status===status));
- if(sort==="recent")arr.sort((a,b)=>(b.updated||0)-(a.updated||0));
- if(sort==="az")arr.sort((a,b)=>(a.name||"").localeCompare(b.name||""));
- if(sort==="count")arr.sort((a,b)=>b.surveys.length-a.surveys.length);
- let list=document.getElementById("siteList"); if(!list)return;
- list.innerHTML=arr.length?"":"<div class='item'><b>Keine Standorte gefunden</b></div>";
- arr.forEach(s=>list.appendChild(siteCard(s,false)));
-}
-function siteCard(s,compact){
- let last=s.surveys.slice().sort((a,b)=>(b.created||0)-(a.created||0))[0];
- let img=s.photo?`<img class="thumb" src="${s.photo}">`:`<div class="thumb"></div>`;
- let div=document.createElement("div"); div.className="item";
- div.innerHTML=`<div class="item-head">${img}<div style="flex:1"><b>${s.id} · ${s.name}</b><p>${s.street}, ${s.city}<br>${s.surveys.length} Aufnahme(n) · Letzte: ${last?last.date:"-"}</p><span class="bad ${statusClass(s.status)}">${siteStatusText(s.status)}</span></div></div><div class="actions"><button class="secondary small" onclick="openSite('${s.id}')">Öffnen</button><button class="small" onclick="addSurveyToSite('${s.id}')">Neue Aufnahme</button><button class="ghost small" onclick="pdfSite('${s.id}')">Standort PDF</button>${compact?"":`<button class="danger small" onclick="deleteSite('${s.id}')">Standort löschen</button>`}</div>`;
- return div;
-}
-function statusClass(s){return s==="active"?"activeStatus":s}
-function siteStatusText(s){return s==="maintenance"?"Wartung":s==="inactive"?"Ausser Betrieb":s==="archived"?"Archiv":"Aktiv"}
-function surveyStatusText(s){return s==="done"?"Erledigt":s==="archived"?"Archiv":"Offen"}
-
-function newSiteFlow(){
- clearForm();currentSiteId=null;setVal("fSiteId",siteId());setVal("fSurveyId",surveyId());document.getElementById("fDate").valueAsDate=new Date();document.getElementById("siteFormTitle").textContent="Neuer Standort / neue Aufnahme";showView("form");addObject();
-}
-function addSurveyToSite(id){
- let s=db.find(x=>x.id===id);if(!s)return;clearForm();currentSiteId=id;
- setVal("fSiteId",s.id);setVal("fSiteStatus",s.status);setVal("fSiteName",s.name);setVal("fStreet",s.street);setVal("fCity",s.city);setVal("fContact",s.contact);setVal("fPhone",s.phone);setVal("fGps",s.gps);setVal("fMaps",s.maps);setVal("fSiteNotes",s.notes);sitePhoto=s.photo||"";showSitePhoto();
- setVal("fSurveyId",surveyId());document.getElementById("fDate").valueAsDate=new Date();document.getElementById("siteFormTitle").textContent="Neue Aufnahme zu bestehendem Standort";showView("form");addObject();
-}
-function clearForm(){
- ["fSiteId","fSiteName","fStreet","fCity","fContact","fPhone","fGps","fMaps","fSiteNotes","fSurveyId","fProject","fSurveyNotes"].forEach(id=>setVal(id,""));
- setVal("fSiteStatus","active");setVal("fSurveyStatus","open");setVal("fBy","");document.getElementById("fDate").valueAsDate=new Date();
- objs=[];document.getElementById("objects").innerHTML="";sitePhoto="";document.getElementById("sitePhotoPrev").style.display="none";document.getElementById("dupNote").classList.add("hidden");document.getElementById("map").style.display="none";
-}
-function resetCurrentForm(){if(confirm("Nur aktuelles Formular leeren?")){let old=currentSiteId;clearForm();if(old)addSurveyToSite(old);else newSiteFlow()}}
-function checkDuplicateSite(){
- let name=val("fSiteName").trim().toLowerCase();if(!name||currentSiteId)return;
- let found=db.find(s=>(s.name||"").toLowerCase()===name),note=document.getElementById("dupNote");
- if(found){note.classList.remove("hidden");note.innerHTML=`⚠ Standort existiert bereits: <b>${found.id} · ${found.name}</b><br><button onclick="addSurveyToSite('${found.id}')">Neue Aufnahme zu diesem Standort hinzufügen</button>`}else note.classList.add("hidden");
-}
-async function gps(){
- if(!navigator.geolocation){alert("GPS nicht verfügbar");return}
- navigator.geolocation.getCurrentPosition(async p=>{
-  let lat=p.coords.latitude.toFixed(6),lng=p.coords.longitude.toFixed(6),link=`https://www.google.com/maps?q=${lat},${lng}`;
-  setVal("fGps",lat+", "+lng);setVal("fMaps",link);document.getElementById("map").style.display="block";document.getElementById("mapframe").src=`https://maps.google.com/maps?q=${lat},${lng}&z=17&output=embed`;
-  try{let r=await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`),d=await r.json(),a=d.address||{};setVal("fStreet",[a.road,a.house_number].filter(Boolean).join(" ")||d.display_name||link);setVal("fCity",[a.postcode,a.city||a.town||a.village].filter(Boolean).join(" "))}catch(e){}
- },()=>alert("GPS-Berechtigung prüfen"),{enableHighAccuracy:true,timeout:10000})
-}
-function loadSitePhoto(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=x=>{sitePhoto=x.target.result;showSitePhoto()};r.readAsDataURL(f)}
-function showSitePhoto(){let im=document.getElementById("sitePhotoPrev");if(sitePhoto){im.src=sitePhoto;im.style.display="block"}else im.style.display="none"}
-
-function addObject(data=null){
- let id=data?.id||Date.now()+Math.floor(Math.random()*999),o={id,images:data?.images||{}};objs.push(o);
- let el=document.createElement("details");el.className="object accordion";el.open=objs.length===1;el.id="obj"+id;
- el.innerHTML=`<summary>Objekt ${objs.length}${data?.name?": "+data.name:""}</summary>
- <h3 class="sub">Fotos</h3><div class="photo-grid">${photo(id,"gesamt","Gesamtansicht")}${photo(id,"front","Frontansicht")}${photo(id,"befestigung","Befestigung")}${photo(id,"trafo","Trafo / Kabel")}${photo(id,"fassade","Fassade")}${photo(id,"schaden","Schaden / Besonderheit")}</div>
- <h3 class="sub">Produkt / Masse</h3><div class="grid"><label>Objektbezeichnung<input id="name${id}"></label><label>Beschriftungsart<select id="type${id}"><option>Leuchtschrift</option><option>Leuchtkasten</option><option>Pylon / Stele</option><option>Tankstellensignage</option><option>Digital Signage</option><option>Beschriftung</option><option>Beleuchtung</option><option>Sonstiges</option></select></label><label>Ausführung<select id="exec${id}"><option>Frontleuchtend</option><option>Rückleuchtend</option><option>Front- und rückleuchtend</option><option>Vollacryl</option><option>Unbeleuchtet</option><option>Bestehend / unbekannt</option></select></label><label>Breite mm<input id="w${id}" type="number"></label><label>Höhe mm<input id="h${id}" type="number"></label><label>Tiefe mm<input id="d${id}" type="number"></label><label>Montagehöhe m<input id="mh${id}"></label></div>
- <h3 class="sub">Fassade / Zugang</h3><div class="grid"><label>Fassadenfarbe<input id="fcol${id}"></label><label>Fassadenmaterial<select id="fmat${id}"><option>Beton</option><option>Verputz</option><option>Alucobond</option><option>Metallfassade</option><option>Glas</option><option>Holz</option><option>Sandwichpaneel</option><option>Naturstein</option><option>Unbekannt</option></select></label><label>Zugang<select id="access${id}" onchange="suggestAmpel(${id})"><option>Leiter möglich</option><option>Hebebühne nötig</option><option>Kran nötig</option><option>Dachzugang</option><option>Innenmontage</option><option>Unklar</option></select></label><label>Demontage<select id="demo${id}" onchange="suggestAmpel(${id})"><option>Nein</option><option>Ja</option><option>Unklar</option></select></label></div>
- <h3 class="sub">Unterkonstruktion</h3><div class="grid"><label>Befestigungsart<select id="sub${id}" onchange="suggestAmpel(${id})"><option>Direktmontage</option><option>Montageschiene</option><option>Leiterkonstruktion</option><option>Rohrrahmen</option><option>Distanzmontage</option><option>Rückwandkasten</option><option>Bestehende Konstruktion</option><option>Neue Unterkonstruktion nötig</option><option>Unbekannt</option></select></label><label>Material<select id="submat${id}"><option>Aluminium</option><option>Stahl verzinkt</option><option>Edelstahl</option><option>Holz</option><option>Kunststoff</option><option>Unbekannt</option></select></label><label>Details<input id="subdet${id}"></label><label>Bohrlöcher<select id="holes${id}"><option>Ja</option><option>Nein</option><option>Unbekannt</option></select></label></div>
- <h3 class="sub">Skizzen</h3><div class="grid"><div class="skbox"><b>Unterkonstruktion</b><canvas class="sketch" id="sk1${id}"></canvas><div class="skact"><button type="button" onclick="clearSketch('sk1${id}')">Löschen</button><button type="button" class="secondary" onclick="initSketch('sk1${id}')">Aktivieren</button></div></div><div class="skbox"><b>Gebäude / Fassade</b><canvas class="sketch" id="sk2${id}"></canvas><div class="skact"><button type="button" onclick="clearSketch('sk2${id}')">Löschen</button><button type="button" class="secondary" onclick="initSketch('sk2${id}')">Aktivieren</button></div></div></div>
- <h3 class="sub">Elektro / Bestand</h3><div class="grid"><label>Trafo / Netzteil Typ<input id="trafo${id}"></label><label>Leistung<input id="tw${id}"></label><label>Spannung<select id="volt${id}"><option>12V</option><option>24V</option><option>230V</option><option>Unbekannt</option></select></label><label>Standort Trafo<input id="tloc${id}"></label><label>Kabelherkunft<input id="cable${id}"></label><label>Kabel sichtbar<select id="cvis${id}"><option>Ja</option><option>Nein</option><option>Teilweise</option></select></label><label>Kabelreserve<input id="cres${id}"></label><label>Schaltart<select id="sw${id}"><option>Dauerstrom</option><option>Zeitschaltuhr</option><option>Dämmerungsschalter</option><option>Fernsteuerung</option><option>Gebäudeleitsystem</option><option>Unbekannt</option></select></label></div>
- <div class="ampel"><div><b>Automatischer Vorschlag</b><p id="autoAmpel${id}"><span class="dot"></span>Einfach</p></div><label>Manuelle Bewertung<select id="manualAmpel${id}"><option value="auto">Automatisch übernehmen</option><option value="easy">Einfach</option><option value="medium">Mittel</option><option value="hard">Komplex</option></select></label></div>
- <label>Besonderheiten<textarea id="notes${id}"></textarea></label><button class="danger" onclick="removeObject(${id})">Objekt löschen</button>`;
- document.getElementById("objects").appendChild(el);
- setTimeout(()=>{initSketch("sk1"+id);initSketch("sk2"+id);if(data)fillObject(id,data);suggestAmpel(id)},80)
-}
-function photo(id,key,label){return`<div class="photo"><label>${label}<input type="file" accept="image/*" capture="environment" onchange="loadImage(event,${id},'${key}')"></label><img class="prev" id="img${key}${id}"></div>`}
-function loadImage(e,id,key){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=x=>{let im=document.getElementById(`img${key}${id}`);im.src=x.target.result;im.style.display="block";let o=objs.find(a=>a.id===id);if(o)o.images[key]=x.target.result};r.readAsDataURL(f)}
+function saveSupabaseConfig(){let url=val("supabaseUrl"),key=val("supabaseKey");localStorage.setItem(CFG_KEY,JSON.stringify({url,key}));alert("Gespeichert. Seite neu laden.");}
+function persist(){localStorage.setItem(LOCAL_KEY,JSON.stringify(db))}
+function val(id){let e=document.getElementById(id);return e?e.value||"":""}function setv(id,v){let e=document.getElementById(id);if(e)e.value=v||""}
+function siteId(){return"ST-"+String(Date.now()).slice(-6)}function surveyId(){return"AP-"+new Date().getFullYear()+"-"+String(Date.now()).slice(-5)}
+function view(v){["dash","sites","detail","form","settings"].forEach(id=>document.getElementById(id).classList.add("hidden"));["nDash","nSites","nNew","nSet"].forEach(id=>document.getElementById(id).classList.remove("active"));document.getElementById(v).classList.remove("hidden");if(v==="dash")nDash.classList.add("active");if(v==="sites"){nSites.classList.add("active");renderSites()}if(v==="settings")nSet.classList.add("active");render();}
+function render(){stats();renderRecent();renderSites();}
+function stats(){let surveys=db.reduce((a,s)=>a+s.surveys.length,0),objects=db.reduce((a,s)=>a+s.surveys.reduce((b,u)=>b+u.objects.length,0),0);sSites.textContent=db.length;sSurveys.textContent=surveys;sObjects.textContent=objects;sMode.textContent=cloud?"Cloud":"Lokal";}
+function text(s){return (s.id+" "+s.name+" "+s.street+" "+s.city+" "+s.surveys.map(u=>u.id+" "+u.project+" "+u.by+" "+u.date+" "+u.objects.map(o=>o.name+" "+o.type).join(" ")).join(" ")).toLowerCase()}
+function renderRecent(){let q=val("q").toLowerCase(),arr=[...db].filter(s=>text(s).includes(q)).sort((a,b)=>(b.updated||0)-(a.updated||0)).slice(0,8);recent.innerHTML=arr.length?"":"<div class='item'>Noch keine Standorte.</div>";arr.forEach(s=>recent.appendChild(card(s)))}
+function renderSites(){let q=(val("q")+" "+val("siteQ")).toLowerCase(),f=val("siteFilter")||"all",arr=[...db].filter(s=>text(s).includes(q)&&(f==="all"||s.status===f));if(val("sort")==="az")arr.sort((a,b)=>a.name.localeCompare(b.name));else arr.sort((a,b)=>(b.updated||0)-(a.updated||0));siteList.innerHTML=arr.length?"":"<div class='item'>Keine Standorte gefunden.</div>";arr.forEach(s=>siteList.appendChild(card(s)))}
+function card(s){let last=s.surveys.slice().sort((a,b)=>(b.created||0)-(a.created||0))[0],d=document.createElement("div");d.className="item";d.innerHTML=`<b>${s.id} · ${s.name}</b><p>${s.street}, ${s.city}<br>${s.surveys.length} Aufnahme(n) · Letzte: ${last?last.date:"-"}</p><span class="bad ${s.status}">${s.status==="archived"?"Archiv":"Aktiv"}</span><div class="actions"><button class="secondary small" onclick="openSite('${s.id}')">Öffnen</button><button class="small" onclick="newSurveyForSite('${s.id}')">Neue Aufnahme</button><button class="ghost small" onclick="editSiteOnly('${s.id}')">Standort bearbeiten</button><button class="ghost small" onclick="pdfSite('${s.id}')">PDF</button></div>`;return d}
+function newSite(){clearForm();editing={siteId:null,surveyId:null};setv("siteId",siteId());setv("surveyId",surveyId());setv("by",currentUser||"Marco Cassani");date.valueAsDate=new Date();view("form");addObject();}
+function newSurveyForSite(id){let s=db.find(x=>x.id===id);if(!s)return;clearForm();editing={siteId:id,surveyId:null};fillSite(s);setv("surveyId",surveyId());setv("by",currentUser||"Marco Cassani");date.valueAsDate=new Date();view("form");addObject();}
+function editSiteOnly(id){let s=db.find(x=>x.id===id);if(!s)return;clearForm();editing={siteId:id,surveyId:null};fillSite(s);setv("surveyId",surveyId());view("form")}
+function editSurvey(siteId,surveyId){let s=db.find(x=>x.id===siteId),u=s?.surveys.find(x=>x.id===surveyId);if(!s||!u)return;clearForm();editing={siteId,surveyId};fillSite(s);setv("surveyId",u.id);setv("surveyStatus",u.status);setv("date",u.date);setv("by",u.by);setv("project",u.project);setv("surveyNotes",u.notes);u.objects.forEach(o=>addObject(o));view("form")}
+function fillSite(s){setv("siteId",s.id);setv("siteStatus",s.status);setv("siteName",s.name);setv("street",s.street);setv("city",s.city);setv("contact",s.contact);setv("phone",s.phone);setv("gps",s.gps);}
+function clearForm(){["siteId","siteName","street","city","contact","phone","gps","surveyId","project","surveyNotes"].forEach(id=>setv(id,""));setv("siteStatus","active");setv("surveyStatus","open");setv("by",currentUser);objs=[];objects.innerHTML="";}
+function clearCurrent(){if(confirm("Formular leeren?"))clearForm();}
+function addObject(data=null){let id=data?.id||Date.now()+Math.floor(Math.random()*999);objs.push({id,images:data?.images||{}});let el=document.createElement("details");el.className="obj";el.open=objs.length===1;el.id="obj"+id;el.innerHTML=`<summary>${data?.name||"Objekt "+objs.length}</summary><div class="grid"><label>Objektbezeichnung<input id="name${id}"></label><label>Beschriftungsart<select id="type${id}"><option>Leuchtschrift</option><option>Leuchtkasten</option><option>Pylon / Stele</option><option>Beschriftung</option><option>Digital Signage</option></select></label><label>Breite mm<input id="w${id}"></label><label>Höhe mm<input id="h${id}"></label><label>Tiefe mm<input id="d${id}"></label><label>Unterkonstruktion<input id="sub${id}"></label><label>Trafo<input id="trafo${id}"></label><label>Kabelherkunft<input id="cable${id}"></label><label>Ampel<select id="ampel${id}"><option value="easy">Einfach</option><option value="medium">Mittel</option><option value="hard">Komplex</option></select></label><label>Notizen<textarea id="notes${id}"></textarea></label></div><h3 class="sub">Fotos manuell aus Album hochladen</h3><div class="photo-grid">${photo(id,"gesamt","Gesamtansicht")}${photo(id,"front","Frontansicht")}${photo(id,"detail","Detail")}</div><button class="danger" onclick="removeObject(${id})">Objekt löschen</button>`;objects.appendChild(el);if(data)setTimeout(()=>fillObject(id,data),50);}
+function photo(id,key,label){return`<div class="photo"><b>${label}</b><input type="file" accept="image/*" onchange="loadImage(event,${id},'${key}')"><div class="camera-note">Bitte zuerst mit Kamera-App fotografieren, dann hier aus Album wählen.</div><img class="prev" id="img${key}${id}"></div>`}
+async function loadImage(e,id,key){let f=e.target.files[0];if(!f)return;let data=await compress(f);let im=document.getElementById("img"+key+id);im.src=data;im.style.display="block";let o=objs.find(x=>x.id===id);if(o)o.images[key]=data}
+function compress(file){return new Promise((res,rej)=>{let r=new FileReader();r.onload=e=>{let img=new Image();img.onload=()=>{let w=img.width,h=img.height,max=1600;if(w>h&&w>max){h=Math.round(h*max/w);w=max}else if(h>=w&&h>max){w=Math.round(w*max/h);h=max}let c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(img,0,0,w,h);res(c.toDataURL("image/jpeg",.78))};img.src=e.target.result};r.readAsDataURL(file)})}
 function removeObject(id){objs=objs.filter(o=>o.id!==id);document.getElementById("obj"+id).remove()}
-function suggestAmpel(id){let a=val("access"+id),s=val("sub"+id),d=val("demo"+id),level="easy",text="Einfach",dot="dot";if(a.includes("Hebebühne")||d==="Ja"||s.includes("Neue")){level="medium";text="Mittel";dot="dot yellow"}if(a.includes("Kran")||a.includes("Dach")||s==="Unbekannt"){level="hard";text="Komplex";dot="dot red"}let p=document.getElementById("autoAmpel"+id);if(p){p.innerHTML=`<span class="${dot}"></span>${text}`;p.dataset.level=level}}
-function initSketch(id){let c=document.getElementById(id);if(!c)return;let r=c.getBoundingClientRect();c.width=r.width;c.height=220;let ctx=c.getContext("2d");ctx.lineWidth=3;ctx.lineCap="round";ctx.strokeStyle="#585849";let dr=false,p=e=>{let rr=c.getBoundingClientRect(),t=e.touches?e.touches[0]:e;return{x:t.clientX-rr.left,y:t.clientY-rr.top}};c.onmousedown=c.ontouchstart=e=>{e.preventDefault();dr=true;let q=p(e);ctx.beginPath();ctx.moveTo(q.x,q.y)};c.onmousemove=c.ontouchmove=e=>{if(!dr)return;e.preventDefault();let q=p(e);ctx.lineTo(q.x,q.y);ctx.stroke()};c.onmouseup=c.onmouseleave=c.ontouchend=()=>dr=false}
-function clearSketch(id){let c=document.getElementById(id);if(c)c.getContext("2d").clearRect(0,0,c.width,c.height)}
-function collectObject(o){let id=o.id,auto=document.getElementById("autoAmpel"+id)?.dataset.level||"easy",manual=val("manualAmpel"+id);return{id,images:o.images||{},name:val("name"+id),type:val("type"+id),exec:val("exec"+id),w:val("w"+id),h:val("h"+id),d:val("d"+id),mh:val("mh"+id),fcol:val("fcol"+id),fmat:val("fmat"+id),access:val("access"+id),demo:val("demo"+id),sub:val("sub"+id),submat:val("submat"+id),subdet:val("subdet"+id),holes:val("holes"+id),trafo:val("trafo"+id),tw:val("tw"+id),volt:val("volt"+id),tloc:val("tloc"+id),cable:val("cable"+id),cvis:val("cvis"+id),cres:val("cres"+id),sw:val("sw"+id),autoAmpel:auto,manualAmpel:manual,finalAmpel:manual==="auto"?auto:manual,notes:val("notes"+id),sk1:document.getElementById("sk1"+id)?.toDataURL("image/png"),sk2:document.getElementById("sk2"+id)?.toDataURL("image/png")}}
-function saveSiteSurvey(){
- if(!val("fSiteName")){alert("Standortname fehlt");return}
- if(objs.length===0){alert("Bitte mindestens ein Objekt erfassen.");return}
- let site=currentSiteId?db.find(s=>s.id===currentSiteId):null;
- if(!site){site={id:val("fSiteId")||siteId(),surveys:[],created:Date.now()};db.push(site)}
- Object.assign(site,{status:val("fSiteStatus"),name:val("fSiteName"),street:val("fStreet"),city:val("fCity"),contact:val("fContact"),phone:val("fPhone"),gps:val("fGps"),maps:val("fMaps"),notes:val("fSiteNotes"),photo:sitePhoto,updated:Date.now()});
- let survey={id:val("fSurveyId")||surveyId(),status:val("fSurveyStatus"),date:val("fDate"),by:val("fBy"),project:val("fProject"),notes:val("fSurveyNotes"),objects:objs.map(collectObject),created:Date.now(),updated:Date.now()};
- site.surveys.push(survey);
- persist();renderAll();openSite(site.id);alert("Gespeichert");
+function collectObject(o){let id=o.id;return{id,images:o.images||{},name:val("name"+id),type:val("type"+id),w:val("w"+id),h:val("h"+id),d:val("d"+id),sub:val("sub"+id),trafo:val("trafo"+id),cable:val("cable"+id),ampel:val("ampel"+id),notes:val("notes"+id)}}
+function fillObject(id,o){["name","type","w","h","d","sub","trafo","cable","ampel","notes"].forEach(k=>setv(k+id,o[k]));Object.entries(o.images||{}).forEach(([k,v])=>{let im=document.getElementById("img"+k+id);if(im&&v){im.src=v;im.style.display="block"}})}
+async function saveCurrent(){if(!val("siteName")){alert("Standort fehlt");return}let site=editing.siteId?db.find(s=>s.id===editing.siteId):null;if(!site){site={id:val("siteId")||siteId(),surveys:[],created:Date.now()};db.push(site)}Object.assign(site,{status:val("siteStatus"),name:val("siteName"),street:val("street"),city:val("city"),contact:val("contact"),phone:val("phone"),gps:val("gps"),updated:Date.now()});let survey={id:val("surveyId")||surveyId(),status:val("surveyStatus"),date:val("date"),by:val("by"),project:val("project"),notes:val("surveyNotes"),objects:objs.map(collectObject),updated:Date.now(),created:Date.now(),history:[{at:new Date().toISOString(),by:currentUser,action:editing.surveyId?"bearbeitet":"erstellt"}]};if(editing.surveyId){let i=site.surveys.findIndex(u=>u.id===editing.surveyId);survey.created=site.surveys[i].created;survey.history=[...(site.surveys[i].history||[]),{at:new Date().toISOString(),by:currentUser,action:"bearbeitet"}];site.surveys[i]=survey}else site.surveys.push(survey);persist();await syncNow(false);render();openSite(site.id);alert("Gespeichert");}
+function openSite(id){let s=db.find(x=>x.id===id);if(!s)return;detailBox.innerHTML=`<button class="ghost small" onclick="view('sites')">← Zurück</button><h2>${s.id} · ${s.name}</h2><p>${s.street}, ${s.city}<br>${s.contact||""} ${s.phone||""}</p><div class="actions"><button onclick="newSurveyForSite('${s.id}')">Neue Aufnahme</button><button class="ghost" onclick="editSiteOnly('${s.id}')">Standort bearbeiten</button><button class="secondary" onclick="pdfSite('${s.id}')">Standort PDF</button></div><h3 class="sub">Aufnahmen</h3>`;s.surveys.slice().sort((a,b)=>b.created-a.created).forEach(u=>{let d=document.createElement("div");d.className="item";d.innerHTML=`<b>${u.id} · ${u.date}</b><p>${u.by} · ${u.project||"-"} · ${u.objects.length} Objekt(e)</p><span class="bad ${u.status}">${u.status}</span><div class="actions"><button class="secondary small" onclick="pdfSurvey('${s.id}','${u.id}')">PDF</button><button class="ghost small" onclick="editSurvey('${s.id}','${u.id}')">Bearbeiten</button></div>`;detailBox.appendChild(d)});view("detail")}
+
+async function loadFromCloud(){
+ if(!cloud||!sb)return;
+ try{
+  const {data,error}=await sb.from("nasima_data").select("data").eq("id","main").maybeSingle();
+  if(error){
+   console.warn("Supabase load error:",error.message);
+   return;
+  }
+  if(data && data.data){
+   db=data.data;
+   persist();
+  }
+ }catch(e){
+  console.warn("Cloud konnte nicht geladen werden:",e.message);
+ }
 }
-function openSite(id){
- let s=db.find(x=>x.id===id);if(!s)return;currentSiteId=id;
- let detail=document.getElementById("siteDetail"),img=s.photo?`<img class="thumb" style="width:180px;height:125px" src="${s.photo}">`:"";
- detail.innerHTML=`<button class="ghost small" onclick="showView('sites')">← Zurück</button><h2>${s.id} · ${s.name}</h2>${img}<p>${s.street}, ${s.city}<br>GPS: ${s.gps||"-"}<br>Ansprechpartner: ${s.contact||"-"} · ${s.phone||"-"}</p><span class="bad ${statusClass(s.status)}">${siteStatusText(s.status)}</span><div class="actions"><button onclick="addSurveyToSite('${s.id}')">Neue Aufnahme hinzufügen</button><button class="secondary" onclick="pdfSite('${s.id}')">Standort PDF</button></div><h3 class="sub">Aufnahmen</h3><div id="surveyList"></div>`;
- let list=detail.querySelector("#surveyList");
- s.surveys.slice().sort((a,b)=>(b.created||0)-(a.created||0)).forEach(u=>{let item=document.createElement("div");item.className="item";item.innerHTML=`<b>${u.id} · ${u.date}</b><p>${u.by||"-"} · Projekt: ${u.project||"-"} · ${u.objects.length} Objekt(e)</p><span class="bad ${u.status}">${surveyStatusText(u.status)}</span><div class="actions"><button class="secondary small" onclick="pdfSurvey('${s.id}','${u.id}')">Aufnahme PDF</button><button class="ghost small" onclick="toggleSurveyObjects('${s.id}','${u.id}',this)">Objekte anzeigen</button></div><div class="hidden" id="surveyObjects-${u.id}"></div>`;list.appendChild(item)});
- showView("detail");
-}
-function toggleSurveyObjects(siteId,surveyId,btn){let s=db.find(x=>x.id===siteId),u=s?.surveys.find(x=>x.id===surveyId),box=document.getElementById("surveyObjects-"+surveyId);if(!u||!box)return;if(!box.classList.contains("hidden")){box.classList.add("hidden");btn.textContent="Objekte anzeigen";return}box.innerHTML="";u.objects.forEach((o,i)=>{let d=document.createElement("div");d.className="item";d.innerHTML=`<b>Objekt ${i+1}: ${o.name||o.type}</b><p>${o.type} · ${o.w} x ${o.h} x ${o.d} mm · Aufwand: ${ampelText(o.finalAmpel)}</p><button class="small secondary" onclick="pdfObject('${siteId}','${surveyId}',${i})">Objekt PDF</button>`;box.appendChild(d)});box.classList.remove("hidden");btn.textContent="Objekte ausblenden"}
-function ampelText(s){return s==="hard"?"Komplex":s==="medium"?"Mittel":"Einfach"}
-function deleteSite(id){if(!confirm("Diesen Standort inklusive aller Aufnahmen löschen?"))return;db=db.filter(s=>s.id!==id);persist();renderAll()}
-function exportJSON(){let blob=new Blob([JSON.stringify({version:"4.1",exported:new Date().toISOString(),sites:db},null,2)],{type:"application/json"});download(blob,"cicolino13_standorte_backup.json")}
-function importJSON(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=x=>{try{let j=JSON.parse(x.target.result),arr=Array.isArray(j)?j:j.sites;if(!Array.isArray(arr))throw 1;if(confirm(arr.length+" Standort(e) importieren?")){arr.forEach(s=>{s.id=s.id||siteId();s.updated=Date.now();db.push(s)});persist();renderAll()}}catch(err){alert("JSON ungültig")}};r.readAsText(f)}
+
+async function syncNow(show=true){if(!cloud||!sb){if(show)alert("Supabase ist noch nicht konfiguriert.");return}try{await sb.from("nasima_data").upsert({id:"main",data:db,updated_at:new Date().toISOString()});if(show)alert("Synchronisiert.");}catch(e){alert("Supabase Fehler: "+e.message)}}
+function exportJSON(){download(new Blob([JSON.stringify({version:"5",data:db},null,2)],{type:"application/json"}),"nasima_v5_backup.json")}
+function importJSON(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=x=>{let j=JSON.parse(x.target.result);db=Array.isArray(j)?j:j.data||[];persist();render()};r.readAsText(f)}
 function download(blob,name){let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href)}
-
-function pdfAll(){makePDF(db,"cicolino13_alle_standorte.pdf")}
-function pdfSite(id){makePDF([db.find(s=>s.id===id)],"cicolino13_"+id+".pdf")}
-function pdfSurvey(siteId,surveyId){let s=db.find(x=>x.id===siteId),u=s?.surveys.find(x=>x.id===surveyId);if(!s||!u)return;makePDF([{...s,surveys:[u]}],"cicolino13_"+surveyId+".pdf")}
-function pdfObject(siteId,surveyId,index){let s=db.find(x=>x.id===siteId),u=s?.surveys.find(x=>x.id===surveyId),o=u?.objects[index];if(!s||!u||!o)return;makePDF([{...s,surveys:[{...u,objects:[o]}]}],"cicolino13_objekt_"+(index+1)+".pdf")}
-function makePDF(sites,name){const{jsPDF}=window.jspdf,pdf=new jsPDF("p","mm","a4");let page=0;sites.filter(Boolean).forEach(s=>s.surveys.forEach(u=>u.objects.forEach((o,i)=>{if(page)pdf.addPage();page++;pdf.setFillColor(88,88,73);pdf.rect(0,0,210,24,"F");pdf.setTextColor(255,255,255);pdf.setFontSize(16);pdf.text("CICOLINO13",15,10);pdf.setFontSize(9);pdf.text("Aufnahme Tool 4.1.1",15,17);pdf.setTextColor(0,0,0);pdf.setFontSize(15);pdf.text("Signage Aufnahmeprotokoll",15,34);pdf.setFontSize(8.5);pdf.text(`Standort: ${s.id} · ${s.name}`,15,44);pdf.text(`Adresse: ${s.street}, ${s.city}`,15,50,{maxWidth:150});pdf.text(`Aufnahme: ${u.id} · ${surveyStatusText(u.status)}`,15,62);pdf.text(`Datum: ${u.date||"-"} · Von: ${u.by||"-"}`,15,68);pdf.text(`Projekt: ${u.project||"-"}`,15,74);if(s.gps)pdf.text(`GPS: ${s.gps}`,105,74);let main=o.images.gesamt||o.images.front||Object.values(o.images||{})[0];if(main)pdf.addImage(main,"JPEG",15,82,86,53);else{pdf.rect(15,82,86,53);pdf.text("Kein Hauptfoto",42,109)}if(o.images.front)pdf.addImage(o.images.front,"JPEG",109,82,86,53);else{pdf.rect(109,82,86,53);pdf.text("Keine Frontansicht",136,109)}pdf.setFontSize(9);pdf.text("Skizze Unterkonstruktion",15,143);if(o.sk1)pdf.addImage(o.sk1,"PNG",15,147,86,38);pdf.text("Skizze Gebäude / Fassade",109,143);if(o.sk2)pdf.addImage(o.sk2,"PNG",109,147,86,38);let y=194;pdf.setFontSize(10);pdf.text("Technische Angaben",15,y);y+=6;pdf.setFontSize(7.8);[["Objekt",o.name],["Art",o.type],["Ausführung",o.exec],["Masse",`${o.w} x ${o.h} x ${o.d} mm`],["Montagehöhe",`${o.mh} m`],["Fassade",`${o.fmat} / ${o.fcol}`],["Zugang",o.access],["Demontage",o.demo],["Unterkonstruktion",o.sub],["UK Material",o.submat],["UK Details",o.subdet],["Trafo",`${o.trafo} / ${o.tw} / ${o.volt}`],["Trafo Standort",o.tloc],["Kabel",`${o.cable} / sichtbar: ${o.cvis} / Reserve: ${o.cres}`],["Schaltart",o.sw],["Ampel Vorschlag",ampelText(o.autoAmpel)],["Ampel final",ampelText(o.finalAmpel)],["Besonderheiten",o.notes]].forEach(r=>{if(y>280)return;pdf.setFont(undefined,"bold");pdf.text(r[0]+":",15,y);pdf.setFont(undefined,"normal");pdf.text(String(r[1]||"-"),55,y,{maxWidth:140});y+=5});pdf.setFillColor(183,187,0);pdf.rect(0,288,210,9,"F");pdf.setTextColor(88,88,73);pdf.setFontSize(8);pdf.text("Erstellt mit cicolino13 Aufnahme Tool 4.1.1",15,294)})));if(!page){alert("Keine Daten für PDF vorhanden");return}pdf.save(name)}
-
-window.addEventListener("error",function(e){
- console.error("App Fehler:", e.message, e.filename, e.lineno);
-});
+function pdfAll(){makePDF(db,"nasima_alle.pdf")}function pdfSite(id){makePDF([db.find(s=>s.id===id)],"nasima_"+id+".pdf")}function pdfSurvey(sid,uid){let s=db.find(x=>x.id===sid),u=s?.surveys.find(x=>x.id===uid);makePDF([{...s,surveys:[u]}],"nasima_"+uid+".pdf")}
+function makePDF(sites,name){const{jsPDF}=window.jspdf,pdf=new jsPDF("p","mm","a4");let page=0;sites.filter(Boolean).forEach(s=>s.surveys.forEach(u=>u.objects.forEach(o=>{if(page)pdf.addPage();page++;pdf.setFillColor(88,88,73);pdf.rect(0,0,210,24,"F");pdf.setTextColor(255,255,255);pdf.setFontSize(16);pdf.text("NASIMA",15,10);pdf.setFontSize(9);pdf.text("Aufnahme Tool V5.1.1",15,17);pdf.setTextColor(0,0,0);pdf.setFontSize(14);pdf.text("Aufnahmeprotokoll",15,34);pdf.setFontSize(9);pdf.text(`Standort: ${s.id} · ${s.name}`,15,45);pdf.text(`Adresse: ${s.street}, ${s.city}`,15,52);pdf.text(`Aufnahme: ${u.id} · ${u.date} · ${u.by}`,15,59);let img=o.images.gesamt||o.images.front||Object.values(o.images||{})[0];if(img)pdf.addImage(img,"JPEG",15,68,180,82);let y=162;[["Objekt",o.name],["Art",o.type],["Masse",`${o.w} x ${o.h} x ${o.d} mm`],["Unterkonstruktion",o.sub],["Trafo",o.trafo],["Kabel",o.cable],["Ampel",o.ampel],["Notizen",o.notes]].forEach(r=>{pdf.setFont(undefined,"bold");pdf.text(r[0]+":",15,y);pdf.setFont(undefined,"normal");pdf.text(String(r[1]||"-"),55,y,{maxWidth:140});y+=7});pdf.setFillColor(183,187,0);pdf.rect(0,288,210,9,"F")})));if(!page){alert("Keine Daten");return}pdf.save(name)}
 </script>
 </body>
 </html>
