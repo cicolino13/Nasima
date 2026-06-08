@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Nasima Aufnahme Tool V5.6.2</title>
+<title>Nasima Aufnahme Tool V5.6.4</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
@@ -41,7 +41,7 @@ main{max-width:1220px;margin:auto;padding:24px 20px 80px;display:grid;gap:22px}.
 
 <div class="app" id="app">
 <header><div class="header-inner"><div class="brand"><div class="mark"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iRWJlbmVfMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAxMDkuMDMgMTE5LjQ4Ij4KICA8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMzAuMS4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogMi4xLjEgQnVpbGQgMTM2KSAgLS0+CiAgPGRlZnM+CiAgICA8c3R5bGU+CiAgICAgIC5zdDAgewogICAgICAgIHN0cm9rZTogI2ZmZWQwMDsKICAgICAgICBzdHJva2Utd2lkdGg6IDVweDsKICAgICAgfQoKICAgICAgLnN0MCwgLnN0MSB7CiAgICAgICAgZmlsbDogbm9uZTsKICAgICAgICBzdHJva2UtbWl0ZXJsaW1pdDogMTA7CiAgICAgIH0KCiAgICAgIC5zdDEgewogICAgICAgIHN0cm9rZTogI2I0YmUxMDsKICAgICAgICBzdHJva2Utd2lkdGg6IDJweDsKICAgICAgfQogICAgPC9zdHlsZT4KICA8L2RlZnM+CiAgPHBhdGggY2xhc3M9InN0MCIgZD0iTTEzNC42LDEyMy43Ii8+CiAgPHBhdGggY2xhc3M9InN0MSIgZD0iTTM4LjIyLDgwLjg0Ii8+CiAgPHBvbHlsaW5lIGNsYXNzPSJzdDEiIHBvaW50cz0iMTUuMjQgMjIuNDEgNjkuNDMgOTUuMzEgODcuNSA5NS4zMSA4Ny41IDIyLjQxIDcwLjczIDIyLjQxIDcwLjczIDcyLjczIDU1Ljg5IDUyLjEyIDM0LjQ5IDIyLjQxIDE1LjI0IDIyLjQxIDEwLjczIDI0Ljk5IDEwLjczIDEwNi4yOCAyNy41IDEwNi4yOCA0MS4wNSA5Ni42IDQxLjg2IDgwLjg0Ii8+CiAgPHBhdGggY2xhc3M9InN0MSIgZD0iTTU1Ljg5LDMyLjczbDE0Ljg0LTEwLjMyLTE0Ljg0LDEwLjMyWiIvPgogIDxsaW5lIGNsYXNzPSJzdDEiIHgxPSI1NS44OSIgeTE9IjUyLjEyIiB4Mj0iNTUuODkiIHkyPSIzMi43MyIvPgogIDxwb2x5bGluZSBjbGFzcz0ic3QxIiBwb2ludHM9IjEwLjczIDEwNi4yOCAyNy41NCA5NS44NyAyNi45NyA2MC44NyA2MC44MyAxMDYuMjggNzcuODIgMTA2LjI4IDg3LjUgOTUuMzEiLz4KPC9zdmc+" alt="NASIMA"></div> Nasima Aufnahme Tool</div><button style="max-width:150px;margin:0" onclick="location.reload()">Abmelden</button></div><div class="nav"><button id="nDash" onclick="view('dash')">Dashboard</button><button id="nSites" onclick="view('sites')">Standorte</button><button id="nNew" onclick="newSite()">Neue Aufnahme</button><button id="nSet" onclick="view('settings')">Einstellungen</button></div></header>
-<section class="hero"><div class="hero-inner"><div class="kicker">Build V5.6.2 · Supabase</div><h1>Standorte, Aufnahmen und Objekte bearbeiten.</h1><p>Standorte erscheinen einmalig. Aufnahmen können nachträglich bearbeitet werden. Fotos werden manuell aus dem Album gewählt und komprimiert.</p><div class="row"><input id="q" placeholder="Suche..." oninput="render()"><button onclick="newSite()">Neue Aufnahme</button><button class="secondary" onclick="pdfAll()">PDF alle</button></div><div class="stats"><div class="stat"><strong id="sSites">0</strong><span>Standorte</span></div><div class="stat"><strong id="sSurveys">0</strong><span>Aufnahmen</span></div><div class="stat"><strong id="sObjects">0</strong><span>Objekte</span></div><div class="stat"><strong id="sMode">Cloud</strong><span>Speicher</span></div></div></div></section>
+<section class="hero"><div class="hero-inner"><div class="kicker">Build V5.6.4 · Supabase</div><h1>Standorte, Aufnahmen und Objekte bearbeiten.</h1><p>Standorte erscheinen einmalig. Aufnahmen können nachträglich bearbeitet werden. Fotos werden manuell aus dem Album gewählt und komprimiert.</p><div class="row"><input id="q" placeholder="Suche..." oninput="render()"><button onclick="newSite()">Neue Aufnahme</button><button class="secondary" onclick="pdfAll()">PDF alle</button></div><div class="stats"><div class="stat"><strong id="sSites">0</strong><span>Standorte</span></div><div class="stat"><strong id="sSurveys">0</strong><span>Aufnahmen</span></div><div class="stat"><strong id="sObjects">0</strong><span>Objekte</span></div><div class="stat"><strong id="sMode">Cloud</strong><span>Speicher</span></div></div></div></section>
 
 <main>
 <section class="card" id="dash"><h2>Dashboard</h2><div id="recent"></div></section>
@@ -53,7 +53,7 @@ main{max-width:1220px;margin:auto;padding:24px 20px 80px;display:grid;gap:22px}.
 <h3 class="sub">Aufnahme</h3><div class="grid"><label>Aufnahme-ID<input id="surveyId" readonly></label><label>Status<select id="surveyStatus"><option value="open">Offen</option><option value="done">Erledigt</option><option value="archived">Archiv</option></select></label><label>Datum<input id="date" type="date"></label><label>Aufgenommen von<select id="by"><option>Marco Cassani</option><option>Hans Zwahlen</option></select></label><label>Projektnummer<input id="project"></label><label>Notizen<textarea id="surveyNotes"></textarea></label></div>
 <h3 class="sub">Objekte</h3><div id="objects"></div><div class="actions"><button onclick="addObject()">Objekt hinzufügen</button><button class="secondary" onclick="saveCurrent()">Speichern</button><button class="ghost" onclick="view('sites')">Schliessen</button><button class="danger" onclick="clearCurrent()">Formular leeren</button></div>
 </section>
-<section class="card hidden" id="settings"><h2>Einstellungen / Backup</h2><div class="notice">Supabase ist bereits hinterlegt. Auto-Sync prüft alle 30 Sekunden auf neue Daten. V5.6.2 speichert zuerst robust in Supabase und warnt, falls der lokale Browser-Speicher voll ist. Falls keine Daten synchronisieren: <b>supabase_setup.sql</b> im Supabase SQL Editor ausführen.</div><div class="actions"><button onclick="exportJSON()">JSON Backup</button><button class="ghost" onclick="document.getElementById('importer').click()">JSON Import</button><button class="secondary" onclick="syncNow()">Jetzt synchronisieren</button><button class="ghost" onclick="loadFromCloud(true)">Cloud neu laden</button></div><input id="importer" type="file" accept=".json,application/json" style="display:none" onchange="importJSON(event)"></section>
+<section class="card hidden" id="settings"><h2>Einstellungen / Backup</h2><div class="notice">Supabase ist bereits hinterlegt. Auto-Sync prüft alle 30 Sekunden auf neue Daten. V5.6.4 speichert zuerst robust in Supabase und warnt, falls der lokale Browser-Speicher voll ist. Falls keine Daten synchronisieren: <b>supabase_setup.sql</b> im Supabase SQL Editor ausführen.</div><div class="actions"><button onclick="exportJSON()">JSON Backup</button><button class="ghost" onclick="document.getElementById('importer').click()">JSON Import</button><button class="secondary" onclick="syncNow()">Jetzt synchronisieren</button><button class="ghost" onclick="loadFromCloud(true)">Cloud neu laden</button></div><input id="importer" type="file" accept=".json,application/json" style="display:none" onchange="importJSON(event)"></section>
 </main>
 <div class="sync-banner" id="syncBanner">
   <b>Neue Cloud-Daten verfügbar.</b><br>
@@ -64,7 +64,7 @@ main{max-width:1220px;margin:auto;padding:24px 20px 80px;display:grid;gap:22px}.
 
 <script>
 const PASS="Neon1234";
-const LOCAL_KEY="nasima_v562_local";
+const LOCAL_KEY="nasima_v564_local";
 const SUPABASE_URL="https://ehqjwylxcagpzpcjhput.supabase.co";
 const SUPABASE_ANON_KEY="sb_publishable_HehPKnqGwq-cSDSdBTQzLA__gCqpM4M";
 let currentUser="", db=JSON.parse(localStorage.getItem(LOCAL_KEY)||"[]"), editing={siteId:null,surveyId:null}, objs=[], sb=null, cloud=false, lastCloudUpdated=null, autoSyncTimer=null;
@@ -238,7 +238,7 @@ function isFormOpen(){const f=document.getElementById("form");return f && !f.cla
 function showSyncBanner(){let b=document.getElementById("syncBanner");if(b)b.style.display="block"}
 function hideSyncBanner(){let b=document.getElementById("syncBanner");if(b)b.style.display="none"}
 
-function exportJSON(){download(new Blob([JSON.stringify({version:"5.6.2",data:db},null,2)],{type:"application/json"}),"nasima_v562_backup.json")}
+function exportJSON(){download(new Blob([JSON.stringify({version:"5.6.4",data:db},null,2)],{type:"application/json"}),"nasima_v564_backup.json")}
 function importJSON(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=x=>{let j=JSON.parse(x.target.result);db=Array.isArray(j)?j:j.data||[];persist();render()};r.readAsText(f)}
 function download(blob,name){let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href)}
 
@@ -270,7 +270,7 @@ function makePDF(sites,name){
   pdf.text("NASIMA SERVICES",15,9);
   pdf.setFontSize(8);
   pdf.setFont(undefined,"normal");
-  pdf.text("Aufnahme Tool V5.6.2",15,16);
+  pdf.text("Aufnahme Tool V5.6.4",15,16);
   pdf.setFillColor(183,187,0);
   pdf.rect(0,288,210,9,"F");
   pdf.setTextColor(88,88,73);
@@ -293,11 +293,69 @@ function makePDF(sites,name){
 
  function addImageFit(img,x,y,w,h){
   if(!img)return false;
+
+  function drawAs(type){
+   return new Promise((resolve,reject)=>{
+    const image=new Image();
+    image.onload=()=>{
+     const iw=image.naturalWidth||image.width;
+     const ih=image.naturalHeight||image.height;
+     if(!iw||!ih){reject(new Error("Bildgrösse unbekannt"));return}
+     const scale=Math.min(w/iw,h/ih);
+     const dw=iw*scale;
+     const dh=ih*scale;
+     const dx=x+(w-dw)/2;
+     const dy=y+(h-dh)/2;
+
+     // Rahmen / Hintergrund, damit leere Ränder sauber aussehen
+     pdf.setFillColor(250,250,247);
+     pdf.rect(x,y,w,h,"F");
+     pdf.setDrawColor(222,222,214);
+     pdf.rect(x,y,w,h);
+
+     pdf.addImage(img,type,dx,dy,dw,dh,undefined,"FAST");
+     resolve(true);
+    };
+    image.onerror=()=>reject(new Error("Bild konnte nicht gelesen werden"));
+    image.src=img;
+   });
+  }
+
+  // jsPDF selbst ist synchron, aber Image-Laden kann async sein.
+  // Da die Bilder bereits als DataURL im Browser vorhanden sind, nutzen wir ein synchrones Fallback mit vorberechneter Bildgrösse über ein temporäres Image-Objekt.
   try{
-   pdf.addImage(img,"JPEG",x,y,w,h,undefined,"FAST");
-   return true;
-  }catch(e){
-   try{pdf.addImage(img,"PNG",x,y,w,h,undefined,"FAST");return true;}catch(err){return false;}
+   const image=new Image();
+   image.src=img;
+   const iw=image.naturalWidth||image.width;
+   const ih=image.naturalHeight||image.height;
+
+   if(iw&&ih){
+    const scale=Math.min(w/iw,h/ih);
+    const dw=iw*scale;
+    const dh=ih*scale;
+    const dx=x+(w-dw)/2;
+    const dy=y+(h-dh)/2;
+    pdf.setFillColor(250,250,247);
+    pdf.rect(x,y,w,h,"F");
+    pdf.setDrawColor(222,222,214);
+    pdf.rect(x,y,w,h);
+    try{pdf.addImage(img,"JPEG",dx,dy,dw,dh,undefined,"FAST");return true;}
+    catch(e){pdf.addImage(img,"PNG",dx,dy,dw,dh,undefined,"FAST");return true;}
+   }
+
+   // Fallback: nicht verzerren, sondern mittig quadratisch approximieren
+   const side=Math.min(w,h);
+   const dx=x+(w-side)/2;
+   const dy=y+(h-side)/2;
+   pdf.setFillColor(250,250,247);
+   pdf.rect(x,y,w,h,"F");
+   pdf.setDrawColor(222,222,214);
+   pdf.rect(x,y,w,h);
+   try{pdf.addImage(img,"JPEG",dx,dy,side,side,undefined,"FAST");return true;}
+   catch(e){pdf.addImage(img,"PNG",dx,dy,side,side,undefined,"FAST");return true;}
+  }catch(err){
+   console.warn("PDF Bildfehler:",err);
+   return false;
   }
  }
 
@@ -395,10 +453,10 @@ function makePDF(sites,name){
    newPage("Fotodokumentation",site,survey,o,`Fotos ${Math.floor(i/4)+1}`);
    const subset=photos.slice(i,i+4);
    const boxes=[
-    [15,70,86,72],
-    [109,70,86,72],
-    [15,155,86,72],
-    [109,155,86,72]
+    [15,70,86,58],
+    [109,70,86,58],
+    [15,150,86,58],
+    [109,150,86,58]
    ];
    subset.forEach((p,idx)=>{
     let [x,y,w,h]=boxes[idx];
