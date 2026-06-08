@@ -3,45 +3,130 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Nasima Aufnahme Tool V5.6.4</title>
+<title>Nasima Aufnahme Tool V5.7.1</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
-:root{--g:#b7bb00;--d:#585849;--r:#e41d13;--bg:#f4f5f0;--line:#deded6;--txt:#25251f}
-*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--txt)}
-h1,h2,h3{color:var(--d);margin-top:0}p{color:#77776d;line-height:1.45}
+:root{
+  --g:#b7bb00;
+  --d:#585849;
+  --r:#e41d13;
+  --bg:#f4f5f0;
+  --line:#deded6;
+  --txt:#25251f;
+  --soft:#efefe5;
+  --hero:#33362f;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--txt)}
+h1,h2,h3{color:var(--d);margin-top:0}
+p{color:#6f7068;line-height:1.45}
 input,select,textarea,button{font:inherit;width:100%}
-input,select,textarea{border:1px solid var(--line);border-radius:14px;background:#fff;padding:13px 14px;margin-top:7px}
-textarea{min-height:88px;resize:vertical}label{display:block;font-weight:800;font-size:14px;margin-top:14px}
-button{border:0;border-radius:15px;padding:14px 16px;background:var(--g);color:#282819;font-weight:900;cursor:pointer;margin-top:14px}
-button.secondary{background:var(--d);color:white}button.danger{background:var(--r);color:white}button.ghost{background:#eeeede;color:var(--d)}button.small{padding:9px 10px;font-size:13px;margin-top:8px}
-.hidden{display:none!important}.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(135deg,#585849,#24241f)}
-.login-box{background:white;max-width:430px;width:100%;padding:34px;border-radius:28px;box-shadow:0 25px 70px #0005}
-.mark{width:170px;height:88px;border-radius:18px;background:var(--g);display:flex;align-items:center;justify-content:center;margin-bottom:18px;padding:14px 18px}.mark img{width:100%;height:100%;object-fit:contain;display:block}
-.app{display:none}header{position:sticky;top:0;z-index:20;background:white;border-bottom:1px solid var(--line)}
-.header-inner{max-width:1220px;margin:auto;padding:14px 20px;display:flex;justify-content:space-between;gap:14px;align-items:center}
-.brand{display:flex;gap:12px;align-items:center;font-weight:900;color:var(--d);text-transform:uppercase}.brand .mark{width:130px;height:54px;border-radius:16px;margin:0;background:var(--g);padding:9px 12px}.brand .mark img{width:100%;height:100%;object-fit:contain;display:block}
-.nav{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:1220px;margin:auto;padding:0 20px 14px}.nav button{margin:0;padding:11px 8px;background:#eeeede;color:var(--d);font-size:13px}.nav button.active{background:var(--g)}
-.hero{background:linear-gradient(135deg,rgba(88,88,73,.97),rgba(31,31,27,.97));color:white;padding:34px 20px}.hero-inner{max-width:1220px;margin:auto}.kicker{color:var(--g);font-weight:900;text-transform:uppercase;letter-spacing:.12em}.hero h1{color:white;font-size:clamp(30px,6vw,56px);line-height:1.02}.hero p{color:#eee}
-main{max-width:1220px;margin:auto;padding:24px 20px 80px;display:grid;gap:22px}.card{background:white;border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:0 12px 30px rgba(40,40,30,.06)}
-.grid,.row,.stats,.actions,.toolbar,.photo-grid{display:grid;grid-template-columns:1fr;gap:12px}.stats{grid-template-columns:repeat(2,1fr);margin-top:20px}.stat{background:#ffffff1a;border:1px solid #ffffff26;border-radius:18px;padding:14px}.stat strong{display:block;font-size:24px;color:white}.stat span{font-size:13px;color:#ddd}
-.item{border:1px solid var(--line);border-radius:18px;padding:16px;background:#fff;margin-top:12px}.bad{display:inline-block;border-radius:999px;padding:6px 9px;background:#eeeede;color:var(--d);font-size:12px;font-weight:900;margin:4px 4px 0 0}.open{background:#eaf6de}.done{background:#e6f0ff}.archived{background:#eee}.active{background:#eaf6de}
-.sub{border-top:1px solid var(--line);padding-top:18px;margin:28px 0 4px}.obj{background:#fbfbf7;border:1px solid var(--line);border-left:7px solid var(--g);border-radius:20px;padding:20px;margin-top:18px}.obj summary{cursor:pointer;font-weight:900;color:var(--d);padding:12px;background:#eeeede;border-radius:14px}.obj[open] summary{background:var(--g)}
-.photo{background:#fff;border:1px solid var(--line);border-radius:18px;padding:12px}.prev{width:100%;max-height:220px;object-fit:cover;border-radius:14px;border:1px solid var(--line);display:none;margin-top:10px}.note{font-size:12px;color:#77776d;margin-top:6px}
-.skbox{background:#fff;border:1px solid var(--line);border-radius:18px;padding:12px}.sketch{width:100%;height:200px;border:2px dashed var(--line);border-radius:14px;background:white;touch-action:none}
-.notice{background:#fffbe8;border:1px solid #e8dfaa;color:#5c5318;padding:12px;border-radius:16px}.sync-banner{display:none;position:fixed;left:16px;right:16px;bottom:16px;z-index:99;background:#585849;color:white;border-radius:18px;padding:14px;box-shadow:0 12px 35px #0004}.sync-banner button{margin-top:8px}
+input,select,textarea{border:1px solid var(--line);border-radius:16px;background:#fff;padding:14px 16px;margin-top:7px;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--g);box-shadow:0 0 0 3px rgba(183,187,0,.18)}
+textarea{min-height:88px;resize:vertical}
+label{display:block;font-weight:800;font-size:14px;margin-top:14px;color:#33332b}
+button{border:0;border-radius:16px;padding:14px 18px;background:var(--g);color:#18180f;font-weight:900;cursor:pointer;margin-top:14px;transition:.15s ease}
+button:hover{filter:brightness(.96);transform:translateY(-1px)}
+button.secondary{background:var(--d);color:white}
+button.danger{background:var(--r);color:white}
+button.ghost{background:#eeeede;color:var(--d)}
+button.small{padding:9px 10px;font-size:13px;margin-top:8px}
+.hidden{display:none!important}
+
+/* Login */
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(135deg,#585849,#25261f)}
+.login-box{background:white;max-width:560px;width:100%;padding:46px 44px;border-radius:34px;box-shadow:0 28px 90px rgba(0,0,0,.38);text-align:center}
+.login-box h1{font-size:34px;margin-bottom:8px}
+.login-box p{font-size:16px}
+.mark{width:390px;height:auto;min-height:105px;border-radius:0;background:transparent;display:flex;align-items:center;justify-content:center;margin:0 auto 26px;padding:0;overflow:visible}
+.mark img{width:100%;height:auto;object-fit:contain;display:block}
+
+/* App / Header */
+.app{display:none}
+header{position:sticky;top:0;z-index:20;background:white;border-bottom:1px solid rgba(0,0,0,.06);box-shadow:0 6px 22px rgba(40,40,30,.045)}
+.header-inner{max-width:1460px;margin:auto;padding:18px 34px 10px;display:flex;justify-content:space-between;gap:20px;align-items:center}
+.brand{display:flex;gap:20px;align-items:center;font-weight:900;color:var(--d);text-transform:uppercase;font-size:22px;letter-spacing:.02em}
+.brand .mark{width:260px;min-height:72px;height:72px;margin:0;padding:0;justify-content:flex-start}
+.brand .mark img{width:100%;height:100%;object-fit:contain;object-position:left center}
+.nav{display:flex;flex-wrap:wrap;gap:12px;max-width:1460px;margin:auto;padding:0 34px 18px}
+.nav button{width:auto;min-width:165px;margin:0;padding:14px 22px;background:#eeeede;color:var(--d);font-size:16px;border-radius:18px}
+.nav button.active{background:var(--g);color:#17170f}
+
+/* Hero / Dashboard */
+.hero{
+  background:
+    radial-gradient(circle at 72% 18%,rgba(183,187,0,.18),transparent 32%),
+    linear-gradient(135deg,rgba(62,65,55,.98),rgba(26,28,24,.98));
+  color:white;
+  padding:52px 34px 48px;
+}
+.hero-inner{max-width:1460px;margin:auto}
+.kicker{color:var(--g);font-weight:900;text-transform:uppercase;letter-spacing:.14em;font-size:18px;margin-bottom:12px}
+.hero h1{color:white;font-size:clamp(40px,6vw,76px);line-height:1.04;margin:0 0 20px;text-shadow:0 6px 24px rgba(0,0,0,.28)}
+.hero p{color:#efefe4;max-width:1040px;font-size:20px;margin-bottom:28px}
+.row{display:grid;grid-template-columns:1fr;gap:16px}
+.hero .row input{height:70px;border-radius:20px;font-size:19px;padding-left:24px}
+.hero .row button{height:70px;border-radius:18px;font-size:18px;margin:0}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:26px}
+.stat{background:rgba(255,255,255,.105);border:1px solid rgba(255,255,255,.18);border-radius:22px;padding:20px;backdrop-filter:blur(8px)}
+.stat strong{display:block;font-size:32px;color:white}
+.stat span{font-size:15px;color:#e6e6db}
+
+/* Content */
+main{max-width:1460px;margin:auto;padding:30px 34px 90px;display:grid;gap:22px}
+.card{background:white;border:1px solid var(--line);border-radius:26px;padding:26px;box-shadow:0 12px 30px rgba(40,40,30,.06)}
+.grid,.actions,.toolbar,.photo-grid{display:grid;grid-template-columns:1fr;gap:12px}
+.item{border:1px solid var(--line);border-radius:20px;padding:18px;background:white;margin-top:12px}
+.bad{display:inline-block;border-radius:999px;padding:6px 9px;background:#eeeede;color:var(--d);font-size:12px;font-weight:900;margin:4px 4px 0 0}
+.open,.active{background:#eaf6de}
+.done{background:#e6f0ff}
+.archived{background:#eee}
+.sub{border-top:1px solid var(--line);padding-top:18px;margin:28px 0 4px}
+.obj{background:#fbfbf7;border:1px solid var(--line);border-left:7px solid var(--g);border-radius:22px;padding:20px;margin-top:18px}
+.obj summary{cursor:pointer;font-weight:900;color:var(--d);padding:13px;background:#eeeede;border-radius:15px}
+.obj[open] summary{background:var(--g)}
+.photo{background:#fff;border:1px solid var(--line);border-radius:18px;padding:12px}
+.prev{width:100%;max-height:220px;object-fit:cover;border-radius:14px;border:1px solid var(--line);display:none;margin-top:10px}
+.note{font-size:12px;color:#77776d;margin-top:6px}
+.skbox{background:#fff;border:1px solid var(--line);border-radius:18px;padding:12px;margin-top:12px}
+.sketch{width:100%;height:220px;border:2px dashed var(--line);border-radius:14px;background:white;touch-action:none}
+.skact{display:grid;grid-template-columns:1fr;gap:10px}
+.skhelp{font-size:12px;color:#77776d;margin:6px 0}
+.notice{background:#fffbe8;border:1px solid #e8dfaa;color:#5c5318;padding:12px;border-radius:16px}
 .addr{position:relative}.addr input{padding-right:60px}.gpsbtn{position:absolute;right:6px;top:6px;width:44px;height:44px;margin:0;padding:0}
 .map{display:none;margin-top:14px;border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#fff}.map iframe{width:100%;height:220px;border:0}
-.skbox{background:#fff;border:1px solid var(--line);border-radius:18px;padding:12px;margin-top:12px}.sketch{width:100%;height:220px;border:2px dashed var(--line);border-radius:14px;background:white;touch-action:none}.skact{display:grid;grid-template-columns:1fr;gap:10px}.skhelp{font-size:12px;color:#77776d;margin:6px 0}
-@media(min-width:780px){.row{grid-template-columns:2fr 1fr 1fr}.stats{grid-template-columns:repeat(4,1fr)}.grid{grid-template-columns:repeat(2,1fr)}.toolbar{grid-template-columns:2fr 1fr 1fr}.actions{grid-template-columns:repeat(4,1fr)}.photo-grid{grid-template-columns:repeat(3,1fr)}.nav{display:flex}.nav button{width:auto;min-width:140px}}
+.sync-banner{display:none;position:fixed;left:16px;right:16px;bottom:16px;z-index:99;background:#585849;color:white;border-radius:18px;padding:14px;box-shadow:0 12px 35px #0004}.sync-banner button{margin-top:8px}
+
+@media(min-width:900px){
+  .row{grid-template-columns:2fr 1fr 1fr}
+  .stats{grid-template-columns:repeat(4,1fr)}
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .toolbar{grid-template-columns:2fr 1fr 1fr}
+  .actions{grid-template-columns:repeat(4,1fr)}
+  .photo-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:760px){
+  .login-box{padding:32px 24px}
+  .mark{width:280px}
+  .header-inner{padding:14px 18px 10px}
+  .brand{font-size:16px;gap:12px;align-items:center}
+  .brand .mark{width:175px;height:54px}
+  .nav{padding:0 18px 14px;display:grid;grid-template-columns:1fr 1fr}
+  .nav button{min-width:0;width:100%;font-size:14px;padding:12px 10px}
+  .hero{padding:34px 18px}
+  .hero h1{font-size:38px}
+  .hero p{font-size:17px}
+  main{padding:22px 18px 80px}
+}
 </style>
 </head>
 <body>
-<section class="login" id="login"><div class="login-box"><div class="mark"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iRWJlbmVfMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAxMDkuMDMgMTE5LjQ4Ij4KICA8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMzAuMS4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogMi4xLjEgQnVpbGQgMTM2KSAgLS0+CiAgPGRlZnM+CiAgICA8c3R5bGU+CiAgICAgIC5zdDAgewogICAgICAgIHN0cm9rZTogI2ZmZWQwMDsKICAgICAgICBzdHJva2Utd2lkdGg6IDVweDsKICAgICAgfQoKICAgICAgLnN0MCwgLnN0MSB7CiAgICAgICAgZmlsbDogbm9uZTsKICAgICAgICBzdHJva2UtbWl0ZXJsaW1pdDogMTA7CiAgICAgIH0KCiAgICAgIC5zdDEgewogICAgICAgIHN0cm9rZTogI2I0YmUxMDsKICAgICAgICBzdHJva2Utd2lkdGg6IDJweDsKICAgICAgfQogICAgPC9zdHlsZT4KICA8L2RlZnM+CiAgPHBhdGggY2xhc3M9InN0MCIgZD0iTTEzNC42LDEyMy43Ii8+CiAgPHBhdGggY2xhc3M9InN0MSIgZD0iTTM4LjIyLDgwLjg0Ii8+CiAgPHBvbHlsaW5lIGNsYXNzPSJzdDEiIHBvaW50cz0iMTUuMjQgMjIuNDEgNjkuNDMgOTUuMzEgODcuNSA5NS4zMSA4Ny41IDIyLjQxIDcwLjczIDIyLjQxIDcwLjczIDcyLjczIDU1Ljg5IDUyLjEyIDM0LjQ5IDIyLjQxIDE1LjI0IDIyLjQxIDEwLjczIDI0Ljk5IDEwLjczIDEwNi4yOCAyNy41IDEwNi4yOCA0MS4wNSA5Ni42IDQxLjg2IDgwLjg0Ii8+CiAgPHBhdGggY2xhc3M9InN0MSIgZD0iTTU1Ljg5LDMyLjczbDE0Ljg0LTEwLjMyLTE0Ljg0LDEwLjMyWiIvPgogIDxsaW5lIGNsYXNzPSJzdDEiIHgxPSI1NS44OSIgeTE9IjUyLjEyIiB4Mj0iNTUuODkiIHkyPSIzMi43MyIvPgogIDxwb2x5bGluZSBjbGFzcz0ic3QxIiBwb2ludHM9IjEwLjczIDEwNi4yOCAyNy41NCA5NS44NyAyNi45NyA2MC44NyA2MC44MyAxMDYuMjggNzcuODIgMTA2LjI4IDg3LjUgOTUuMzEiLz4KPC9zdmc+" alt="NASIMA"></div><h1>Nasima Aufnahme Tool</h1><p>Cloud-Version mit allen Praxisfeldern, Auto-Sync und manuellem Bildimport aus dem Album.</p><div class="notice">User: <b>Marco Cassani</b> oder <b>Hans Zwahlen</b><br>Passwort: <b>Neon1234</b></div><p id="loginError" style="display:none;color:var(--r);font-weight:900">Login falsch.</p><label>Benutzer</label><select id="loginUser"><option>Marco Cassani</option><option>Hans Zwahlen</option></select><label>Passwort</label><input id="loginPass" type="password" onkeydown="if(event.key==='Enter')doLogin()"><button onclick="doLogin()">Einloggen</button></div></section>
+<section class="login" id="login"><div class="login-box"><div class="mark"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iRWJlbmVfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgODQxLjg5IDU5NS4yOCI+CiAgPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDMwLjEuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDIuMS4xIEJ1aWxkIDEzNikgIC0tPgogIDxkZWZzPgogICAgPHN0eWxlPgogICAgICAuc3QwIHsKICAgICAgICBmaWxsOiAjYjdiYjAwOwogICAgICB9CgogICAgICAuc3QxIHsKICAgICAgICBmaWxsOiAjZmZmOwogICAgICB9CgogICAgICAuc3QyIHsKICAgICAgICBmaWxsOiBub25lOwogICAgICB9CgogICAgICAuc3QzIHsKICAgICAgICBmaWxsOiAjNTE1MjQ4OwogICAgICB9CgogICAgICAuc3Q0IHsKICAgICAgICBmaWxsOiAjZTQxZDEzOwogICAgICB9CgogICAgICAuc3Q1IHsKICAgICAgICBjbGlwLXBhdGg6IHVybCgjY2xpcHBhdGgpOwogICAgICB9CiAgICA8L3N0eWxlPgogICAgPGNsaXBQYXRoIGlkPSJjbGlwcGF0aCI+CiAgICAgIDxyZWN0IGNsYXNzPSJzdDIiIHg9IjY2LjYxIiB5PSIxNDguODkiIHdpZHRoPSI3MDguNjYiIGhlaWdodD0iMjk3LjUiLz4KICAgIDwvY2xpcFBhdGg+CiAgPC9kZWZzPgogIDxnIGNsYXNzPSJzdDUiPgogICAgPHBhdGggY2xhc3M9InN0MCIgZD0iTTc2Mi42OSwxNzQuMDZjLTYuOTQsMC0xMi41OS01LjY1LTEyLjU5LTEyLjU5czUuNjUtMTIuNTgsMTIuNTktMTIuNTgsMTIuNTgsNS42NSwxMi41OCwxMi41OC01LjY1LDEyLjU5LTEyLjU4LDEyLjU5TTc2Mi42OSwxNTAuNTRjLTYuMDMsMC0xMC45Myw0LjktMTAuOTMsMTAuOTNzNC45LDEwLjkzLDEwLjkzLDEwLjkzLDEwLjkzLTQuOTEsMTAuOTMtMTAuOTMtNC45LTEwLjkzLTEwLjkzLTEwLjkzIi8+CiAgICA8cGF0aCBjbGFzcz0ic3QwIiBkPSJNNzU4LjEzLDE2Ny40OHYtMTIuMDJoNS4zM2MxLjA3LDAsMS44OS4xLDIuNDUuMzIuNTYuMjIsMSwuNiwxLjM0LDEuMTUuMzMuNTUuNSwxLjE1LjUsMS44MSwwLC44NS0uMjgsMS41Ny0uODMsMi4xNS0uNTUuNTktMS40Ljk2LTIuNTYsMS4xMi40My4yLjc0LjQuOTcuNi40Ni40My45Ljk2LDEuMzEsMS42bDIuMSwzLjI3aC0ybC0xLjU5LTIuNWMtLjQ3LS43Mi0uODUtMS4yNy0xLjE1LTEuNjYtLjMtLjM4LS41Ny0uNjUtLjgxLS44LS4yNC0uMTUtLjQ4LS4yNi0uNzItLjMyLS4xOC0uMDQtLjQ4LS4wNi0uODktLjA2aC0xLjg0djUuMzRoLTEuNTlaTTc1OS43MiwxNjAuNzZoMy40MmMuNzMsMCwxLjMtLjA3LDEuNy0uMjIuNDEtLjE1LjczLS4zOS45NC0uNzMuMjEtLjMzLjMyLS42OS4zMi0xLjA3LDAtLjU3LS4yMS0xLjA0LS42Mi0xLjQtLjQyLS4zNy0xLjA3LS41NS0xLjk2LS41NWgtMy44djMuOTdaIi8+CiAgICA8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMTU0Ljg5LDM0MC4zMWgtMjIuODFsLTQxLjcxLTEwOS41OGMxLjExLDUuMzUsMS42Nyw5LjUzLDEuNjcsMTIuNTd2OTdoLTI1LjM3di0xNzQuMWgyMi44MWw0MS43MiwxMDcuMzVjLTEuMTEtNS4zNC0xLjY3LTkuNTMtMS42Ny0xMi41N3YtOTQuNzhoMjUuMzZ2MTc0LjFaIi8+CiAgICA8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMjg2LjgsMzQwLjMxaC0yNS44MWwtNS4yMi0zMy4wNGgtMzIuNmwtNS4yMywzMy4wNGgtMjUuN3YtLjQ0bDMzLjcxLTE3My44OGgyNy4zNmwzMy40OSwxNzQuMzJaTTI1Mi4xLDI4NC45MWwtMTIuNjgtNzguNTQtMTIuOCw3OC41NGgyNS40OFoiLz4KICAgIDxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik00MDcuNiwzMjQuNGMwLDEwLjYxLTUuMjYsMTUuOTEtMTUuOCwxNS45MWgtNTIuMzljLTEwLjQ3LDAtMTUuNjktNS4zLTE1LjY5LTE1Ljkxdi00MS41aDI2LjAzdjM1LjQ5aDMxLjgxdi0zNC4xNWwtNTIuMTctNDkuMzljLTMuNzgtMy42My01LjY3LTguMjctNS42Ny0xMy45di0zOC43MmMwLTEwLjY4LDUuMjItMTYuMDIsMTUuNjktMTYuMDJoNTIuMzljMTAuNTMsMCwxNS44LDUuMjYsMTUuOCwxNS44djM4Ljk0aC0yNi4wNHYtMzIuODJoLTMxLjgxdjMxLjQ5bDUyLjE3LDQ5LjE3YzMuNzgsMy41Niw1LjY4LDguMjcsNS42OCwxNC4xM3Y0MS41WiIvPgogICAgPHJlY3QgY2xhc3M9InN0MCIgeD0iNDUxLjUxIiB5PSIxNjYuMjEiIHdpZHRoPSIyNi4wMyIgaGVpZ2h0PSIxNzQuMSIvPgogICAgPHBhdGggY2xhc3M9InN0MCIgZD0iTTYyNi45MywzNDAuMzFoLTI1LjAzdi04NS44OGMwLTQuNTIuNTItMTAuODIsMS41Ni0xOC45bC0yMi40Nyw4OC44OGgtMTMuMjRsLTIyLjU4LTg4Ljg4YzEuMDQsOC4yMiwxLjU2LDE0LjUzLDEuNTYsMTguOXY4NS44OGgtMjUuMDN2LTE3NC4xaDI0LjU5bDI3LjM3LDk2LjIzYy4yOSwxLjA0LjUxLDMuNjcuNjYsNy45LDAtMS44Ni4yMy00LjQ5LjY2LTcuOWwyNy4zOC05Ni4yM2gyNC41OHYxNzQuMVoiLz4KICAgIDxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik03NTguNzQsMzQwLjMxaC0yNS44MWwtNS4yMy0zMy4wNGgtMzIuNTlsLTUuMjMsMzMuMDRoLTI1Ljd2LS40NGwzMy43LTE3My44OGgyNy4zNmwzMy40OSwxNzQuMzJaTTcyNC4wMiwyODQuOTFsLTEyLjY4LTc4LjU0LTEyLjgsNzguNTRoMjUuNDhaIi8+CiAgICA8cGF0aCBjbGFzcz0ic3QzIiBkPSJNMTA2LjkzLDQzOC4xM2MwLDUuMS0yLjUzLDcuNjUtNy41OSw3LjY1aC0yNS4xOWMtNS4wMiwwLTcuNTQtMi41NS03LjU0LTcuNjV2LTE5Ljk0aDEyLjUxdjE3LjA1aDE1LjN2LTE2LjQxbC0yNS4wNy0yMy43NGMtMS44Mi0xLjc1LTIuNzMtMy45Ny0yLjczLTYuNjl2LTE4LjZjMC01LjEzLDIuNTEtNy43LDcuNTQtNy43aDI1LjE5YzUuMDUsMCw3LjU5LDIuNTMsNy41OSw3LjU5djE4LjcxaC0xMi41MXYtMTUuNzdoLTE1LjN2MTUuMTNsMjUuMDcsMjMuNjNjMS44MiwxLjcxLDIuNzMsMy45NywyLjczLDYuNzl2MTkuOTRaIi8+CiAgICA8cG9seWdvbiBjbGFzcz0ic3QzIiBwb2ludHM9IjE4NC40MiA0NDUuNzcgMTQ5LjcyIDQ0NS43NyAxNDkuNzIgMzYyLjEgMTg0LjEgMzYyLjEgMTg0LjEgMzczLjE3IDE2Mi4yMyAzNzMuMTcgMTYyLjIzIDM5Ny42IDE4MS4wNSAzOTcuNiAxODEuMDUgNDA4LjQ2IDE2Mi4yMyA0MDguNDYgMTYyLjIzIDQzNC43MSAxODQuNDIgNDM0LjcxIDE4NC40MiA0NDUuNzciLz4KICAgIDxwYXRoIGNsYXNzPSJzdDMiIGQ9Ik0yNjguNjQsNDQ1Ljc3aC0xMy4wNGwtMTMuOC0zOC44N3YtNy41NGgxMi4yOXYtMjYuNTFoLTE1Ljc2djcyLjkyaC0xMi41MnYtODMuNjdoMzMuMmM1LjAzLDAsNy41NCwyLjU3LDcuNTQsNy43djMwLjQyYzAsMy41Mi0xLjE5LDUuOC0zLjU4LDYuODQtMS4yOC41My0zLjk4LjgtOC4xMi44bDEzLjgsMzcuOTFaIi8+CiAgICA8cGF0aCBjbGFzcz0ic3QzIiBkPSJNMzUwLjc5LDM2Mi4xbC0xNi4wNCw4My43N2gtMTIuNDZsLTE1Ljk4LTgzLjc3aDEyLjU2bDkuMzYsNTcuMzZjLjA3LDEuNjQuMTgsNC4wMy4zMiw3LjE2LS4wNC0xLjYzLjA3LTQuMDIuMzItNy4xNmw5LjQxLTU3LjM2aDEyLjUxWiIvPgogICAgPHJlY3QgY2xhc3M9InN0MyIgeD0iMzkwLjkxIiB5PSIzNjIuMSIgd2lkdGg9IjEyLjUxIiBoZWlnaHQ9IjgzLjY3Ii8+CiAgICA8cGF0aCBjbGFzcz0ic3QzIiBkPSJNNDg3LjcsNDM4LjEzYzAsNS4xLTIuNTUsNy42NS03LjY1LDcuNjVoLTI2LjA5Yy00Ljk1LDAtNy40My0yLjU1LTcuNDMtNy42NXYtNjguMzJjMC01LjEzLDIuNDgtNy43LDcuNDMtNy43aDI2LjA5YzUuMSwwLDcuNjUsMi41Nyw3LjY1LDcuN3YxOS41N2gtMTIuNDZ2LTE2LjUyaC0xNi4ydjYyLjE4aDE2LjJ2LTE3LjU5aDEyLjQ2djIwLjY5WiIvPgogICAgPHBvbHlnb24gY2xhc3M9InN0MyIgcG9pbnRzPSI1NjUuMDggNDQ1Ljc3IDUzMC4zOCA0NDUuNzcgNTMwLjM4IDM2Mi4xIDU2NC43NiAzNjIuMSA1NjQuNzYgMzczLjE3IDU0Mi44OSAzNzMuMTcgNTQyLjg5IDM5Ny42IDU2MS43MSAzOTcuNiA1NjEuNzEgNDA4LjQ2IDU0Mi44OSA0MDguNDYgNTQyLjg5IDQzNC43MSA1NjUuMDggNDM0LjcxIDU2NS4wOCA0NDUuNzciLz4KICAgIDxwYXRoIGNsYXNzPSJzdDMiIGQ9Ik02NDYuNTgsNDM4LjEzYzAsNS4xLTIuNTMsNy42NS03LjU5LDcuNjVoLTI1LjE4Yy01LjAzLDAtNy41NC0yLjU1LTcuNTQtNy42NXYtMTkuOTRoMTIuNTF2MTcuMDVoMTUuM3YtMTYuNDFsLTI1LjA3LTIzLjc0Yy0xLjgyLTEuNzUtMi43My0zLjk3LTIuNzMtNi42OXYtMTguNmMwLTUuMTMsMi41Mi03LjcsNy41NC03LjdoMjUuMThjNS4wNSwwLDcuNTksMi41Myw3LjU5LDcuNTl2MTguNzFoLTEyLjUxdi0xNS43N2gtMTUuM3YxNS4xM2wyNS4wNywyMy42M2MxLjgyLDEuNzEsMi43MywzLjk3LDIuNzMsNi43OXYxOS45NFoiLz4KICAgIDxwYXRoIGNsYXNzPSJzdDQiIGQ9Ik03NTEuNyw0NDUuNjVjMy42OCwwLDYuNjgtMi45Myw2LjgtNi41OXYtNzAuMTVoLS4wMmMwLTMuNzYtMy4wNS02LjgxLTYuODItNi44MWgwcy03MC4xNywwLTcwLjE3LDBjLTMuNDIuMDktNi4yLDIuNjktNi41OSw2LjAydjcxLjQ4Yy4zMywzLjI2LDIuOTgsNS44NCw2LjI3LDYuMDhoNzAuNTF2LS4wNFoiLz4KICAgIDxwYXRoIGNsYXNzPSJzdDEiIGQ9Ik03NTEuNyw0NDYuMzloLTcwLjUxYy0zLjY5LS4yNi02LjYxLTMuMDgtNi45Ny02Ljcydi03MS41NWMuNDItMy43NywzLjU1LTYuNjMsNy4yNy02LjcybDcwLjg5LjA0YzMuNTguMzMsNi40NSwzLjE5LDYuNzgsNi43OGguMDN2LjdzLjAxLDcwLjE1LjAxLDcwLjE1Yy0uMTIsMy44NS0zLjA1LDYuOTEtNi44LDcuMjV2LjA0bC0uNzEuMDNaTTY4MS41LDM2Mi44Yy0zLC4wOC01LjU1LDIuNC01Ljg5LDUuNHY3MS40Yy4zLDIuODgsMi42Nyw1LjE4LDUuNjMsNS4zOWw3MC40Ni0uMDRjMy4zMiwwLDUuOTktMi42LDYuMS01Ljl2LTcwLjEzYy0uMDEtMy4zNy0yLjc2LTYuMTEtNi4xMi02LjExaC03MC4xOFoiLz4KICAgIDxwb2x5Z29uIGNsYXNzPSJzdDEiIHBvaW50cz0iNzI1LjczIDM5NC44NyA3MjUuNzMgMzc2LjgzIDcwNy42OCAzNzYuODMgNzA3LjY4IDM5NC44NyA2ODkuNjQgMzk0Ljg3IDY4OS42NCA0MTIuOTIgNzA3LjY4IDQxMi45MiA3MDcuNjggNDMwLjk3IDcyNS43MyA0MzAuOTcgNzI1LjczIDQxMi45MiA3NDMuNzggNDEyLjkyIDc0My43OCAzOTQuODcgNzI1LjczIDM5NC44NyIvPgogIDwvZz4KICA8cmVjdCBjbGFzcz0ic3QyIiB4PSI2Ni42MSIgeT0iMTQ4Ljg5IiB3aWR0aD0iNzA4LjY2IiBoZWlnaHQ9IjI5Ny41Ii8+Cjwvc3ZnPg==" alt="NASIMA"></div><h1>Nasima Aufnahme Tool</h1><p><b>Standortaufnahmen & Dokumentation</b></p><p>Cloud-Version mit allen Praxisfeldern, Auto-Sync und manuellem Bildimport aus dem Album.</p><div class="notice">User: <b>Marco Cassani</b> oder <b>Hans Zwahlen</b><br>Passwort: <b>Neon1234</b></div><p id="loginError" style="display:none;color:var(--r);font-weight:900">Login falsch.</p><label>Benutzer</label><select id="loginUser"><option>Marco Cassani</option><option>Hans Zwahlen</option></select><label>Passwort</label><input id="loginPass" type="password" onkeydown="if(event.key==='Enter')doLogin()"><button onclick="doLogin()">Einloggen</button></div></section>
 
 <div class="app" id="app">
-<header><div class="header-inner"><div class="brand"><div class="mark"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iRWJlbmVfMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAxMDkuMDMgMTE5LjQ4Ij4KICA8IS0tIEdlbmVyYXRvcjogQWRvYmUgSWxsdXN0cmF0b3IgMzAuMS4wLCBTVkcgRXhwb3J0IFBsdWctSW4gLiBTVkcgVmVyc2lvbjogMi4xLjEgQnVpbGQgMTM2KSAgLS0+CiAgPGRlZnM+CiAgICA8c3R5bGU+CiAgICAgIC5zdDAgewogICAgICAgIHN0cm9rZTogI2ZmZWQwMDsKICAgICAgICBzdHJva2Utd2lkdGg6IDVweDsKICAgICAgfQoKICAgICAgLnN0MCwgLnN0MSB7CiAgICAgICAgZmlsbDogbm9uZTsKICAgICAgICBzdHJva2UtbWl0ZXJsaW1pdDogMTA7CiAgICAgIH0KCiAgICAgIC5zdDEgewogICAgICAgIHN0cm9rZTogI2I0YmUxMDsKICAgICAgICBzdHJva2Utd2lkdGg6IDJweDsKICAgICAgfQogICAgPC9zdHlsZT4KICA8L2RlZnM+CiAgPHBhdGggY2xhc3M9InN0MCIgZD0iTTEzNC42LDEyMy43Ii8+CiAgPHBhdGggY2xhc3M9InN0MSIgZD0iTTM4LjIyLDgwLjg0Ii8+CiAgPHBvbHlsaW5lIGNsYXNzPSJzdDEiIHBvaW50cz0iMTUuMjQgMjIuNDEgNjkuNDMgOTUuMzEgODcuNSA5NS4zMSA4Ny41IDIyLjQxIDcwLjczIDIyLjQxIDcwLjczIDcyLjczIDU1Ljg5IDUyLjEyIDM0LjQ5IDIyLjQxIDE1LjI0IDIyLjQxIDEwLjczIDI0Ljk5IDEwLjczIDEwNi4yOCAyNy41IDEwNi4yOCA0MS4wNSA5Ni42IDQxLjg2IDgwLjg0Ii8+CiAgPHBhdGggY2xhc3M9InN0MSIgZD0iTTU1Ljg5LDMyLjczbDE0Ljg0LTEwLjMyLTE0Ljg0LDEwLjMyWiIvPgogIDxsaW5lIGNsYXNzPSJzdDEiIHgxPSI1NS44OSIgeTE9IjUyLjEyIiB4Mj0iNTUuODkiIHkyPSIzMi43MyIvPgogIDxwb2x5bGluZSBjbGFzcz0ic3QxIiBwb2ludHM9IjEwLjczIDEwNi4yOCAyNy41NCA5NS44NyAyNi45NyA2MC44NyA2MC44MyAxMDYuMjggNzcuODIgMTA2LjI4IDg3LjUgOTUuMzEiLz4KPC9zdmc+" alt="NASIMA"></div> Nasima Aufnahme Tool</div><button style="max-width:150px;margin:0" onclick="location.reload()">Abmelden</button></div><div class="nav"><button id="nDash" onclick="view('dash')">Dashboard</button><button id="nSites" onclick="view('sites')">Standorte</button><button id="nNew" onclick="newSite()">Neue Aufnahme</button><button id="nSet" onclick="view('settings')">Einstellungen</button></div></header>
-<section class="hero"><div class="hero-inner"><div class="kicker">Build V5.6.4 · Supabase</div><h1>Standorte, Aufnahmen und Objekte bearbeiten.</h1><p>Standorte erscheinen einmalig. Aufnahmen können nachträglich bearbeitet werden. Fotos werden manuell aus dem Album gewählt und komprimiert.</p><div class="row"><input id="q" placeholder="Suche..." oninput="render()"><button onclick="newSite()">Neue Aufnahme</button><button class="secondary" onclick="pdfAll()">PDF alle</button></div><div class="stats"><div class="stat"><strong id="sSites">0</strong><span>Standorte</span></div><div class="stat"><strong id="sSurveys">0</strong><span>Aufnahmen</span></div><div class="stat"><strong id="sObjects">0</strong><span>Objekte</span></div><div class="stat"><strong id="sMode">Cloud</strong><span>Speicher</span></div></div></div></section>
+<header><div class="header-inner"><div class="brand"><div class="mark"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iRWJlbmVfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgODQxLjg5IDU5NS4yOCI+CiAgPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDMwLjEuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDIuMS4xIEJ1aWxkIDEzNikgIC0tPgogIDxkZWZzPgogICAgPHN0eWxlPgogICAgICAuc3QwIHsKICAgICAgICBmaWxsOiAjYjdiYjAwOwogICAgICB9CgogICAgICAuc3QxIHsKICAgICAgICBmaWxsOiAjZmZmOwogICAgICB9CgogICAgICAuc3QyIHsKICAgICAgICBmaWxsOiBub25lOwogICAgICB9CgogICAgICAuc3QzIHsKICAgICAgICBmaWxsOiAjNTE1MjQ4OwogICAgICB9CgogICAgICAuc3Q0IHsKICAgICAgICBmaWxsOiAjZTQxZDEzOwogICAgICB9CgogICAgICAuc3Q1IHsKICAgICAgICBjbGlwLXBhdGg6IHVybCgjY2xpcHBhdGgpOwogICAgICB9CiAgICA8L3N0eWxlPgogICAgPGNsaXBQYXRoIGlkPSJjbGlwcGF0aCI+CiAgICAgIDxyZWN0IGNsYXNzPSJzdDIiIHg9IjY2LjYxIiB5PSIxNDguODkiIHdpZHRoPSI3MDguNjYiIGhlaWdodD0iMjk3LjUiLz4KICAgIDwvY2xpcFBhdGg+CiAgPC9kZWZzPgogIDxnIGNsYXNzPSJzdDUiPgogICAgPHBhdGggY2xhc3M9InN0MCIgZD0iTTc2Mi42OSwxNzQuMDZjLTYuOTQsMC0xMi41OS01LjY1LTEyLjU5LTEyLjU5czUuNjUtMTIuNTgsMTIuNTktMTIuNTgsMTIuNTgsNS42NSwxMi41OCwxMi41OC01LjY1LDEyLjU5LTEyLjU4LDEyLjU5TTc2Mi42OSwxNTAuNTRjLTYuMDMsMC0xMC45Myw0LjktMTAuOTMsMTAuOTNzNC45LDEwLjkzLDEwLjkzLDEwLjkzLDEwLjkzLTQuOTEsMTAuOTMtMTAuOTMtNC45LTEwLjkzLTEwLjkzLTEwLjkzIi8+CiAgICA8cGF0aCBjbGFzcz0ic3QwIiBkPSJNNzU4LjEzLDE2Ny40OHYtMTIuMDJoNS4zM2MxLjA3LDAsMS44OS4xLDIuNDUuMzIuNTYuMjIsMSwuNiwxLjM0LDEuMTUuMzMuNTUuNSwxLjE1LjUsMS44MSwwLC44NS0uMjgsMS41Ny0uODMsMi4xNS0uNTUuNTktMS40Ljk2LTIuNTYsMS4xMi40My4yLjc0LjQuOTcuNi40Ni40My45Ljk2LDEuMzEsMS42bDIuMSwzLjI3aC0ybC0xLjU5LTIuNWMtLjQ3LS43Mi0uODUtMS4yNy0xLjE1LTEuNjYtLjMtLjM4LS41Ny0uNjUtLjgxLS44LS4yNC0uMTUtLjQ4LS4yNi0uNzItLjMyLS4xOC0uMDQtLjQ4LS4wNi0uODktLjA2aC0xLjg0djUuMzRoLTEuNTlaTTc1OS43MiwxNjAuNzZoMy40MmMuNzMsMCwxLjMtLjA3LDEuNy0uMjIuNDEtLjE1LjczLS4zOS45NC0uNzMuMjEtLjMzLjMyLS42OS4zMi0xLjA3LDAtLjU3LS4yMS0xLjA0LS42Mi0xLjQtLjQyLS4zNy0xLjA3LS41NS0xLjk2LS41NWgtMy44djMuOTdaIi8+CiAgICA8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMTU0Ljg5LDM0MC4zMWgtMjIuODFsLTQxLjcxLTEwOS41OGMxLjExLDUuMzUsMS42Nyw5LjUzLDEuNjcsMTIuNTd2OTdoLTI1LjM3di0xNzQuMWgyMi44MWw0MS43MiwxMDcuMzVjLTEuMTEtNS4zNC0xLjY3LTkuNTMtMS42Ny0xMi41N3YtOTQuNzhoMjUuMzZ2MTc0LjFaIi8+CiAgICA8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMjg2LjgsMzQwLjMxaC0yNS44MWwtNS4yMi0zMy4wNGgtMzIuNmwtNS4yMywzMy4wNGgtMjUuN3YtLjQ0bDMzLjcxLTE3My44OGgyNy4zNmwzMy40OSwxNzQuMzJaTTI1Mi4xLDI4NC45MWwtMTIuNjgtNzguNTQtMTIuOCw3OC41NGgyNS40OFoiLz4KICAgIDxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik00MDcuNiwzMjQuNGMwLDEwLjYxLTUuMjYsMTUuOTEtMTUuOCwxNS45MWgtNTIuMzljLTEwLjQ3LDAtMTUuNjktNS4zLTE1LjY5LTE1Ljkxdi00MS41aDI2LjAzdjM1LjQ5aDMxLjgxdi0zNC4xNWwtNTIuMTctNDkuMzljLTMuNzgtMy42My01LjY3LTguMjctNS42Ny0xMy45di0zOC43MmMwLTEwLjY4LDUuMjItMTYuMDIsMTUuNjktMTYuMDJoNTIuMzljMTAuNTMsMCwxNS44LDUuMjYsMTUuOCwxNS44djM4Ljk0aC0yNi4wNHYtMzIuODJoLTMxLjgxdjMxLjQ5bDUyLjE3LDQ5LjE3YzMuNzgsMy41Niw1LjY4LDguMjcsNS42OCwxNC4xM3Y0MS41WiIvPgogICAgPHJlY3QgY2xhc3M9InN0MCIgeD0iNDUxLjUxIiB5PSIxNjYuMjEiIHdpZHRoPSIyNi4wMyIgaGVpZ2h0PSIxNzQuMSIvPgogICAgPHBhdGggY2xhc3M9InN0MCIgZD0iTTYyNi45MywzNDAuMzFoLTI1LjAzdi04NS44OGMwLTQuNTIuNTItMTAuODIsMS41Ni0xOC45bC0yMi40Nyw4OC44OGgtMTMuMjRsLTIyLjU4LTg4Ljg4YzEuMDQsOC4yMiwxLjU2LDE0LjUzLDEuNTYsMTguOXY4NS44OGgtMjUuMDN2LTE3NC4xaDI0LjU5bDI3LjM3LDk2LjIzYy4yOSwxLjA0LjUxLDMuNjcuNjYsNy45LDAtMS44Ni4yMy00LjQ5LjY2LTcuOWwyNy4zOC05Ni4yM2gyNC41OHYxNzQuMVoiLz4KICAgIDxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik03NTguNzQsMzQwLjMxaC0yNS44MWwtNS4yMy0zMy4wNGgtMzIuNTlsLTUuMjMsMzMuMDRoLTI1Ljd2LS40NGwzMy43LTE3My44OGgyNy4zNmwzMy40OSwxNzQuMzJaTTcyNC4wMiwyODQuOTFsLTEyLjY4LTc4LjU0LTEyLjgsNzguNTRoMjUuNDhaIi8+CiAgICA8cGF0aCBjbGFzcz0ic3QzIiBkPSJNMTA2LjkzLDQzOC4xM2MwLDUuMS0yLjUzLDcuNjUtNy41OSw3LjY1aC0yNS4xOWMtNS4wMiwwLTcuNTQtMi41NS03LjU0LTcuNjV2LTE5Ljk0aDEyLjUxdjE3LjA1aDE1LjN2LTE2LjQxbC0yNS4wNy0yMy43NGMtMS44Mi0xLjc1LTIuNzMtMy45Ny0yLjczLTYuNjl2LTE4LjZjMC01LjEzLDIuNTEtNy43LDcuNTQtNy43aDI1LjE5YzUuMDUsMCw3LjU5LDIuNTMsNy41OSw3LjU5djE4LjcxaC0xMi41MXYtMTUuNzdoLTE1LjN2MTUuMTNsMjUuMDcsMjMuNjNjMS44MiwxLjcxLDIuNzMsMy45NywyLjczLDYuNzl2MTkuOTRaIi8+CiAgICA8cG9seWdvbiBjbGFzcz0ic3QzIiBwb2ludHM9IjE4NC40MiA0NDUuNzcgMTQ5LjcyIDQ0NS43NyAxNDkuNzIgMzYyLjEgMTg0LjEgMzYyLjEgMTg0LjEgMzczLjE3IDE2Mi4yMyAzNzMuMTcgMTYyLjIzIDM5Ny42IDE4MS4wNSAzOTcuNiAxODEuMDUgNDA4LjQ2IDE2Mi4yMyA0MDguNDYgMTYyLjIzIDQzNC43MSAxODQuNDIgNDM0LjcxIDE4NC40MiA0NDUuNzciLz4KICAgIDxwYXRoIGNsYXNzPSJzdDMiIGQ9Ik0yNjguNjQsNDQ1Ljc3aC0xMy4wNGwtMTMuOC0zOC44N3YtNy41NGgxMi4yOXYtMjYuNTFoLTE1Ljc2djcyLjkyaC0xMi41MnYtODMuNjdoMzMuMmM1LjAzLDAsNy41NCwyLjU3LDcuNTQsNy43djMwLjQyYzAsMy41Mi0xLjE5LDUuOC0zLjU4LDYuODQtMS4yOC41My0zLjk4LjgtOC4xMi44bDEzLjgsMzcuOTFaIi8+CiAgICA8cGF0aCBjbGFzcz0ic3QzIiBkPSJNMzUwLjc5LDM2Mi4xbC0xNi4wNCw4My43N2gtMTIuNDZsLTE1Ljk4LTgzLjc3aDEyLjU2bDkuMzYsNTcuMzZjLjA3LDEuNjQuMTgsNC4wMy4zMiw3LjE2LS4wNC0xLjYzLjA3LTQuMDIuMzItNy4xNmw5LjQxLTU3LjM2aDEyLjUxWiIvPgogICAgPHJlY3QgY2xhc3M9InN0MyIgeD0iMzkwLjkxIiB5PSIzNjIuMSIgd2lkdGg9IjEyLjUxIiBoZWlnaHQ9IjgzLjY3Ii8+CiAgICA8cGF0aCBjbGFzcz0ic3QzIiBkPSJNNDg3LjcsNDM4LjEzYzAsNS4xLTIuNTUsNy42NS03LjY1LDcuNjVoLTI2LjA5Yy00Ljk1LDAtNy40My0yLjU1LTcuNDMtNy42NXYtNjguMzJjMC01LjEzLDIuNDgtNy43LDcuNDMtNy43aDI2LjA5YzUuMSwwLDcuNjUsMi41Nyw3LjY1LDcuN3YxOS41N2gtMTIuNDZ2LTE2LjUyaC0xNi4ydjYyLjE4aDE2LjJ2LTE3LjU5aDEyLjQ2djIwLjY5WiIvPgogICAgPHBvbHlnb24gY2xhc3M9InN0MyIgcG9pbnRzPSI1NjUuMDggNDQ1Ljc3IDUzMC4zOCA0NDUuNzcgNTMwLjM4IDM2Mi4xIDU2NC43NiAzNjIuMSA1NjQuNzYgMzczLjE3IDU0Mi44OSAzNzMuMTcgNTQyLjg5IDM5Ny42IDU2MS43MSAzOTcuNiA1NjEuNzEgNDA4LjQ2IDU0Mi44OSA0MDguNDYgNTQyLjg5IDQzNC43MSA1NjUuMDggNDM0LjcxIDU2NS4wOCA0NDUuNzciLz4KICAgIDxwYXRoIGNsYXNzPSJzdDMiIGQ9Ik02NDYuNTgsNDM4LjEzYzAsNS4xLTIuNTMsNy42NS03LjU5LDcuNjVoLTI1LjE4Yy01LjAzLDAtNy41NC0yLjU1LTcuNTQtNy42NXYtMTkuOTRoMTIuNTF2MTcuMDVoMTUuM3YtMTYuNDFsLTI1LjA3LTIzLjc0Yy0xLjgyLTEuNzUtMi43My0zLjk3LTIuNzMtNi42OXYtMTguNmMwLTUuMTMsMi41Mi03LjcsNy41NC03LjdoMjUuMThjNS4wNSwwLDcuNTksMi41Myw3LjU5LDcuNTl2MTguNzFoLTEyLjUxdi0xNS43N2gtMTUuM3YxNS4xM2wyNS4wNywyMy42M2MxLjgyLDEuNzEsMi43MywzLjk3LDIuNzMsNi43OXYxOS45NFoiLz4KICAgIDxwYXRoIGNsYXNzPSJzdDQiIGQ9Ik03NTEuNyw0NDUuNjVjMy42OCwwLDYuNjgtMi45Myw2LjgtNi41OXYtNzAuMTVoLS4wMmMwLTMuNzYtMy4wNS02LjgxLTYuODItNi44MWgwcy03MC4xNywwLTcwLjE3LDBjLTMuNDIuMDktNi4yLDIuNjktNi41OSw2LjAydjcxLjQ4Yy4zMywzLjI2LDIuOTgsNS44NCw2LjI3LDYuMDhoNzAuNTF2LS4wNFoiLz4KICAgIDxwYXRoIGNsYXNzPSJzdDEiIGQ9Ik03NTEuNyw0NDYuMzloLTcwLjUxYy0zLjY5LS4yNi02LjYxLTMuMDgtNi45Ny02Ljcydi03MS41NWMuNDItMy43NywzLjU1LTYuNjMsNy4yNy02LjcybDcwLjg5LjA0YzMuNTguMzMsNi40NSwzLjE5LDYuNzgsNi43OGguMDN2LjdzLjAxLDcwLjE1LjAxLDcwLjE1Yy0uMTIsMy44NS0zLjA1LDYuOTEtNi44LDcuMjV2LjA0bC0uNzEuMDNaTTY4MS41LDM2Mi44Yy0zLC4wOC01LjU1LDIuNC01Ljg5LDUuNHY3MS40Yy4zLDIuODgsMi42Nyw1LjE4LDUuNjMsNS4zOWw3MC40Ni0uMDRjMy4zMiwwLDUuOTktMi42LDYuMS01Ljl2LTcwLjEzYy0uMDEtMy4zNy0yLjc2LTYuMTEtNi4xMi02LjExaC03MC4xOFoiLz4KICAgIDxwb2x5Z29uIGNsYXNzPSJzdDEiIHBvaW50cz0iNzI1LjczIDM5NC44NyA3MjUuNzMgMzc2LjgzIDcwNy42OCAzNzYuODMgNzA3LjY4IDM5NC44NyA2ODkuNjQgMzk0Ljg3IDY4OS42NCA0MTIuOTIgNzA3LjY4IDQxMi45MiA3MDcuNjggNDMwLjk3IDcyNS43MyA0MzAuOTcgNzI1LjczIDQxMi45MiA3NDMuNzggNDEyLjkyIDc0My43OCAzOTQuODcgNzI1LjczIDM5NC44NyIvPgogIDwvZz4KICA8cmVjdCBjbGFzcz0ic3QyIiB4PSI2Ni42MSIgeT0iMTQ4Ljg5IiB3aWR0aD0iNzA4LjY2IiBoZWlnaHQ9IjI5Ny41Ii8+Cjwvc3ZnPg==" alt="NASIMA"></div> Nasima Aufnahme Tool</div><button style="max-width:150px;margin:0" onclick="location.reload()">Abmelden</button></div><div class="nav"><button id="nDash" onclick="view('dash')">Dashboard</button><button id="nSites" onclick="view('sites')">Standorte</button><button id="nNew" onclick="newSite()">Neue Aufnahme</button><button id="nSet" onclick="view('settings')">Einstellungen</button></div></header>
+<section class="hero"><div class="hero-inner"><div class="kicker">Build V5.7.1 · Supabase</div><h1>Standorte, Aufnahmen und Objekte bearbeiten.</h1><p>Standorte erscheinen einmalig. Aufnahmen können nachträglich bearbeitet werden. Fotos werden manuell aus dem Album gewählt und komprimiert.</p><div class="row"><input id="q" placeholder="Suche..." oninput="render()"><button onclick="newSite()">Neue Aufnahme</button><button class="secondary" onclick="pdfAll()">PDF alle</button></div><div class="stats"><div class="stat"><strong id="sSites">0</strong><span>Standorte</span></div><div class="stat"><strong id="sSurveys">0</strong><span>Aufnahmen</span></div><div class="stat"><strong id="sObjects">0</strong><span>Objekte</span></div><div class="stat"><strong id="sMode">Cloud</strong><span>Cloud / Auto-Sync</span></div></div></div></section>
 
 <main>
 <section class="card" id="dash"><h2>Dashboard</h2><div id="recent"></div></section>
@@ -53,7 +138,7 @@ main{max-width:1220px;margin:auto;padding:24px 20px 80px;display:grid;gap:22px}.
 <h3 class="sub">Aufnahme</h3><div class="grid"><label>Aufnahme-ID<input id="surveyId" readonly></label><label>Status<select id="surveyStatus"><option value="open">Offen</option><option value="done">Erledigt</option><option value="archived">Archiv</option></select></label><label>Datum<input id="date" type="date"></label><label>Aufgenommen von<select id="by"><option>Marco Cassani</option><option>Hans Zwahlen</option></select></label><label>Projektnummer<input id="project"></label><label>Notizen<textarea id="surveyNotes"></textarea></label></div>
 <h3 class="sub">Objekte</h3><div id="objects"></div><div class="actions"><button onclick="addObject()">Objekt hinzufügen</button><button class="secondary" onclick="saveCurrent()">Speichern</button><button class="ghost" onclick="view('sites')">Schliessen</button><button class="danger" onclick="clearCurrent()">Formular leeren</button></div>
 </section>
-<section class="card hidden" id="settings"><h2>Einstellungen / Backup</h2><div class="notice">Supabase ist bereits hinterlegt. Auto-Sync prüft alle 30 Sekunden auf neue Daten. V5.6.4 speichert zuerst robust in Supabase und warnt, falls der lokale Browser-Speicher voll ist. Falls keine Daten synchronisieren: <b>supabase_setup.sql</b> im Supabase SQL Editor ausführen.</div><div class="actions"><button onclick="exportJSON()">JSON Backup</button><button class="ghost" onclick="document.getElementById('importer').click()">JSON Import</button><button class="secondary" onclick="syncNow()">Jetzt synchronisieren</button><button class="ghost" onclick="loadFromCloud(true)">Cloud neu laden</button></div><input id="importer" type="file" accept=".json,application/json" style="display:none" onchange="importJSON(event)"></section>
+<section class="card hidden" id="settings"><h2>Einstellungen / Backup</h2><div class="notice">Supabase ist bereits hinterlegt. Auto-Sync prüft alle 30 Sekunden auf neue Daten. V5.7.1 speichert zuerst robust in Supabase und warnt, falls der lokale Browser-Speicher voll ist. Falls keine Daten synchronisieren: <b>supabase_setup.sql</b> im Supabase SQL Editor ausführen.</div><div class="actions"><button onclick="exportJSON()">JSON Backup</button><button class="ghost" onclick="document.getElementById('importer').click()">JSON Import</button><button class="secondary" onclick="syncNow()">Jetzt synchronisieren</button><button class="ghost" onclick="loadFromCloud(true)">Cloud neu laden</button></div><input id="importer" type="file" accept=".json,application/json" style="display:none" onchange="importJSON(event)"></section>
 </main>
 <div class="sync-banner" id="syncBanner">
   <b>Neue Cloud-Daten verfügbar.</b><br>
@@ -64,7 +149,7 @@ main{max-width:1220px;margin:auto;padding:24px 20px 80px;display:grid;gap:22px}.
 
 <script>
 const PASS="Neon1234";
-const LOCAL_KEY="nasima_v564_local";
+const LOCAL_KEY="nasima_v571_local";
 const SUPABASE_URL="https://ehqjwylxcagpzpcjhput.supabase.co";
 const SUPABASE_ANON_KEY="sb_publishable_HehPKnqGwq-cSDSdBTQzLA__gCqpM4M";
 let currentUser="", db=JSON.parse(localStorage.getItem(LOCAL_KEY)||"[]"), editing={siteId:null,surveyId:null}, objs=[], sb=null, cloud=false, lastCloudUpdated=null, autoSyncTimer=null;
@@ -238,7 +323,7 @@ function isFormOpen(){const f=document.getElementById("form");return f && !f.cla
 function showSyncBanner(){let b=document.getElementById("syncBanner");if(b)b.style.display="block"}
 function hideSyncBanner(){let b=document.getElementById("syncBanner");if(b)b.style.display="none"}
 
-function exportJSON(){download(new Blob([JSON.stringify({version:"5.6.4",data:db},null,2)],{type:"application/json"}),"nasima_v564_backup.json")}
+function exportJSON(){download(new Blob([JSON.stringify({version:"5.7.1",data:db},null,2)],{type:"application/json"}),"nasima_v571_backup.json")}
 function importJSON(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=x=>{let j=JSON.parse(x.target.result);db=Array.isArray(j)?j:j.data||[];persist();render()};r.readAsText(f)}
 function download(blob,name){let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href)}
 
@@ -270,7 +355,7 @@ function makePDF(sites,name){
   pdf.text("NASIMA SERVICES",15,9);
   pdf.setFontSize(8);
   pdf.setFont(undefined,"normal");
-  pdf.text("Aufnahme Tool V5.6.4",15,16);
+  pdf.text("Aufnahme Tool V5.7.1 · Standortaufnahmen",15,16);
   pdf.setFillColor(183,187,0);
   pdf.rect(0,288,210,9,"F");
   pdf.setTextColor(88,88,73);
